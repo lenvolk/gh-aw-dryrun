@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.env
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# gh-aw generated (keep .lock.yml, ignore caches)
+.github/aw/cache/
+
+# OS
+.DS_Store
+Thumbs.db
