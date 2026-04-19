@@ -10,12 +10,23 @@
 
 **GitHub Agentic Workflows (gh-aw)** lets you describe an automation in plain-English markdown instead of writing a YAML GitHub Actions file. The `gh aw compile` command then *generates* a hardened `.lock.yml` workflow from your markdown. When the trigger fires (a PR opens, an issue is filed, etc.), GitHub Actions runs an AI agent that follows your markdown instructions and posts back results — comments, labels, etc.
 
-You'll set up two of these "agents":
+### At a glance — the three Beats
+
+The diagram below shows how the *same* building block (a single markdown file → `gh aw compile` → hardened `.lock.yml`) is reused three times with different triggers and different outputs.
+
+![gh-aw Demo — Three Beats, One Building Block](assets/beats-overview.svg)
+
+> Editable source: [assets/beats-overview.excalidraw](assets/beats-overview.excalidraw) — open in the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor) or at <https://excalidraw.com>.
+
+You'll set up three of these "agents" — two core beats plus an optional advanced beat:
 
 - **Beat 1 — Big-O Auditor**: When someone opens a Pull Request, the agent reads the changed code and posts a comment flagging slow algorithms (e.g., O(n²) loops) with a suggested fix.
 - **Beat 2 — Issue Triage**: When someone files a new Issue, the agent reads it, applies labels (`bug`, `feature-request`, severity, etc.), and posts a triage comment asking for missing info.
+- **Beat 3 (advanced) — Auto-Fix**: When a reviewer comments `/fix` on the Beat 1 PR, a second agent reads the auditor's advice, applies the optimization, and opens a stacked pull request with the fix. Skip this if your audience is new to gh-aw; use it if some of them already get the basics and you want a "wow" moment.
 
-Same building block (a markdown file), two different triggers (`pull_request` vs. `issues`), two different outputs (`add-comment` vs. `add-labels`). That contrast is the whole point of the demo.
+Same building block (a markdown file) used three times with different triggers (`pull_request`, `issues`, `slash_command`) and different outputs (`add-comment`, `add-labels`, `create-pull-request`). That contrast is the whole point of the demo.
+
+We close with a short **security coda** that reuses Beat 2's workflow to show the compiler's auto-inserted prompt-injection defense — no new agent file required.
 
 ---
 

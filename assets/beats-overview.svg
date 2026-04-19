@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <style>
+    .title { font-size: 22px; fill: #1e1e1e; font-weight: 600; }
+    .subtitle { font-size: 14px; fill: #757575; }
+    .zoneLabel { font-size: 16px; font-weight: 700; fill: #000000; }
+    .node { font-size: 14px; fill: #1e1e1e; text-anchor: middle; }
+  </style>
+
+  <!-- Title -->
+  <text x="400" y="34" text-anchor="middle" class="title">gh-aw Demo — Three Beats, One Building Block</text>
+  <text x="400" y="58" text-anchor="middle" class="subtitle">trigger  →  markdown agent  →  output</text>
+
+  <!-- ===== Beat 1 ===== -->
+  <rect x="30" y="88" width="740" height="100" rx="12" fill="#dbe4ff" fill-opacity="0.35" stroke="#4a9eed"/>
+  <text x="48" y="110" class="zoneLabel">Beat 1 — Big-O Auditor</text>
+
+  <rect x="60" y="122" width="170" height="56" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="145" y="147" class="node">pull_request</text>
+  <text x="145" y="165" class="node">opened</text>
+
+  <line x1="232" y1="150" x2="288" y2="150" stroke="#4a9eed" stroke-width="2"/>
+  <polygon points="288,150 280,146 280,154" fill="#4a9eed"/>
+
+  <rect x="290" y="122" width="200" height="56" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="390" y="147" class="node">big-o-auditor.md</text>
+  <text x="390" y="165" class="node">(AI reviews diff)</text>
+
+  <line x1="492" y1="150" x2="548" y2="150" stroke="#4a9eed" stroke-width="2"/>
+  <polygon points="548,150 540,146 540,154" fill="#4a9eed"/>
+
+  <rect x="550" y="122" width="200" height="56" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <text x="650" y="147" class="node">add-comment</text>
+  <text x="650" y="165" class="node">"O(n²) → use set"</text>
+
+  <!-- ===== Beat 2 ===== -->
+  <rect x="30" y="218" width="740" height="100" rx="12" fill="#d3f9d8" fill-opacity="0.4" stroke="#22c55e"/>
+  <text x="48" y="240" class="zoneLabel">Beat 2 — Issue Triage</text>
+
+  <rect x="60" y="252" width="170" height="56" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="145" y="277" class="node">issues</text>
+  <text x="145" y="295" class="node">opened</text>
+
+  <line x1="232" y1="280" x2="288" y2="280" stroke="#22c55e" stroke-width="2"/>
+  <polygon points="288,280 280,276 280,284" fill="#22c55e"/>
+
+  <rect x="290" y="252" width="200" height="56" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="390" y="277" class="node">issue-triage.md</text>
+  <text x="390" y="295" class="node">(AI classifies)</text>
+
+  <line x1="492" y1="280" x2="548" y2="280" stroke="#22c55e" stroke-width="2"/>
+  <polygon points="548,280 540,276 540,284" fill="#22c55e"/>
+
+  <rect x="550" y="252" width="200" height="56" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <text x="650" y="277" class="node">add-labels +</text>
+  <text x="650" y="295" class="node">add-comment</text>
+
+  <!-- ===== Beat 3 ===== -->
+  <rect x="30" y="348" width="740" height="100" rx="12" fill="#e5dbff" fill-opacity="0.4" stroke="#8b5cf6"/>
+  <text x="48" y="370" class="zoneLabel">Beat 3 — Auto-Fix  (advanced)</text>
+
+  <rect x="60" y="382" width="170" height="56" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="145" y="407" class="node">slash_command</text>
+  <text x="145" y="425" class="node">/fix on PR</text>
+
+  <line x1="232" y1="410" x2="288" y2="410" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="288,410 280,406 280,414" fill="#8b5cf6"/>
+
+  <rect x="290" y="382" width="200" height="56" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="390" y="407" class="node">auto-fix.md</text>
+  <text x="390" y="425" class="node">(AI writes patch)</text>
+
+  <line x1="492" y1="410" x2="548" y2="410" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="548,410 540,406 540,414" fill="#8b5cf6"/>
+
+  <rect x="550" y="382" width="200" height="56" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <text x="650" y="407" class="node">create-pull-request</text>
+  <text x="650" y="425" class="node">(stacked fix)</text>
+
+  <!-- ===== Footer note ===== -->
+  <rect x="110" y="488" width="580" height="56" rx="12" fill="#fff3bf" fill-opacity="0.85" stroke="#f59e0b" stroke-width="2"/>
+  <text x="400" y="522" text-anchor="middle" font-size="15" fill="#78350f" font-weight="500">
+    Same building block: one .md file → gh aw compile → hardened .lock.yml
+  </text>
+</svg>
