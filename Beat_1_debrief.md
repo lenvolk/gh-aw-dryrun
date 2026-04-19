@@ -242,6 +242,22 @@ flowchart LR
 
 **Why it landed:** no button press = automation. A real code rewrite = genuine value, not a toy.
 
+### ⚠️ Common question: "What changed in the code itself?"
+
+**Answer: the agent changed nothing.** The "1 file changed / +24 lines" you see in the **Files changed** tab is *your* commit — the one that added `find_matching_records` to `src/main.py` and triggered the workflow. The agent did **not** add any more commits, and it did **not** edit that file. It only posted a comment.
+
+| Check this in your PR | What you'll see | Who did it |
+|---|---|---|
+| **Files changed** tab (`+24`) | `src/main.py` has the new `find_matching_records` function | **You** — this is the commit that triggered the workflow |
+| **Commits** tab | Exactly **1** commit — yours, from branch `feat/add-search-function` | **You** — no bot commits were added |
+| **Conversation** tab | One new comment from `github-actions[bot]` with the Big-O analysis | **The agent** — this is its only output |
+
+**Why the agent didn't add a second commit:** the `safe_outputs` job's permissions only include `pull-requests: write` (can comment). It does **not** include `contents: write` (which would be required to commit code). The house-analogy garage has a key to the mailbox, not a key to the filing cabinet.
+
+**Where the "rewrite" actually lives:** inside the comment body as a copy-pasteable code block. The agent's closing question *"want me to apply this?"* is its polite way of saying *"I can't apply it myself; a human needs to."*
+
+**If you wanted the agent to actually open a follow-up PR with the fix**, you'd add a different safe-output type (like `create-pull-request`) to the `.md` file — and gh-aw would generate a separate job with `contents: write` for that. That's a deliberate opt-in, not the default.
+
 ## 4. The Actions run (the "receipt")
 
 ```mermaid
