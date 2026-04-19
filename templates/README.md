@@ -188,7 +188,7 @@ Scroll down to find your API access token, or follow the prompts to generate one
 ### Step 4.2 — Add it as a repository secret
 
 ```powershell
-gh secret set COPILOT_API_KEY
+gh secret set COPILOT_GITHUB_TOKEN
 ```
 
 When prompted, paste your API key. This stores it securely in GitHub — it's never visible in logs or code.

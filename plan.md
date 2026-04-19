@@ -1,173 +1,208 @@
-# gh-aw Demo Setup Plan
+# gh-aw Demo — Beginner's Setup Guide
 
-**Purpose:** Agent instructions for setting up the GitHub Agentic Workflows (gh-aw) demo environment in a new GitHub repository.
+**Who this is for:** Someone who has used GitHub through the website and maybe tried GitHub Copilot in VS Code, but has never heard of "GitHub Agentic Workflows" (gh-aw). Follow this top to bottom on a fresh Windows machine and you'll have a working two-beat demo at the end.
 
-**Two-beat demo structure:**
-- **Beat 1 — Big-O Auditor**: Agent reviews a PR, flags O(n²) code, suggests optimization. Shows PR-triggered workflow + comment output.
-- **Beat 2 — Issue Triage**: Agent auto-labels a new issue and posts a welcome/triage comment. Shows *different* trigger (`on: issues`) and *different* safe-output (labels). Together they prove "any trigger, any output, all markdown."
-
-**How to use this:**
-1. Create a new empty GitHub repo (public or private, name it something like `gh-aw-demo`)
-2. Clone it locally
-3. Open in VS Code with `@mcaps` agent active
-4. Say: *"Follow the plan in `plan.md` and set up the demo in this repo."*
-5. Provide the agent with the local repo path
+**Time needed:** ~45 min first time (most of it is installs + waiting on the agent).
 
 ---
 
-## Prerequisites Check (Agent: verify before starting)
+## What you're building (and why it's interesting)
 
-Before doing anything, verify the user has the required tools installed:
+**GitHub Agentic Workflows (gh-aw)** lets you describe an automation in plain-English markdown instead of writing a YAML GitHub Actions file. The `gh aw compile` command then *generates* a hardened `.lock.yml` workflow from your markdown. When the trigger fires (a PR opens, an issue is filed, etc.), GitHub Actions runs an AI agent that follows your markdown instructions and posts back results — comments, labels, etc.
 
-```powershell
-gh --version          # GitHub CLI installed (v2.40+) — needed to talk to GitHub from the terminal
-gh auth status        # Confirms you're logged in to GitHub (the extension + secrets use this auth)
-git --version         # Git installed — needed for clone/commit/push
-python --version      # Python 3.8+ — the demo code we'll PR into the repo is Python
-```
+You'll set up two of these "agents":
 
-Also verify GitHub Copilot is available (this is the AI provider the agent calls):
-```powershell
-gh copilot --help     # Should not error — confirms your Copilot subscription is active
-```
+- **Beat 1 — Big-O Auditor**: When someone opens a Pull Request, the agent reads the changed code and posts a comment flagging slow algorithms (e.g., O(n²) loops) with a suggested fix.
+- **Beat 2 — Issue Triage**: When someone files a new Issue, the agent reads it, applies labels (`bug`, `feature-request`, severity, etc.), and posts a triage comment asking for missing info.
 
-If Copilot isn't available, the demo can fall back to Claude (ANTHROPIC_API_KEY) or OpenAI (OPENAI_API_KEY).
-
-### Update everything to latest (recommended before a live demo)
-
-Run these in order to make sure nothing is stale on demo day:
-
-```powershell
-winget upgrade github.cli            # Upgrades the GitHub CLI (gh) itself to the latest release via Windows Package Manager
-copilot update                       # Upgrades the Copilot CLI — keeps the AI provider wiring current
-gh extension install githubnext/gh-aw  # First-time install of the Agentic Workflows extension (safe to re-run; no-op if already installed)
-gh extension upgrade aw              # Upgrades the gh-aw extension to latest — pick up recent compiler fixes and schema changes
-```
-
-**Order matters**: upgrade `gh` first (`winget upgrade github.cli`), because the `gh extension` commands below are provided by `gh` itself. Then install/upgrade extensions.
-
-On Mac/Linux replace `winget upgrade github.cli` with `brew upgrade gh` (or follow [cli.github.com](https://cli.github.com/) for your package manager).
-
-If `gh` is missing entirely: `winget install GitHub.cli` then `gh auth login`.
+Same building block (a markdown file), two different triggers (`pull_request` vs. `issues`), two different outputs (`add-comment` vs. `add-labels`). That contrast is the whole point of the demo.
 
 ---
 
-## Step-by-Step Setup Tasks
+## Part 1 — Quick prerequisite check
 
-### Task 1 — Install the gh-aw CLI extension
+This guide assumes the following are already installed and configured. Run this one-liner in **PowerShell** to confirm everything is good:
 
 ```powershell
-gh extension install githubnext/gh-aw
-gh aw --help
+git --version; gh --version; gh auth status; python --version; gh aw --help | Select-Object -First 1
 ```
 
-Verify `gh aw` commands are listed (compile, logs, audit, etc.).
+You should see, with no errors:
 
-### Task 2 — Navigate to the user's new repo
+| Tool | Why it's needed | Expected output |
+|---|---|---|
+| `git` | Push code to GitHub | `git version 2.x` |
+| `gh` (GitHub CLI) | Create repos, open PRs, set secrets, install extensions | `gh version 2.40+` |
+| `gh auth status` | Confirms you're signed in to github.com | `Logged in to github.com as <you>` |
+| `python` | The demo code we review is Python (not executed locally) | `Python 3.8+` |
+| `gh aw` (gh-aw extension) | Compiles markdown agents into hardened Actions workflows | usage line for `gh aw` |
+| GitHub Copilot subscription | The AI brain the workflow calls | check at <https://github.com/settings/copilot> |
 
-Ask the user for the local path if not already in it. Example:
+**Recommended before a live demo — upgrade everything to latest:**
+
 ```powershell
-cd C:\Temp\GIT\gh-aw-demo
+winget upgrade github.cli      # upgrade gh first (extension cmds come from gh)
+gh extension upgrade aw        # then upgrade the gh-aw extension
 ```
 
-Verify `git status` works and we're in a GitHub-linked repo.
+> **No Copilot?** You can swap to Claude (`ANTHROPIC_API_KEY`) or OpenAI (`OPENAI_API_KEY`) at Step 2.5 — change the `engine:` line in the workflow `.md` files and set the matching secret.
 
-### Task 3 — Create the demo file structure
+---
 
-Create these files (preserve content exactly — see template section below):
+## Part 2 — Set up the demo repo
 
+### 2.1 Create an empty GitHub repo
+
+Go to <https://github.com/new>:
+- **Repository name:** `gh-aw-demo` (or anything you like)
+- **Visibility:** Private is fine for first run; you can make it public later
+- **Initialize:** Leave all checkboxes UNchecked (no README, no .gitignore, no license — we'll add our own)
+- Click **Create repository**
+
+### 2.2 Clone it locally
+
+Copy the HTTPS URL GitHub shows you (looks like `https://github.com/<you>/gh-aw-demo.git`), then in PowerShell:
+
+```powershell
+cd C:\Temp\GIT          # or wherever you keep code; create the folder if needed
+git clone https://github.com/<you>/gh-aw-demo.git
+cd gh-aw-demo
 ```
-├── .github/
-│   └── workflows/
-│       ├── big-o-auditor.md       # Beat 1: PR reviewer agent
-│       └── issue-triage.md        # Beat 2: Issue triage agent
+
+Verify with `git status` — should say "On branch main" and "nothing to commit".
+
+### 2.3 Copy the template files into the repo
+
+This guide ships with a `templates/` folder containing every file you need. Copy them into the new repo with the right names and folders:
+
+```powershell
+# From inside the gh-aw-demo folder. Adjust $src to where THIS guide lives:
+$src = "C:\Temp\GIT\gh-aw-dryrun\templates"
+
+New-Item -ItemType Directory -Force -Path .github\workflows, src | Out-Null
+
+Copy-Item "$src\big-o-auditor.md" .github\workflows\big-o-auditor.md
+Copy-Item "$src\issue-triage.md"  .github\workflows\issue-triage.md
+Copy-Item "$src\main.py"          src\main.py
+Copy-Item "$src\README.md"        README.md
+Copy-Item "$src\.gitignore"       .gitignore
+```
+
+Your repo should now look like:
+```
+gh-aw-demo/
+├── .github/workflows/
+│   ├── big-o-auditor.md       # Beat 1: PR reviewer agent (markdown!)
+│   └── issue-triage.md        # Beat 2: Issue triage agent (markdown!)
 ├── src/
-│   └── main.py                    # Starter Python file (efficient code)
-├── .gitignore                     # Python + VS Code ignores
-└── README.md                      # Educational walkthrough for the audience
+│   └── main.py                # Starter Python file
+├── .gitignore
+└── README.md
 ```
 
-**Important**: Files to create are in the `templates/` folder next to this plan. Copy them:
-- `templates/big-o-auditor.md` → `.github/workflows/big-o-auditor.md`
-- `templates/issue-triage.md` → `.github/workflows/issue-triage.md`
-- `templates/main.py` → `src/main.py`
-- `templates/README.md` → `README.md`
-- `templates/.gitignore` → `.gitignore`
+**Open the two `.md` files in `.github/workflows/`** — these are the agents. Read them. Notice they're plain English with a small YAML header. That's the magic.
 
-### Task 4 — Compile the agentic workflows
+### 2.4 Compile the agents into real workflows
 
-From repo root:
+Run this from the **root of your `gh-aw-demo` repo** (the same folder you've been in since Step 2.2 — it's the one that contains the `.github/` and `src/` folders you just created). `gh aw compile` looks for `.github/workflows/*.md` relative to the current directory, so being at the repo root is how it finds both agents.
+
 ```powershell
+# Confirm you're in the repo root first:
+Get-Location                         # should print ...\gh-aw-demo
+Test-Path .github\workflows\big-o-auditor.md   # should print True
+
 gh aw compile
 ```
 
-This should:
-- Read BOTH `.github/workflows/big-o-auditor.md` and `.github/workflows/issue-triage.md`
-- Generate matching `.lock.yml` files for each (the hardened Actions workflows)
-- Generate `.github/aw/` folder with supporting lockfiles
+**What this does:** Reads each `.md` file in `.github/workflows/` and generates a matching `.lock.yml` file next to it. The `.lock.yml` is the hardened, audited GitHub Actions YAML that Actions actually runs. You don't write the YAML; you read it to understand what was generated.
 
-Verify the `.lock.yml` was created. If `gh aw compile` fails, surface the error clearly — common issues:
-- Missing YAML header in the markdown file
-- Invalid permissions or safe-outputs syntax
-- Network issues reaching the gh-aw compile service
+**Verify:** You should now also have `.github/workflows/big-o-auditor.lock.yml` and `.github/workflows/issue-triage.lock.yml`. Open one — notice it's locked-down (read-only permissions, pinned action SHAs, etc.).
 
-### Task 5 — Set the AI provider secret
+**If it fails:** Most common causes are a missing/malformed YAML header at the top of the `.md`, or you're offline. Re-read the error; it usually points at the line.
 
-The compiled workflow needs an API key. Default: GitHub Copilot.
+### 2.5 Set the AI provider secret
+
+The compiled workflow needs a token to call the AI. With the default GitHub Copilot engine, the workflow reads a secret named **`COPILOT_GITHUB_TOKEN`** — the name matters, it won't work under any other name.
 
 ```powershell
-# For Copilot (preferred — uses existing GitHub auth)
-gh secret set COPILOT_API_KEY
-
-# Alternative: Claude
-# gh secret set ANTHROPIC_API_KEY
-
-# Alternative: OpenAI
-# gh secret set OPENAI_API_KEY
+gh secret set COPILOT_GITHUB_TOKEN
 ```
 
-The user will be prompted to paste the key. For live demo, check what provider the workflow file specifies in its YAML header and set the matching secret.
+You'll be prompted to paste a value. Paste your personal access token and press Enter.
 
-### Task 6 — Initial commit & push
+> **How to generate the token:**
+> 1. Go to <https://github.com/settings/personal-access-tokens/new> — this is the **fine-grained** PAT page. The Copilot CLI engine **rejects classic PATs (`ghp_…`)**; you must use a fine-grained one (`github_pat_…`).
+> 2. **Token name:** `gh-aw demo` so future-you knows what it's for.
+> 3. **Expiration:** 30 or 60 days — just enough for the demo. Never pick "No expiration".
+> 4. **Resource owner:** your user (or the org that owns the demo repo).
+> 5. **Repository access:** *Only select repositories* → pick `gh-aw-demo`.
+> 6. **Repository permissions** (all Read/Write unless noted):
+>    - `Contents`: **Read**
+>    - `Pull requests`: **Read and write**
+>    - `Issues`: **Read and write**
+>    - `Metadata`: **Read** (auto-selected)
+> 7. **Account permissions:** `Copilot Chat`: **Read-only** (this is what lets the engine call Copilot's chat-completion API — the plain "Copilot" permission doesn't exist; "Copilot Editor Context" and "Copilot Requests" are for different surfaces and aren't needed).
+> 8. Click **Generate token**, then **copy it immediately** — GitHub only shows it once. It will start with `github_pat_`.
+> 9. Paste it when `gh secret set COPILOT_GITHUB_TOKEN` prompts you.
+>
+> **Prefer Claude or OpenAI instead?** Open the workflow `.md` files, change the `engine:` line in the YAML header, then `gh secret set ANTHROPIC_API_KEY` or `OPENAI_API_KEY` (those keys come from the respective provider consoles, not GitHub).
+
+### 2.6 Commit and push
 
 ```powershell
 git add .
-git commit -m "feat: add gh-aw Big-O Auditor demo"
+git commit -m "feat: add gh-aw Big-O Auditor and Issue Triage demo"
 git push
 ```
 
-Verify the workflow shows up under Actions tab in the GitHub repo.
+Open your repo on github.com and click the **Actions** tab. You should see the two workflows listed (they won't have run yet — they only run when their trigger fires).
 
-### Task 7a — Beat 1 rehearsal: Create the demo PR
+---
 
-Create a branch, add inefficient code, open a PR, and watch the Big-O Auditor comment.
+## Part 3 — Run Beat 1 (PR reviewer)
+
+You'll create a branch, paste in some deliberately slow code, open a PR, and wait for the agent to review it.
 
 ```powershell
 git checkout -b feat/add-search-function
+```
 
-# Agent: append the O(n²) function to src/main.py — use the content from
-# templates/inefficient-snippet.py
+Append the inefficient sample function to `src/main.py`:
 
-git add src/main.py
+```powershell
+Get-Content "$src\inefficient-snippet.py" | Add-Content src\main.py
+```
+
+(`$src` is still set from Step 2.3. If you opened a new PowerShell window, re-set it: `$src = "C:\Temp\GIT\gh-aw-dryrun\templates"`.)
+
+Commit, push, open the PR:
+
+```powershell
+git add src\main.py
 git commit -m "feat: add record search function"
 git push -u origin feat/add-search-function
 
-# Open the PR
-gh pr create --title "Add record search function" --body "Adds a function to search for matching records in our dataset."
+gh pr create --title "Add record search function" `
+             --body "Adds a function to search for matching records in our dataset."
 ```
 
-Then wait for the agent to comment on the PR (~3 min per the YouTube demo). Verify the comment shows:
-- Big-O complexity analysis (should flag O(n²))
-- A formatted table
-- Suggested optimization
-- Performance impact
+The PR URL will be printed. Open it in the browser.
 
-### Task 7b — Beat 2 rehearsal: File a sample issue
+**What to wait for (~3 min):** A new comment appears on the PR from the workflow. It should:
+- Call out O(n²) complexity in the new function
+- Include a small markdown table
+- Suggest an optimization (e.g., set lookup → O(n))
+- Estimate the perf impact
 
-Create the labels the triage agent will apply, then open an issue and watch it get labeled + commented on.
+If nothing appears after 5 minutes, jump to Troubleshooting below.
+
+---
+
+## Part 4 — Run Beat 2 (issue triage)
+
+The triage agent applies labels, so first create the labels it knows about. Run this once per repo:
 
 ```powershell
-# Pre-create the label set (one-time setup)
 $labels = @(
   @{name='bug'; color='d73a4a'},
   @{name='feature-request'; color='a2eeef'},
@@ -187,67 +222,98 @@ $labels = @(
 foreach ($l in $labels) {
   gh label create $l.name --color $l.color --force 2>$null
 }
+```
 
-# File a sample bug issue (this will trigger the agent)
+Now file a vague bug report to trigger the agent:
+
+```powershell
 gh issue create `
   --title "App crashes when I click the export button" `
   --body "It just crashes. Please fix."
 ```
 
-Wait ~2-3 min, then refresh the issue. You should see:
-- Labels applied (`bug`, `needs-repro`, `severity:medium` or similar)
+**Wait ~2-3 min, then refresh the issue.** You should see:
+- Labels applied (likely `bug`, `needs-repro`, and a severity label)
 - A single triage comment asking for reproduction details (version, OS, exact steps, error message)
 
-**Demo tip**: File a second, well-formed issue live on stage to contrast — e.g., "Add dark mode to settings page" — and watch it get `feature-request` instead. The contrast makes the classification visible.
-
-### Task 8 — Post-demo cleanup prep (optional)
-
-Create a "reset" script so the user can re-run the demo:
-
-```powershell
-# Close the PR, delete the branch, reset main
-gh pr close <pr-number> --delete-branch
-git checkout main
-git pull
-```
+**Bonus contrast:** File a second, well-formed issue — `gh issue create --title "Add dark mode to settings page" --body "Would love a dark theme option in Settings → Appearance."` — and watch it get `feature-request` instead. Same agent, different classification.
 
 ---
 
-## Troubleshooting Reference
+## Part 5 — Demo talking points
+
+When showing this to others:
+
+- **The shift:** "I didn't write YAML. I wrote a markdown file in English." Open `big-o-auditor.md` and read the first paragraph aloud.
+- **Compile step:** Run `gh aw compile` live and open the generated `.lock.yml` to show the hardened YAML you didn't have to write.
+- **Security:** Point at `permissions: read-all` in the lockfile — the agent can read code but can't push, can't merge, can't change settings. Outputs go through "safe outputs" (`add-comment`, `add-labels`) which are validated.
+- **Two beats, one pattern:** Open both `.md` files side-by-side. Same structure, just `on: pull_request` vs `on: issues` and different safe outputs.
+
+---
+
+## Part 6 — Troubleshooting
 
 | Symptom | Fix |
-|---------|-----|
-| `gh aw compile` fails with "unknown command" | Re-run `gh extension install githubnext/gh-aw` |
-| Workflow doesn't trigger on PR | Check `.lock.yml` has the PR trigger, verify Actions are enabled in repo settings |
-| Agent posts no comment after 5 min | Check Actions run logs: `gh run list` then `gh run view <id> --log` |
-| "Invalid API key" in logs | Re-set the secret: `gh secret set COPILOT_API_KEY` |
-| Agent comments but misses the O(n²) | Expected for research prototype — note latency + human-in-the-loop per GitHub Next disclaimer |
+|---|---|
+| `gh aw` says "unknown command" | Re-run `gh extension install githubnext/gh-aw` |
+| `gh aw compile` fails | Check the `.md` file has a valid YAML header (between `---` markers) at the top |
+| Workflow doesn't trigger on the PR | Open the repo's **Settings → Actions → General**, ensure Actions are enabled, and that workflow permissions allow comments |
+| No comment after 5 min | `gh run list` to see runs, then `gh run view <id> --log` to read the full log |
+| Log shows "Invalid API key" or "None of the following secrets are set" | Re-set the secret under the exact name the engine expects: `gh secret set COPILOT_GITHUB_TOKEN` |
+| Log shows "COPILOT_GITHUB_TOKEN is a classic Personal Access Token... Classic PATs are not supported" | Regenerate as a **fine-grained** PAT (`github_pat_…`) per Step 2.5, then re-set the secret |
+| Agent comments but misses the O(n²) | The AI is non-deterministic. Try again, or use a stronger model in the workflow's `engine:` block. |
 
 ---
 
-## Success Criteria
+## Part 7 — Reset to the starting state (so you can re-run the demo)
 
-At the end of setup, the user should be able to:
-1. Show a markdown file (the agent definition) and explain it in plain English
-2. Run `gh aw compile` live and show the generated `.lock.yml` files (both of them)
-3. **Beat 1**: Open a PR with inefficient code → return 3 min later → show the Big-O comment
-4. **Beat 2**: File an issue → return 2 min later → show the auto-applied labels + triage comment
-5. Explain the contrast: same markdown structure, different trigger (`on: pull_request` vs `on: issues`), different safe-output (`add-comment` vs `add-labels`)
+After running the demo you'll have: an extra branch, an open PR, an issue, and an extra function in `main.py`. Use this to get back to the clean post-Part-2 state — ready to demo again.
 
----
+> **Scope:** This is a *local* reset — it cleans up branches, PRs, issues, and reverts files inside your demo repo. It does **not** delete the repo, secrets, or the labels. (Those are reusable across runs.)
 
-## Demo Talking Points (per slide in the deck)
+Run from inside the `gh-aw-demo` folder. Make sure `$src` is still set (re-run `$src = "C:\Temp\GIT\gh-aw-dryrun\templates"` if you opened a new PowerShell window):
 
-- **Slide 2 (The Shift)**: "I didn't write YAML. I wrote a markdown file in English."
-- **Slide 3 (How It Works)**: Show the `agent.md` file, then show the compiled `.lock.yml` — emphasize that YOU control the hardened workflow
-- **Slide 4 (Security)**: Show the `permissions: read-all` in the header, emphasize the agent has no write access
-- **Slide 5 (Demo)**: Walk through the PR flow live
-- **Slide 6/7 (Use Cases / Alignment)**: "What else could your teams build with this?"
+```powershell
+# 1. Close the demo PR and delete its branch (both remote and local)
+$prNumber = (gh pr list --head feat/add-search-function --json number --jq '.[0].number')
+if ($prNumber) {
+  gh pr close $prNumber --delete-branch
+}
+
+# 2. Close any demo issues we filed
+gh issue list --state open --json number,title `
+  | ConvertFrom-Json `
+  | Where-Object { $_.title -in @(
+      "App crashes when I click the export button",
+      "Add dark mode to settings page"
+    ) } `
+  | ForEach-Object { gh issue close $_.number }
+
+# 3. Make sure you're on main and synced
+git checkout main
+git pull
+
+# 4. Remove the local feature branch if it still exists
+git branch -D feat/add-search-function 2>$null
+
+# 5. Restore main.py to the clean template (removes the inefficient snippet)
+Copy-Item "$src\main.py" src\main.py -Force
+git add src\main.py
+git diff --cached --quiet
+if ($LASTEXITCODE -ne 0) {
+  git commit -m "chore: reset main.py to starting template"
+  git push
+}
+```
+
+After these steps your repo is back to: `main` branch only, no open PR, no open demo issues, `main.py` matches the original template. You can now re-run **Part 3** and **Part 4** for another demo.
+
+> **If you want to start completely from scratch** (new repo, new secrets, new labels): just delete the GitHub repo via **Settings → Danger Zone → Delete this repository** and start over from **Part 2.1**.
 
 ---
 
 ## Reference Links
 
-- Docs: https://github.github.com/gh-aw/
-- Quick Start: https://github.github.com/gh-aw/setup/quick-start/
-- Examples: https://github.com/githubnext/agentics
+- gh-aw docs: <https://github.github.com/gh-aw/>
+- Quick Start: <https://github.github.com/gh-aw/setup/quick-start/>
+- Example agents: <https://github.com/githubnext/agentics>
