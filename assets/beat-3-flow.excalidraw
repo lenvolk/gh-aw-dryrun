@@ -1,0 +1,37 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "gh-aw-dryrun/Beat_3_debrief.md",
+  "elements": [
+    { "type": "text", "id": "title", "x": 160, "y": 18, "width": 600, "height": 28, "text": "Beat 3 — Auto-Fix  (the agent becomes a contributor)", "fontSize": 22, "strokeColor": "#6d28d9" },
+    { "type": "text", "id": "subtitle", "x": 220, "y": 50, "width": 480, "height": 20, "text": "/fix comment  →  AI reads audit  →  opens a new pull request with code", "fontSize": 14, "strokeColor": "#757575" },
+
+    { "type": "rectangle", "id": "input", "x": 40, "y": 100, "width": 200, "height": 64, "backgroundColor": "#dbeafe", "fillStyle": "solid", "strokeColor": "#1d4ed8", "roundness": { "type": 3 }, "label": { "text": "① auto-fix.md\nslash_command: fix", "fontSize": 16 } },
+    { "type": "arrow", "id": "a1", "x": 240, "y": 132, "width": 70, "height": 0, "points": [[0,0],[70,0]], "strokeColor": "#f97316", "strokeWidth": 2, "endArrowhead": "arrow", "label": { "text": "gh aw compile", "fontSize": 12 } },
+    { "type": "rectangle", "id": "lock", "x": 310, "y": 100, "width": 220, "height": 64, "backgroundColor": "#fef3c7", "fillStyle": "solid", "strokeColor": "#d97706", "roundness": { "type": 3 }, "label": { "text": "② auto-fix.lock.yml\ncontents: write  added!", "fontSize": 16 } },
+    { "type": "arrow", "id": "a2", "x": 530, "y": 132, "width": 70, "height": 0, "points": [[0,0],[70,0]], "strokeColor": "#f97316", "strokeWidth": 2, "endArrowhead": "arrow", "label": { "text": "/fix on PR", "fontSize": 12 } },
+    { "type": "rectangle", "id": "trigger", "x": 600, "y": 100, "width": 180, "height": 64, "backgroundColor": "#e0f2fe", "fillStyle": "solid", "strokeColor": "#0284c7", "roundness": { "type": 3 }, "label": { "text": "pull_request_comment\nevent", "fontSize": 16 } },
+
+    { "type": "rectangle", "id": "jobs", "x": 40, "y": 200, "width": 740, "height": 120, "backgroundColor": "#f1f5f9", "fillStyle": "solid", "strokeColor": "#475569", "strokeWidth": 1, "opacity": 40, "roundness": { "type": 3 } },
+    { "type": "text", "id": "jobslabel", "x": 54, "y": 208, "width": 420, "height": 20, "text": "③ Actions run — same 5-job graph, new powers", "fontSize": 16, "strokeColor": "#0f172a" },
+    { "type": "rectangle", "id": "j1", "x": 56, "y": 238, "width": 120, "height": 70, "backgroundColor": "#e2e8f0", "fillStyle": "solid", "strokeColor": "#475569", "roundness": { "type": 3 }, "label": { "text": "activation\n(read audit)", "fontSize": 14 } },
+    { "type": "arrow", "id": "ja1", "x": 176, "y": 273, "width": 20, "height": 0, "points": [[0,0],[20,0]], "strokeColor": "#475569", "strokeWidth": 2, "endArrowhead": "arrow" },
+    { "type": "rectangle", "id": "j2", "x": 196, "y": 238, "width": 140, "height": 70, "backgroundColor": "#fde68a", "fillStyle": "solid", "strokeColor": "#b45309", "roundness": { "type": 3 }, "label": { "text": "agent\n🔑 AI key\n🚫 no write", "fontSize": 14 } },
+    { "type": "arrow", "id": "ja2", "x": 336, "y": 273, "width": 20, "height": 0, "points": [[0,0],[20,0]], "strokeColor": "#475569", "strokeWidth": 2, "endArrowhead": "arrow" },
+    { "type": "rectangle", "id": "j3", "x": 356, "y": 238, "width": 140, "height": 70, "backgroundColor": "#fecaca", "fillStyle": "solid", "strokeColor": "#dc2626", "roundness": { "type": 3 }, "label": { "text": "detection\n🛡️ injection\nscan", "fontSize": 14 } },
+    { "type": "arrow", "id": "ja3", "x": 496, "y": 273, "width": 20, "height": 0, "points": [[0,0],[20,0]], "strokeColor": "#475569", "strokeWidth": 2, "endArrowhead": "arrow" },
+    { "type": "rectangle", "id": "j4", "x": 516, "y": 238, "width": 160, "height": 70, "backgroundColor": "#bbf7d0", "fillStyle": "solid", "strokeColor": "#059669", "strokeWidth": 3, "roundness": { "type": 3 }, "label": { "text": "safe_outputs\n🔓 contents: write\n🔓 pull-requests: write", "fontSize": 12 } },
+    { "type": "arrow", "id": "ja4", "x": 676, "y": 273, "width": 20, "height": 0, "points": [[0,0],[20,0]], "strokeColor": "#475569", "strokeWidth": 2, "endArrowhead": "arrow" },
+    { "type": "rectangle", "id": "j5", "x": 696, "y": 238, "width": 80, "height": 70, "backgroundColor": "#e9d5fe", "fillStyle": "solid", "strokeColor": "#7c3aed", "roundness": { "type": 3 }, "label": { "text": "conclusion\n⏱️ ~3 min", "fontSize": 13 } },
+
+    { "type": "rectangle", "id": "pr1", "x": 60, "y": 360, "width": 210, "height": 80, "backgroundColor": "#dbeafe", "fillStyle": "solid", "strokeColor": "#1d4ed8", "roundness": { "type": 3 }, "label": { "text": "④ PR #1 (slow code)\nauditor comment +\n/fix from human", "fontSize": 13 } },
+    { "type": "arrow", "id": "pra", "x": 270, "y": 400, "width": 90, "height": 0, "points": [[0,0],[90,0]], "strokeColor": "#7c3aed", "strokeWidth": 2, "endArrowhead": "arrow", "label": { "text": "agent opens", "fontSize": 11 } },
+    { "type": "rectangle", "id": "pr2", "x": 360, "y": 360, "width": 210, "height": 80, "backgroundColor": "#d1fae5", "fillStyle": "solid", "strokeColor": "#059669", "roundness": { "type": 3 }, "label": { "text": "⑤ Child PR (fast code)\n[ai] Optimize …\nlabels: ai-fix", "fontSize": 13 } },
+    { "type": "arrow", "id": "prb", "x": 570, "y": 400, "width": 90, "height": 0, "points": [[0,0],[90,0]], "strokeColor": "#059669", "strokeWidth": 2, "endArrowhead": "arrow", "label": { "text": "human merges", "fontSize": 11 } },
+    { "type": "rectangle", "id": "main", "x": 660, "y": 360, "width": 120, "height": 80, "backgroundColor": "#fef3c7", "fillStyle": "solid", "strokeColor": "#d97706", "roundness": { "type": 3 }, "label": { "text": "main\n(optimized)", "fontSize": 14 } },
+
+    { "type": "rectangle", "id": "foot", "x": 80, "y": 470, "width": 660, "height": 50, "backgroundColor": "#fff3bf", "fillStyle": "solid", "strokeColor": "#f59e0b", "roundness": { "type": 3 }, "opacity": 70, "label": { "text": "The agent wrote code, not prose. A separate gated job pushed it. A human still clicks Merge.", "fontSize": 14 } }
+  ],
+  "appState": { "viewBackgroundColor": "#ffffff", "gridSize": null },
+  "files": {}
+}
