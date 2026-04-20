@@ -1,6 +1,6 @@
 # gh-aw Demo — Beginner's Setup Guide
 
-**Who this is for:** Someone who has used GitHub through the website and maybe tried GitHub Copilot in VS Code, but has never heard of "GitHub Agentic Workflows" (gh-aw). Follow this top to bottom on a fresh Windows machine and you'll have a working two-beat demo at the end.
+**Who this is for:** Someone who has used GitHub through the website and maybe tried GitHub Copilot in VS Code, but has never heard of "GitHub Agentic Workflows" (gh-aw). Follow this top to bottom on a fresh Windows machine and you'll have a working three-beat demo at the end (Beats 1 & 2 are the core; Beat 3 is an optional advanced "wow" moment).
 
 **Time needed:** ~45 min first time (most of it is installs + waiting on the agent).
 
@@ -375,7 +375,7 @@ When showing this to others:
 - **The shift:** "I didn't write YAML. I wrote a markdown file in English." Open `big-o-auditor.md` and read the first paragraph aloud.
 - **Compile step:** Run `gh aw compile` live and open the generated `.lock.yml` to show the hardened YAML you didn't have to write.
 - **Security:** Point at `permissions: read-all` in the lockfile — the agent can read code but can't push, can't merge, can't change settings. Outputs go through "safe outputs" (`add-comment`, `add-labels`) which are validated.
-- **Two beats, one pattern:** Open both `.md` files side-by-side. Same structure, just `on: pull_request` vs `on: issues` and different safe outputs.
+- **Three beats, one pattern:** Open all three `.md` files side-by-side. Same structure, just different triggers (`on: pull_request` vs `on: issues` vs `on: slash_command`) and different safe outputs (`add-comment`, `add-labels`, `create-pull-request`).
 - **Beat 3 (advanced):** One more agent file, one more trigger type (`slash_command`), one more safe-output type (`create-pull-request`) — and suddenly the agent is a contributor, not just an advisor. Same compile step produced it.
 - **Security was free:** The `detection` job in every run was inserted by the compiler, not by you. Show the injection-defense coda to drive it home.
 
