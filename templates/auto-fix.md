@@ -2,7 +2,7 @@
 on:
   slash_command:
     name: fix
-    events: [issue_comment]
+    events: [pull_request_comment]
 
 permissions:
   contents: read

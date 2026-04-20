@@ -22,7 +22,7 @@ You'll set up three of these "agents" — two core beats plus an optional advanc
 
 - **Beat 1 — Big-O Auditor**: When someone opens a Pull Request, the agent reads the changed code and posts a comment flagging slow algorithms (e.g., O(n²) loops) with a suggested fix.
 - **Beat 2 — Issue Triage**: When someone files a new Issue, the agent reads it, applies labels (`bug`, `feature-request`, severity, etc.), and posts a triage comment asking for missing info.
-- **Beat 3 (advanced) — Auto-Fix**: When a reviewer comments `/fix` on the Beat 1 PR, a second agent reads the auditor's advice, applies the optimization, and opens a stacked pull request with the fix. Skip this if your audience is new to gh-aw; use it if some of them already get the basics and you want a "wow" moment.
+- **Beat 3 (advanced) — Auto-Fix**: When a reviewer comments `/fix` on the Beat 1 PR, a second agent reads the auditor's advice, applies the optimization, and opens a **new pull request** with the fix. Skip this if your audience is new to gh-aw; use it if some of them already get the basics and you want a "wow" moment.
 
 Same building block (a markdown file) used three times with different triggers (`pull_request`, `issues`, `slash_command`) and different outputs (`add-comment`, `add-labels`, `create-pull-request`). That contrast is the whole point of the demo.
 
@@ -65,10 +65,18 @@ gh extension upgrade aw        # then upgrade the gh-aw extension
 ### 2.1 Create an empty GitHub repo
 
 Go to <https://github.com/new>:
+- **Owner:** your user (or an org you own)
 - **Repository name:** `gh-aw-demo` (or anything you like)
+- **Description:** leave blank
 - **Visibility:** Private is fine for first run; you can make it public later
-- **Initialize:** Leave all checkboxes UNchecked (no README, no .gitignore, no license — we'll add our own)
+- **Configuration** — leave everything at its default so the repo is truly empty (we'll add our own files in Step 2.3):
+  - **Start with a template:** `No template`
+  - **Add README:** toggle **Off**
+  - **Add .gitignore:** `No .gitignore`
+  - **Add license:** `No license`
 - Click **Create repository**
+
+> GitHub recently replaced the old "Initialize this repository with…" checkboxes with the **Configuration** panel shown above. Same idea — just make sure README / .gitignore / license are all set to the "no / off" option so you clone an empty repo.
 
 ### 2.2 Clone it locally
 
@@ -129,6 +137,8 @@ gh aw compile
 
 **Verify:** You should now also have `.github/workflows/big-o-auditor.lock.yml` and `.github/workflows/issue-triage.lock.yml`. Open one — notice it's locked-down (read-only permissions, pinned action SHAs, etc.).
 
+You'll also see a new file at **`.github/aw/actions-lock.json`** — this is created by `gh aw compile` (it did not exist before). It's the pinning manifest that records the exact commit SHA of every third-party action referenced by the generated `.lock.yml` files (e.g., `actions/checkout@<sha>`), so the workflows stay reproducible and tamper-evident. Commit it alongside the `.md` and `.lock.yml` files in Step 2.6.
+
 **If it fails:** Most common causes are a missing/malformed YAML header at the top of the `.md`, or you're offline. Re-read the error; it usually points at the line.
 
 ### 2.5 Set the AI provider secret
@@ -148,7 +158,7 @@ You'll be prompted to paste a value. Paste your personal access token and press 
 > 4. **Resource owner:** your user (or the org that owns the demo repo).
 > 5. **Repository access:** *Only select repositories* → pick `gh-aw-demo`.
 > 6. **Repository permissions** (all Read/Write unless noted):
->    - `Contents`: **Read**
+>    - `Contents`: **Read and write** (Beat 3 pushes a new branch; Beats 1 & 2 alone only need Read)
 >    - `Pull requests`: **Read and write**
 >    - `Issues`: **Read and write**
 >    - `Metadata`: **Read** (auto-selected)
@@ -272,7 +282,7 @@ Copy-Item "$src\auto-fix.md" .github\workflows\auto-fix.md
 Open `.github\workflows\auto-fix.md` and read it. Highlights for the audience:
 - `on: slash_command: name: fix` → the agent wakes up when someone types `/fix` in a comment.
 - `safe-outputs: create-pull-request:` → the gated write job can open a PR; the agent itself still has `contents: read`.
-- `events: [issue_comment]` → restricts the trigger to comments on issues/PRs (GitHub models PR comments as `issue_comment` events), cutting down on noise from unrelated events.
+- `events: [pull_request_comment]` → restricts the trigger to comments on **pull requests** (gh-aw maps both `issue_comment` and `pull_request_comment` onto GitHub's single `issue_comment` event and auto-filters between them). Using `issue_comment` here would make the workflow ignore PR comments — exactly the opposite of what Beat 3 needs.
 
 ### 5.2 Compile and push
 
@@ -284,6 +294,15 @@ git push
 ```
 
 Open `.github\workflows\auto-fix.lock.yml` and contrast it with `big-o-auditor.lock.yml`. Same 5-job graph, but the `safe_outputs` job now has `pull-requests: write` + `contents: write` — the only job in the run that can push code.
+
+**⚠️ One-time repo setting — do this now, or Beat 3 will fail silently:**
+
+1. Open your repo → **Settings** → **Actions** → **General**.
+2. Scroll to **Workflow permissions**.
+3. Check **"Allow GitHub Actions to create and approve pull requests"**.
+4. Click **Save**.
+
+Without this toggle, the Auto-Fix run still reports “success” — but GitHub blocks the PR creation and the agent falls back to filing an **issue** with the diff. Easy to miss; easy to fix.
 
 ### 5.3 Trigger it live on the Beat 1 PR
 
@@ -297,25 +316,23 @@ Go back to the pull request you opened in Part 3 (the one the Big-O Auditor alre
 
 1. Within ~10 seconds: a status comment appears ("Started…") with a link to the new Actions run. That's auto-created by the `slash_command` trigger — you didn't configure it.
 2. The new run appears under **Actions → Auto-Fix Agent**. Open it and keep it visible on screen.
-3. ~2–3 minutes later: a **new pull request** appears in the repo. Title looks like `[ai] Optimize find_matching_records to O(n)`. It targets your `feat/add-search-function` branch as its base, so it "stacks" on top of the Beat 1 PR.
-4. Open the child PR → read the body (links back to the audit comment) → look at the diff (the slow function has been rewritten exactly as the auditor suggested).
+3. ~2–3 minutes later: a **new pull request** appears in the repo. Title looks like `[ai] Optimize find_matching_records to O(n)`. It targets `main` (the default branch) and contains just the optimized function.
+4. Open the child PR. On the **Conversation** tab, read the description (it links back to the audit comment). Click the **Files changed** tab to see the diff — the slow function rewritten exactly as the auditor suggested.
 
 ### 5.4 Close the loop on stage
 
-Merge the child PR into the Beat 1 branch:
+Merge the child PR into `main`:
 
-```powershell
-$childPr = (gh pr list --label ai-fix --state open --json number --jq '.[0].number')
-gh pr merge $childPr --squash --delete-branch
-```
+1. On the child PR page, click **Merge pull request** → **Confirm squash and merge** → **Delete branch**.
+2. `main` now has the optimized `find_matching_records`. Close **PR #1** (the original slow-code PR) with a comment like *"Superseded by the auto-fix PR."* — its work is already on `main`, so merging it would re-introduce the slow version.
 
-The Beat 1 PR now has the optimized code. GitHub auto-triggers the Big-O Auditor again (because `pull_request: synchronize`) — wait ~2 minutes and watch the auditor post a **clean** "code is efficient" comment on the same PR. The loop closes in front of the audience.
+> **Why not "stack" the child PR on PR #1?** The agent template asks for that, but gh-aw's `create-pull-request` safe output currently targets the default branch (`main`) regardless. So Beat 3 lands on `main` directly and PR #1 gets closed as obsolete. Same end result, one extra click. If the loop-back ("auditor re-runs and says clean") is critical for your audience, show it by opening a fresh PR from `main` afterward and watching Beat 1 fire on the already-fast code.
 
 ### 5.5 Why this lands
 
 - Same `.md` building block as Beats 1–2. Same compile step. But a **new capability class** — the agent just contributed code, not text.
 - The audience sees the **separation of duties** in action: the AI job read the audit, a separate gated job with different permissions opened the PR. No single job had both.
-- It's a complete, visible feedback loop: audit → fix → re-audit → clean. Very satisfying to watch.
+- A `/fix` comment produced real, reviewable code in under three minutes — and a human still has to click Merge.
 
 ### 5.6 Troubleshooting Beat 3
 
@@ -325,6 +342,8 @@ The Beat 1 PR now has the optimized code. GitHub auto-triggers the Big-O Auditor
 | Run starts but errors in `activation` | Usually the same PAT/secret issue as Beat 1 — `COPILOT_GITHUB_TOKEN` must be fine-grained with `Pull requests: Read and write`. |
 | Child PR opens but has no changes | The agent couldn't find the audit comment. Re-run Beat 1 first to make sure the auditor's comment is still there, then comment `/fix` again. |
 | `create-pull-request` job fails with a permissions error | Re-check the fine-grained PAT — it needs **Repository permissions → Pull requests: Read and write** AND **Contents: Read and write** (Beat 3 writes a new branch). If you only gave it Contents: Read for Beat 1, update the PAT. |
+| Run is green but no child PR appears — an **issue** shows up instead (with the diff and an `ai-fix` label) | You missed the toggle in Step 5.2. Enable **Settings → Actions → General → Workflow permissions → "Allow GitHub Actions to create and approve pull requests"**, then comment `/fix` again. |
+| `gh pr merge` reports *"the merge commit cannot be cleanly created"* | Normal — PR #1 and the child PR both modify `src/main.py` from `main`'s baseline. Just close PR #1 after merging the child PR; `main` already has the fast code. |
 
 ---
 
@@ -399,19 +418,19 @@ Beat 3 has its own troubleshooting table in Part 5.6.
 
 ## Part 9 — Reset to the starting state (so you can re-run the demo)
 
-After running the demo you'll have: an extra branch, an open PR, an issue, and an extra function in `main.py`. Use this to get back to the clean post-Part-2 state — ready to demo again.
+After running the demo you'll have: a merged auto-fix commit on `main`, a closed PR #1, the auto-fix agent workflow, an issue, and (once the auto-fix merged) the optimized function in `main.py`. Use this to get back to the clean post-Part-2 state — ready to demo again.
 
-> **Scope:** This is a *local* reset — it cleans up branches, PRs, issues, and reverts files inside your demo repo. It does **not** delete the repo, secrets, or the labels. (Those are reusable across runs.)
+> **Scope:** This is a *local* reset — it cleans up branches, PRs, issues, and reverts files inside your demo repo. It does **not** delete the repo, secrets, labels, or the auto-fix workflow file. (Those are reusable across runs.)
 
 Run from inside the `gh-aw-demo` folder. Make sure `$src` is still set (re-run `$src = "C:\Temp\GIT\gh-aw-dryrun\templates"` if you opened a new PowerShell window):
 
 ```powershell
-# 1a. Close any Beat 3 child PRs opened by the auto-fix agent (label: ai-fix)
+# 1a. Close any open Beat 3 child PRs (label: ai-fix)
 gh pr list --label ai-fix --state open --json number `
   | ConvertFrom-Json `
   | ForEach-Object { gh pr close $_.number --delete-branch }
 
-# 1b. Close the Beat 1 demo PR and delete its branch (both remote and local)
+# 1b. Close the Beat 1 demo PR if still open and delete its branch
 $prNumber = (gh pr list --head feat/add-search-function --json number --jq '.[0].number')
 if ($prNumber) {
   gh pr close $prNumber --delete-branch
