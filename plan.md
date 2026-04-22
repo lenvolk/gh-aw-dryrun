@@ -4,7 +4,7 @@
 
 **Time needed:** ~45 min first time (most of it is installs + waiting on the agent).
 
-![More Examples in this Repo](https://github.com/githubnext/agentics)
+[More Examples in this Repo](https://github.com/githubnext/agentics)
 ---
 
 ## What you're building (and why it's interesting)
