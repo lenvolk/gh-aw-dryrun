@@ -1,5 +1,9 @@
 # gh-aw Demo — Beginner's Setup Guide
 
+[copilot-code-review](https://github.com/MSBart2/CopilotTraining/blob/main/tech-talks/copilot-code-review/README.md)
+
+[model-selection](https://github.com/juan-trujillo/CopilotTraining/tree/main/tech-talks/model-selection)
+
 **Who this is for:** Someone who has used GitHub through the website and maybe tried GitHub Copilot in VS Code, but has never heard of "GitHub Agentic Workflows" (gh-aw). Follow this top to bottom on a fresh Windows machine and you'll have a working three-beat demo at the end (Beats 1 & 2 are the core; Beat 3 is an optional advanced "wow" moment).
 
 **Time needed:** ~45 min first time (most of it is installs + waiting on the agent).
