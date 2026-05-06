@@ -3,7 +3,7 @@ name: gh-aw-demo-creator
 description: "Create, configure, and troubleshoot GitHub Agentic Workflows (gh-aw) demos end-to-end using the official gh-aw reference docs as the source of truth. WHEN: \"gh-aw demo\", \"agentic workflow\", \"gh aw compile\", \"COPILOT_GITHUB_TOKEN\", \"agent.md\", \"safe-outputs\", \"Big-O Auditor\", \"issue triage agent\", \"design new gh-aw agent\", \"debug gh-aw run\"."
 license: MIT
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # gh-aw Demo Creator
@@ -82,6 +82,10 @@ When walking an audience through the result, show in order: agent `.md` → comp
 4. `permissions:` in the frontmatter applies to the **agent job only** — it is intentionally read-only in most demos. Writes happen in the separate `safe_outputs` job, scoped per safe-output type.
 5. Compile early and often — `gh aw compile` catches schema errors before push.
 
+## When expanding this demo with new beats
+
+For requests like "add a follow-up beat", "create another AW demo", or "make this demo more impressive", read [references/demo-expansion-playbook.md](references/demo-expansion-playbook.md) before editing files. Use it to select a public example, map the story to one clear trigger and one or two visible safe outputs, keep the audience setup small, and preserve the existing beat-by-beat walkthrough style.
+
 ## Troubleshooting entry points
 
 When a workflow run fails, open [references/troubleshooting.md](references/troubleshooting.md) and match on the error text. The most common failures are secret-name mismatches and wrong PAT types — both surface in the `activation` job log with clear error messages.
@@ -94,3 +98,4 @@ Always recommend `gh run view <run-id> --log-failed` to get the authoritative er
 - [references/engines.md](references/engines.md) — per-engine secret names, PAT types, required permissions
 - [references/troubleshooting.md](references/troubleshooting.md) — known failure modes and their fixes
 - [references/demo-template.md](references/demo-template.md) — the two-beat reference demo structure (PR reviewer + issue triage)
+- [references/demo-expansion-playbook.md](references/demo-expansion-playbook.md) — how to design follow-up beats and new demos from public gh-aw sources
