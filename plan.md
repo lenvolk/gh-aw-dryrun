@@ -78,7 +78,7 @@ Go to <https://github.com/new>:
   - **Start with a template:** `No template`
   - **Add README:** toggle **Off**
   - **Add .gitignore:** `No .gitignore`
-  - **Add license:** `No license`
+  - **Add license:** `MIT`
 - Click **Create repository**
 
 > GitHub recently replaced the old "Initialize this repository with…" checkboxes with the **Configuration** panel shown above. Same idea — just make sure README / .gitignore / license are all set to the "no / off" option so you clone an empty repo.
