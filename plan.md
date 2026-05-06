@@ -101,7 +101,7 @@ This guide ships with a `templates/` folder containing every file you need. Copy
 
 ```powershell
 # From inside the gh-aw-demo folder. Adjust $src to where THIS guide lives:
-$src = "C:\Temp\GIT\gh-aw-dryrun\templates"
+$src = "C:\Temp\GHDemo\gh-aw-dryrun\templates"
 
 New-Item -ItemType Directory -Force -Path .github\workflows, src | Out-Null
 
