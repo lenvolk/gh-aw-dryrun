@@ -169,7 +169,7 @@ You'll be prompted to paste a value. Paste your personal access token and press 
 >    - `Metadata`: **Read** (auto-selected)
 > 7. **Account permissions:** `Copilot Chat`: **Read-only** (this is what lets the engine call Copilot's chat-completion API — the plain "Copilot" permission doesn't exist; "Copilot Editor Context" and "Copilot Requests" are for different surfaces and aren't needed).
 > 8. Click **Generate token**, then **copy it immediately** — GitHub only shows it once. It will start with `github_pat_`.
-> 9. Paste it when `gh secret set COPILOT_GITHUB_TOKEN` prompts you.
+> 9. Back to the vscode terminal: Paste it when `gh secret set COPILOT_GITHUB_TOKEN` prompts you.
 >
 > **Prefer Claude or OpenAI instead?** Open the workflow `.md` files, change the `engine:` line in the YAML header, then `gh secret set ANTHROPIC_API_KEY` or `OPENAI_API_KEY` (those keys come from the respective provider consoles, not GitHub).
 
