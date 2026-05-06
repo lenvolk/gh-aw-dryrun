@@ -199,7 +199,7 @@ Append the inefficient sample function to `src/main.py`:
 Get-Content "$src\inefficient-snippet.py" | Add-Content src\main.py
 ```
 
-(`$src` is still set from Step 2.3. If you opened a new PowerShell window, re-set it: `$src = "C:\Temp\GIT\gh-aw-dryrun\templates"`.)
+(`$src` is still set from Step 2.3. If you opened a new PowerShell window, re-set it: `$src = "C:\Temp\GHDemo\gh-aw-dryrun\templates"`.)
 
 Commit, push, open the PR:
 
