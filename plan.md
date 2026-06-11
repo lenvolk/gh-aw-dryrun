@@ -1,5 +1,7 @@
 # gh-aw Demo — Beginner's Setup Guide
 
+[Automate repository tasks with GitHub Agentic Workflows](https://github.blog/ai-and-ml/automate-repository-tasks-with-github-agentic-workflows/)
+
 [copilot-code-review](https://github.com/MSBart2/CopilotTraining/blob/main/tech-talks/copilot-code-review/README.md)
 
 [model-selection](https://github.com/juan-trujillo/CopilotTraining/tree/main/tech-talks/model-selection)
