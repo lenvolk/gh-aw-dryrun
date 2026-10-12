@@ -18,6 +18,7 @@ The canonical documentation is at <https://github.github.com/gh-aw/>. Fetch the 
 | What common failures and fixes are documented? | <https://github.github.com/gh-aw/troubleshooting/common-issues/> |
 | Where are maintained demo patterns? | <https://github.github.com/gh-aw/gallery/> |
 | What tools can agents use (MCP, etc.)? | <https://github.github.com/gh-aw/reference/tools/> |
+| How do I inspect a compiled workflow and its generated dependencies? | <https://github.github.com/gh-aw/reference/workflow-structure/> |
 
 ## Secondary (when docs lag behind code)
 

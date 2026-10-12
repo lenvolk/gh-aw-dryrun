@@ -52,6 +52,7 @@ gh aw compile
 ```
 
 This generates or updates `.lock.yml` siblings for the workflow Markdown sources. Commit both source and lock files. Read the generated workflow to verify authentication, permissions, and job structure; never hand-edit `.lock.yml`.
+The lock file starts with machine-readable `gh-aw-metadata` and lists the secrets and external actions it uses. Only frontmatter changes require recompilation; body-only prompt edits can be made without recompiling, but commit the source change.
 
 ### Phase 4 — Configure engine authentication
 
@@ -93,6 +94,7 @@ For requests like "add a follow-up beat", "create another AW demo", or "make thi
 When a workflow run fails, open [references/troubleshooting.md](references/troubleshooting.md) and match the exact error. Authentication, permission, compilation, tool, network, and safe-output failures occur at different stages; do not assume every failure is a missing secret.
 
 Start with `gh aw audit <run-id>` and `gh aw logs`, then use `gh run view <run-id> --log-failed` when raw Actions logs are needed.
+Use `gh aw health` for a repository-wide status view, `gh aw mcp inspect <workflow>` for MCP configuration problems, and `gh aw compile --validate` or `gh aw fix --write` for schema issues when those commands are available in the installed version.
 
 ## Resources
 

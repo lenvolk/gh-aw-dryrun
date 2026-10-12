@@ -1,6 +1,6 @@
 # Two-beat reference demo
 
-This is the canonical gh-aw demo — it proves "any trigger, any output, all markdown" in ~10 minutes of live time. Use this structure unless the user has a different scenario in mind.
+This is the canonical gh-aw demo. It proves that one Markdown authoring model can drive multiple triggers and safe outputs. Use this structure unless the user has a different scenario in mind.
 
 ## Target repo layout
 
@@ -29,7 +29,7 @@ After `gh aw compile`, two `.lock.yml` files appear alongside the `.md` files. T
 
 **Agent prompt:** read changed Python files in the PR, detect inefficient algorithms (O(n²) nested loops, repeated list scans), post a single comment with (1) complexity analysis in a markdown table, (2) a concrete optimized rewrite, (3) expected performance impact.
 
-**Demo trigger:** create a branch, append an intentionally inefficient function (e.g., nested-loop `find_matching_records`) to `src/main.py`, open a PR. Comment should appear in ~2-3 min.
+**Demo trigger:** create a branch, append an intentionally inefficient function (e.g., nested-loop `find_matching_records`) to `src/main.py`, and open a PR. Inspect the run and wait for the configured workflow to finish rather than promising a fixed duration.
 
 ## Beat 2 — Issue Triage
 
@@ -57,7 +57,7 @@ $labels = @(
 foreach ($l in $labels) { gh label create $l.name --color $l.color --force 2>$null }
 ```
 
-**Demo trigger:** `gh issue create --title "App crashes when I click export" --body "It just crashes. Please fix."` — expect `bug` + `needs-repro` + severity label + a triage comment. Contrast with a well-formed feature request to show different classification.
+**Demo trigger:** `gh issue create --title "App crashes when I click export" --body "It just crashes. Please fix."` — expect a triage comment and only labels supported by the issue and present in the repository. Contrast with a well-formed feature request to show different classification.
 
 ## Reset flow (so the demo can be re-run)
 
@@ -71,15 +71,22 @@ Keep secrets and labels — they are reusable across runs.
 
 ## Why this demo works
 
-- Two triggers from one skill (`pull_request` + `issues`) → proves it's not just a "code review bot"
-- Two safe-output types (`add-comment` + `add-labels`) → proves the gated-write pattern generalizes
-- Same compile step for both → proves the markdown-to-hardened-YAML pipeline
-- Non-deterministic output (judgment calls) → shows "productive ambiguity with guardrails"
+- Two triggers from one skill (`pull_request` and `issues`) show that the demo is not limited to code review.
+- Two safe-output types (`add-comment` and `add-labels`) show the gated-write pattern.
+- The same compile step produces both lock files.
+- The model makes judgment calls while the workflow limits what it can write.
+
+## Current gh-aw additions worth showing
+
+- Use `gh aw audit <run-id>` after the live run to show tool use, firewall activity, safe outputs, and failure analysis.
+- Point out the `gh-aw-metadata` header in the lock file. It records the compiled schema version, source hash, engine, secrets, and pinned external actions.
+- For repeated PR updates, consider `replace-older-comments: true` in `add-comment` so the demo updates one status comment instead of creating a thread on every push.
 
 ## Authoritative templates
 
 Before writing the two `.md` files, fetch:
 
-- <https://github.com/githubnext/agentics> — working examples for both triggers
+- <https://github.github.com/gh-aw/gallery/> — maintained workflow patterns
+- <https://github.com/githubnext/agentics> — additional working examples
 - <https://github.github.com/gh-aw/reference/frontmatter/> — valid keys for this version
 - <https://github.github.com/gh-aw/reference/safe-outputs/> — exact names and permission models for `add-comment` / `add-labels`

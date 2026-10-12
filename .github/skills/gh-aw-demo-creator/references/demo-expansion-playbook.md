@@ -47,6 +47,7 @@ Avoid demos that require many secrets, organization-only configuration, paid thi
 5. Create or update only the files needed for the beat: workflow `.md`, sample fixture, walkthrough text, and optional diagram/debrief notes.
 6. Include a deterministic trigger recipe: exact `gh` commands, sample PR/issue/comment body, expected wait time, expected visible output, and reset steps.
 7. Run or recommend `gh aw compile`; then inspect the generated `.lock.yml` for permissions, secret names, and the job graph. Never hand-edit `.lock.yml`.
+8. After a live run, use `gh aw audit <run-id>` to inspect tool use, firewall decisions, and safe outputs.
 
 ## Beat writing checklist
 
@@ -65,6 +66,7 @@ Each new beat should document:
 - For beginner demos, prefer `add-comment`, `add-labels`, and `create-issue` before code-writing outputs.
 - For a "wow" follow-up, prefer `slash_command` plus `create-pull-request` if the repo already has a simple fixture to fix.
 - For reliability, prefer `workflow_dispatch` alongside advanced triggers so the presenter can manually retry.
+- For repeated PR updates, consider `replace-older-comments: true` so a workflow edits its own prior status comment instead of adding a new comment on every run.
 - For safety, constrain labels, title prefixes, target repos, protected files, and maximum counts in `safe-outputs:`.
 - For no-op cases, instruct the agent to call `noop` with a short message.
 - For public repos or fork-heavy demos, check fork filtering and role restrictions before enabling PR triggers.
