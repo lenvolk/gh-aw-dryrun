@@ -1,16 +1,13 @@
 ---
 name: gh-aw-demo-creator
-description: "Create, configure, and troubleshoot GitHub Agentic Workflows (gh-aw) demos end-to-end using the official gh-aw reference docs as the source of truth. WHEN: \"gh-aw demo\", \"agentic workflow\", \"gh aw compile\", \"COPILOT_GITHUB_TOKEN\", \"agent.md\", \"safe-outputs\", \"Big-O Auditor\", \"issue triage agent\", \"design new gh-aw agent\", \"debug gh-aw run\"."
-license: MIT
-metadata:
-  version: "1.1"
+description: "Create, configure, present, and troubleshoot GitHub Agentic Workflows (gh-aw) demos using current official documentation. Use for gh-aw demos, agentic workflow Markdown, gh aw init/add-wizard/compile/run, engine authentication, COPILOT_GITHUB_TOKEN, copilot-requests, safe-outputs, workflow debugging, and designing or expanding demo agents."
 ---
 
 # gh-aw Demo Creator
 
 ## Overview
 
-Build and debug GitHub Agentic Workflows (gh-aw) demos using the authoritative gh-aw reference docs as the source of truth. gh-aw is new, its schema changes between releases, and general GitHub knowledge is not sufficient — pattern-matching from Actions experience produces wrong secret names, wrong PAT types, and wrong permissions.
+Build and debug GitHub Agentic Workflows (gh-aw) demos using the authoritative gh-aw documentation as the source of truth. gh-aw is in public preview and changes frequently; do not infer its schema, authentication, or permissions from general GitHub Actions knowledge.
 
 ## Golden rule: look it up before claiming it
 
@@ -20,7 +17,8 @@ Common mistakes to avoid (all made in past sessions — see [references/troubles
 
 - Claiming `COPILOT_API_KEY` when the Copilot engine actually requires `COPILOT_GITHUB_TOKEN`
 - Telling users to generate a classic PAT (`ghp_…`) when the Copilot engine rejects them and requires a fine-grained PAT (`github_pat_…`)
-- Listing a `Copilot: Read` account permission (doesn't exist) instead of the real one (`Copilot Chat: Read`)
+- Requiring a PAT when organization billing through `permissions: copilot-requests: write` is available
+- Listing `Copilot Chat: Read` instead of the current fine-grained PAT account permission, `Copilot Requests: Read`
 
 When in doubt, read the compiled `.lock.yml` in the user's repo — it names the exact secret(s) it reads at runtime.
 
@@ -30,19 +28,20 @@ Execute these phases in order. Skip phases the user has already completed.
 
 ### Phase 1 — Verify prerequisites
 
-Confirm (do not re-install) the following in a single PowerShell one-liner:
+Confirm the required tools without reinstalling them:
 
 ```powershell
-git --version; gh --version; gh auth status; python --version; gh aw --help | Select-Object -First 1
+git --version; gh --version; gh auth status; gh aw version
 ```
 
-All must succeed. Also confirm Copilot subscription is active at <https://github.com/settings/copilot>. If `gh aw` is missing: `gh extension install githubnext/gh-aw`.
+All must succeed. Python is not a gh-aw prerequisite. If `gh aw` is missing, install the current official extension with `gh extension install github/gh-aw`. For a Copilot workflow, verify either organization billing with `copilot-requests: write` or an active Copilot license for the `COPILOT_GITHUB_TOKEN` owner.
 
 ### Phase 2 — Scaffold the demo repo
 
-1. User creates an empty GitHub repo on github.com (no README, no .gitignore, no license).
-2. User clones it locally.
-3. Copy template files into the new repo: two agent markdown files under `.github/workflows/`, a `src/main.py` starter, `.gitignore`, and `README.md`. The two-beat pattern (PR reviewer + issue triage) is the reference demo because it shows two triggers and two safe-output types with one compile step.
+1. Work from the target repository root.
+2. Run `gh aw init` for first-time repository setup. Do not overwrite existing customization.
+3. Prefer `gh aw add-wizard <workflow>` for a maintained gallery workflow, or create `.github/workflows/<name>.md` from the current `create.md` guidance and [references/demo-template.md](references/demo-template.md).
+4. Keep each demo beat focused on one trigger and one or two visible safe outputs.
 
 ### Phase 3 — Compile
 
@@ -52,15 +51,18 @@ From the repo root (where `.github/` lives):
 gh aw compile
 ```
 
-This generates `.lock.yml` siblings for every `.md` in `.github/workflows/`. The `.lock.yml` is the hardened Actions workflow — read it to see the exact secret names, permissions, and job graph. Never hand-edit `.lock.yml`.
+This generates or updates `.lock.yml` siblings for the workflow Markdown sources. Commit both source and lock files. Read the generated workflow to verify authentication, permissions, and job structure; never hand-edit `.lock.yml`.
 
-### Phase 4 — Configure the engine secret
+### Phase 4 — Configure engine authentication
 
-Look up the exact secret name and PAT requirements for the selected engine in [references/engines.md](references/engines.md). Do not guess. Then:
+Look up the current authentication choices in [references/engines.md](references/engines.md). For Copilot, prefer organization billing when available:
 
-```powershell
-gh secret set <EXACT_SECRET_NAME>
+```yaml
+permissions:
+  copilot-requests: write
 ```
+
+This uses the per-run GitHub Actions token and requires no PAT. For personal repositories or organizations without centralized Copilot billing, configure the documented engine secret with `gh aw secrets set <EXACT_SECRET_NAME>` (or `gh secret set <EXACT_SECRET_NAME>`). Never print or pass secret values on the command line.
 
 ### Phase 5 — Commit, push, trigger
 
@@ -68,18 +70,18 @@ gh secret set <EXACT_SECRET_NAME>
 git add . ; git commit -m "feat: add gh-aw demo" ; git push
 ```
 
-Trigger the workflow by creating a PR (for `on: pull_request`) or filing an issue (for `on: issues`). Wait 2-3 min, then verify the agent posted its safe-output (comment, label, etc.).
+Trigger the workflow through its configured event or use `gh aw run <workflow-name>` when manual dispatch is supported. Verify the run and its safe output rather than assuming a fixed completion time.
 
 ### Phase 6 — Debrief / demo
 
-When walking an audience through the result, show in order: agent `.md` → compiled `.lock.yml` → the PR/issue with the agent's output → the Actions run's 5-job graph (`activation → agent → detection → safe_outputs → conclusion`) → optional artifacts (conversation log, detection scan). The value proposition: plain-English input, hardened YAML output, gated writes, full audit trail.
+When walking an audience through the result, show in order: workflow `.md` → compiled `.lock.yml` → the triggering PR/issue/manual run → visible safe output → the actual generated job graph and audit artifacts. Do not promise a fixed five-job graph; jobs vary with the workflow and gh-aw version. The value proposition is natural-language intent, compiled automation, isolated and validated writes, and an auditable run.
 
 ## When designing a new agent (not just the reference demo)
 
 1. Read [references/authoritative-sources.md](references/authoritative-sources.md) and fetch the `frontmatter`, `triggers`, and `safe-outputs` reference pages for the current gh-aw version.
-2. Start from an existing example in <https://github.com/githubnext/agentics> — do not invent YAML keys from memory.
+2. Start from the official <https://github.github.com/gh-aw/gallery/> or a maintained example in <https://github.com/githubnext/agentics>; do not invent YAML keys from memory.
 3. The agent `.md` has a YAML frontmatter (`on:`, `permissions:`, `engine:`, `safe-outputs:`, `tools:`) followed by the plain-English prompt.
-4. `permissions:` in the frontmatter applies to the **agent job only** — it is intentionally read-only in most demos. Writes happen in the separate `safe_outputs` job, scoped per safe-output type.
+4. Keep GitHub data permissions available during agent execution read-only. Special scopes such as `copilot-requests: write` authenticate services; repository mutations should be requested through `safe-outputs:` and performed by separate scoped jobs after validation.
 5. Compile early and often — `gh aw compile` catches schema errors before push.
 
 ## When expanding this demo with new beats
@@ -88,9 +90,9 @@ For requests like "add a follow-up beat", "create another AW demo", or "make thi
 
 ## Troubleshooting entry points
 
-When a workflow run fails, open [references/troubleshooting.md](references/troubleshooting.md) and match on the error text. The most common failures are secret-name mismatches and wrong PAT types — both surface in the `activation` job log with clear error messages.
+When a workflow run fails, open [references/troubleshooting.md](references/troubleshooting.md) and match the exact error. Authentication, permission, compilation, tool, network, and safe-output failures occur at different stages; do not assume every failure is a missing secret.
 
-Always recommend `gh run view <run-id> --log-failed` to get the authoritative error before speculating on causes.
+Start with `gh aw audit <run-id>` and `gh aw logs`, then use `gh run view <run-id> --log-failed` when raw Actions logs are needed.
 
 ## Resources
 

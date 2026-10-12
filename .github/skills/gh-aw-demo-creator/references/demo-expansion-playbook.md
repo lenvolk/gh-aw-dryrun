@@ -11,7 +11,7 @@ Use this when the user asks to add a follow-up beat, create another AW demo, or 
    - Engines/secrets: <https://github.github.com/gh-aw/reference/engines/>
    - CLI/debugging: <https://github.github.com/gh-aw/setup/cli/> and <https://github.github.com/gh-aw/troubleshooting/debugging/>
 2. Use <https://github.com/githubnext/agentics> for working examples and prompt patterns. Prefer adapting a current example over inventing YAML keys.
-3. If docs and behavior disagree, inspect `gh aw version`, the generated `.lock.yml`, and relevant `githubnext/gh-aw` issues or releases.
+3. If docs and behavior disagree, inspect `gh aw version`, the generated `.lock.yml`, and relevant `github/gh-aw` issues or releases.
 
 ## Demo selection criteria
 

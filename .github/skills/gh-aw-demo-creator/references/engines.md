@@ -1,32 +1,38 @@
-# gh-aw engines — secrets, tokens, permissions
+# gh-aw engines — authentication
 
-gh-aw agents pick an `engine:` in their YAML frontmatter. Each engine reads a specific repository secret, accepts specific token types, and needs specific permissions. **These values have been wrong in past sessions from memory — always cross-check against <https://github.github.com/gh-aw/reference/engines/> for the version of gh-aw the user has installed.**
+gh-aw agents select an `engine:` in YAML frontmatter. Authentication can use a workflow permission, repository secret, or workload identity, depending on the engine. Always cross-check <https://github.github.com/gh-aw/reference/auth/> and <https://github.github.com/gh-aw/reference/engines/> for the installed gh-aw version.
 
 ## GitHub Copilot (default engine)
 
 | Item | Value |
 |---|---|
 | Engine key in frontmatter | `engine: copilot` (or omit — it's the default) |
-| Secret name | `COPILOT_GITHUB_TOKEN` (**not** `COPILOT_API_KEY`) |
-| Token type | **Fine-grained PAT** (`github_pat_…`). Classic PATs (`ghp_…`) are rejected with an explicit error. |
-| Generate at | <https://github.com/settings/personal-access-tokens/new> |
+| Preferred authentication | `permissions: copilot-requests: write` |
+| Preferred token | Per-run `${{ github.token }}`; no repository secret |
+| Fallback secret | `COPILOT_GITHUB_TOKEN` (**not** `COPILOT_API_KEY`) |
+| Fallback token type | Fine-grained PAT (`github_pat_…`) |
 
-### Fine-grained PAT settings
+### Preferred: organization billing
 
-- **Resource owner:** user or org that owns the demo repo
-- **Repository access:** *Only selected repositories* → pick the demo repo (don't grant "All repositories")
-- **Repository permissions:**
-  - `Contents`: **Read-only**
-  - `Pull requests`: **Read and write**
-  - `Issues`: **Read and write**
-  - `Metadata`: **Read** (auto-required)
-- **Account permissions:**
-  - `Copilot Chat`: **Read-only** ← this is the one that enables the Copilot CLI engine. "Copilot Editor Context" and "Copilot Requests" are for different surfaces; do not pick them.
+Add `copilot-requests: write` to workflow `permissions`. This path requires an organization Copilot subscription with centralized billing. gh-aw then uses the per-run GitHub Actions token and ignores `COPILOT_GITHUB_TOKEN` for inference.
 
-### Runtime error → fix
+### Fallback: fine-grained PAT
+
+Use this for a personal repository or when centralized organization billing is unavailable:
+
+- **Resource owner:** the user account that has the Copilot license
+- **Account permission:** `Copilot Requests`: **Read**
+- **Secret name:** `COPILOT_GITHUB_TOKEN`
+- **Unsupported token types:** classic PATs (`ghp_…`), OAuth tokens (`gho_…`), and GitHub App tokens
+
+Set it interactively with `gh aw secrets set COPILOT_GITHUB_TOKEN` or `gh secret set COPILOT_GITHUB_TOKEN`. Do not put the token value in command history.
+
+### Runtime error to fix
 
 - `Error: None of the following secrets are set: COPILOT_GITHUB_TOKEN` → secret missing or misnamed; `gh secret set COPILOT_GITHUB_TOKEN`
-- `Error: COPILOT_GITHUB_TOKEN is a classic Personal Access Token (ghp_...). Classic PATs are not supported for GitHub Copilot` → regenerate as fine-grained
+- `403 Forbidden` with `copilot-requests: write` → verify centralized organization billing or use the PAT fallback
+- PAT permission error → regenerate a fine-grained PAT with `Copilot Requests: Read`
+- token type rejected → replace classic/OAuth/App token with a fine-grained PAT
 
 ## Anthropic Claude
 
@@ -44,13 +50,27 @@ gh-aw agents pick an `engine:` in their YAML frontmatter. Each engine reads a sp
 | Secret name | `OPENAI_API_KEY` |
 | Token source | <https://platform.openai.com/api-keys> (not a GitHub token) |
 
+The Codex runtime uses `CODEX_API_KEY` when present and otherwise falls back to `OPENAI_API_KEY`.
+
+## Google Gemini
+
+| Item | Value |
+|---|---|
+| Engine key | `engine: gemini` |
+| Secret name | `GEMINI_API_KEY` |
+| Keyless alternative | Google Workload Identity Federation configured through `engine.auth` |
+
+## Pi
+
+Pi selects authentication from the provider prefix in `model:`. It uses Copilot authentication by default, `ANTHROPIC_API_KEY` for `anthropic/...`, and `CODEX_API_KEY` or `OPENAI_API_KEY` for OpenAI/Codex providers. Verify the current model syntax in the engine reference.
+
 ## Switching engines in an existing demo
 
 1. Edit the `engine:` line in the agent `.md` YAML header.
-2. Re-run `gh aw compile` to regenerate `.lock.yml`.
-3. `gh secret set <new_secret_name>` with a key from the new provider.
+2. Configure the new engine's current authentication method.
+3. Re-run `gh aw compile` to regenerate `.lock.yml`.
 4. Commit + push. The new `.lock.yml` will reference the new secret name.
 
 ## Always verify against the live docs
 
-Before quoting any of the above to a user, fetch <https://github.github.com/gh-aw/reference/engines/> — the engine list, secret names, and required scopes are the places most likely to change between gh-aw releases.
+Before quoting any of the above, fetch both the authentication and engine references. Authentication defaults, secret names, and permissions are especially likely to change.
