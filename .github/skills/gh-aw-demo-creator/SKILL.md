@@ -1,6 +1,6 @@
 ---
 name: gh-aw-demo-creator
-description: "Create, configure, present, and troubleshoot GitHub Agentic Workflows (gh-aw) demos using current official documentation. Use for gh-aw demos, agentic workflow Markdown, gh aw init/add-wizard/compile/run, engine authentication, COPILOT_GITHUB_TOKEN, copilot-requests, safe-outputs, workflow debugging, and designing or expanding demo agents."
+description: "Create, configure, present, and troubleshoot GitHub Agentic Workflows (gh-aw) demos using current official documentation and reviewed workflow examples. Use for gh-aw demos, agentic workflow Markdown, gh aw init/add-wizard/compile/run, engine authentication, COPILOT_GITHUB_TOKEN, copilot-requests, safe-outputs, workflow debugging, and designing demo beats or staged SDLC automation."
 ---
 
 # gh-aw Demo Creator
@@ -8,6 +8,8 @@ description: "Create, configure, present, and troubleshoot GitHub Agentic Workfl
 ## Overview
 
 Build and debug GitHub Agentic Workflows (gh-aw) demos using the authoritative gh-aw documentation as the source of truth. gh-aw is in public preview and changes frequently; do not infer its schema, authentication, or permissions from general GitHub Actions knowledge.
+
+Read GitHub's [creating workflows guide](https://docs.github.com/en/copilot/how-tos/github-agentic-workflows/creating-github-agentic-workflows) for the authoring, authentication, update, and reuse sequence. Use the technical reference pages for exact schema and engine details. For examples and their fit to this repository, read [references/workflow-examples.md](references/workflow-examples.md).
 
 ## Golden rule: look it up before claiming it
 
@@ -36,11 +38,13 @@ git --version; gh --version; gh auth status; gh aw version
 
 All must succeed. Python is not a gh-aw prerequisite. If `gh aw` is missing, install the current official extension with `gh extension install github/gh-aw`. For a Copilot workflow, verify either organization billing with `copilot-requests: write` or an active Copilot license for the `COPILOT_GITHUB_TOKEN` owner.
 
+Keep installation, upgrades, authentication, and rehearsal outside the customer session. Use a working version that supports the chosen workflow; do not require an upgrade merely because a newer release exists.
+
 ### Phase 2 — Scaffold the demo repo
 
 1. Work from the target repository root.
 2. Run `gh aw init` for first-time repository setup. Do not overwrite existing customization.
-3. Prefer `gh aw add-wizard <workflow>` for a maintained gallery workflow, or create `.github/workflows/<name>.md` from the current `create.md` guidance and [references/demo-template.md](references/demo-template.md).
+3. Review a matching example from Awesome Copilot, the gallery, or `githubnext/agentics` before choosing an import or a local adaptation. Use the creating workflows guide for the authoring sequence and [references/demo-template.md](references/demo-template.md) for this repo's existing pattern.
 4. Keep each demo beat focused on one trigger and one or two visible safe outputs.
 
 ### Phase 3 — Compile
@@ -52,7 +56,7 @@ gh aw compile
 ```
 
 This generates or updates `.lock.yml` siblings for the workflow Markdown sources. Commit both source and lock files. Read the generated workflow to verify authentication, permissions, and job structure; never hand-edit `.lock.yml`.
-The lock file starts with machine-readable `gh-aw-metadata` and lists the secrets and external actions it uses. Only frontmatter changes require recompilation; body-only prompt edits can be made without recompiling, but commit the source change.
+The lock file starts with machine-readable `gh-aw-metadata` and lists the secrets and external actions it uses. Recompile after editing a workflow, as GitHub's creating workflows guide instructs, and commit the updated source and generated files.
 
 ### Phase 4 — Configure engine authentication
 
@@ -73,14 +77,18 @@ git add . ; git commit -m "feat: add gh-aw demo" ; git push
 
 Trigger the workflow through its configured event or use `gh aw run <workflow-name>` when manual dispatch is supported. Verify the run and its safe output rather than assuming a fixed completion time.
 
+Before the customer session, rehearse the complete flow in the target fork. Verify the actual comment, issue, plan PR, or code PR and prepare a previously successful run as a clearly labeled fallback. Compilation alone does not prove the demo works.
+
 ### Phase 6 — Debrief / demo
 
 When walking an audience through the result, show in order: workflow `.md` → compiled `.lock.yml` → the triggering PR/issue/manual run → visible safe output → the actual generated job graph and audit artifacts. Do not promise a fixed five-job graph; jobs vary with the workflow and gh-aw version. The value proposition is natural-language intent, compiled automation, isolated and validated writes, and an auditable run.
 
+Keep presenter preparation and the live walkthrough separate in `plan.md`. Name the demo-kit repository and target fork, state where each command runs, and verify the GitHub CLI target before setting secrets or creating issues and PRs. Give each standalone beat all its prerequisites without requiring earlier beats.
+
 ## When designing a new agent (not just the reference demo)
 
 1. Read [references/authoritative-sources.md](references/authoritative-sources.md) and fetch the `frontmatter`, `triggers`, and `safe-outputs` reference pages for the current gh-aw version.
-2. Start from the official <https://github.github.com/gh-aw/gallery/> or a maintained example in <https://github.com/githubnext/agentics>; do not invent YAML keys from memory.
+2. Select a reviewed example using [references/workflow-examples.md](references/workflow-examples.md). Check its current source against the installed compiler; do not treat an example as a schema specification.
 3. The agent `.md` has a YAML frontmatter (`on:`, `permissions:`, `engine:`, `safe-outputs:`, `tools:`) followed by the plain-English prompt.
 4. Keep GitHub data permissions available during agent execution read-only. Special scopes such as `copilot-requests: write` authenticate services; repository mutations should be requested through `safe-outputs:` and performed by separate scoped jobs after validation.
 5. Compile early and often — `gh aw compile` catches schema errors before push.
@@ -88,6 +96,12 @@ When walking an audience through the result, show in order: workflow `.md` → c
 ## When expanding this demo with new beats
 
 For requests like "add a follow-up beat", "create another AW demo", or "make this demo more impressive", read [references/demo-expansion-playbook.md](references/demo-expansion-playbook.md) before editing files. Use it to select a public example, map the story to one clear trigger and one or two visible safe outputs, keep the audience setup small, and preserve the existing beat-by-beat walkthrough style.
+
+## Extending the demo into SDLC automation
+
+Use the staged extension rules in [references/workflow-examples.md](references/workflow-examples.md). Define each stage's input, output, validation, and human approval before implementing it. Add one stage at a time when requested; do not build a complete pipeline merely because an example collection contains more workflows.
+
+Keep Beat 4's current scope. gh-aw proposes the Asset Manager plan; a human merges it and launches GitHub Copilot app modernization in VS Code. A plan merge is authorization for that manual handoff, not an automatic invocation of the extension. Preserve human acceptance of the implementation PR and leave later SDLC stages out of the beginner demo.
 
 ## Troubleshooting entry points
 
@@ -103,3 +117,4 @@ Use `gh aw health` for a repository-wide status view, `gh aw mcp inspect <workfl
 - [references/troubleshooting.md](references/troubleshooting.md) — known failure modes and their fixes
 - [references/demo-template.md](references/demo-template.md) — the two-beat reference demo structure (PR reviewer + issue triage)
 - [references/demo-expansion-playbook.md](references/demo-expansion-playbook.md) — how to design follow-up beats and new demos from public gh-aw sources
+- [references/workflow-examples.md](references/workflow-examples.md) - reviewed Awesome Copilot examples, repository fit, and staged SDLC extension rules

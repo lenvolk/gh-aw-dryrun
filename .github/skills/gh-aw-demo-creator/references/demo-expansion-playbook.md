@@ -4,13 +4,13 @@ Use this when the user asks to add a follow-up beat, create another AW demo, or 
 
 ## Source order
 
-1. Fetch the relevant official gh-aw reference page before using schema details:
+1. Read GitHub's [creating workflows guide](https://docs.github.com/en/copilot/how-tos/github-agentic-workflows/creating-github-agentic-workflows) for authoring and reuse. Fetch the relevant official gh-aw reference page before using schema details:
    - Frontmatter: <https://github.github.com/gh-aw/reference/frontmatter/>
    - Triggers: <https://github.github.com/gh-aw/reference/triggers/>
    - Safe outputs: <https://github.github.com/gh-aw/reference/safe-outputs/>
    - Engines/secrets: <https://github.github.com/gh-aw/reference/engines/>
    - CLI/debugging: <https://github.github.com/gh-aw/setup/cli/> and <https://github.github.com/gh-aw/troubleshooting/debugging/>
-2. Use <https://github.com/githubnext/agentics> for working examples and prompt patterns. Prefer adapting a current example over inventing YAML keys.
+2. Use [workflow-examples.md](workflow-examples.md) to select a relevant example from <https://github.com/github/awesome-copilot/tree/main/workflows>. Use the gh-aw gallery and <https://github.com/githubnext/agentics> for patterns the collection does not cover. Review the actual source before importing or adapting it.
 3. If docs and behavior disagree, inspect `gh aw version`, the generated `.lock.yml`, and relevant `github/gh-aw` issues or releases.
 
 ## Demo selection criteria
@@ -31,6 +31,9 @@ Avoid demos that require many secrets, organization-only configuration, paid thi
 
 | Pattern | Public examples to inspect | Trigger | Visible payoff | Safe outputs to verify |
 |---|---|---|---|---|
+| Maintainer-requested issue assessment | Awesome Copilot `relevance-check` | `slash_command` | Evidence-backed recommendation with the final decision left to a human | `add-comment` |
+| Text-only documentation repair | Awesome Copilot `weekly-comment-sync` | `schedule` or `workflow_dispatch` | One draft PR fixing comments or README text without changing application behavior | `create-pull-request` |
+| Issue activity report | Awesome Copilot `daily-issues-report` | `schedule` | Report issue summarizing recent activity | `create-issue` |
 | ChatOps fix request | `pr-fix`, `repo-ask`, command-triggered workflows | `slash_command` or `issue_comment` | Maintainer asks for help in a comment | `add-comment`, `create-pull-request`, `push-to-pull-request-branch` |
 | CI failure investigator | `ci-doctor`, `ci-coach` | `workflow_run` completed with failure | Agent explains failing check and next action | `add-comment`, `create-issue`, `create-pull-request` |
 | Daily status/report | `daily-repo-status`, `weekly-issue-summary`, `daily-team-status` | `schedule` or `workflow_dispatch` | New report issue with trends and recommendations | `create-issue`, `add-comment`, `upload-artifact` |
@@ -43,11 +46,19 @@ Avoid demos that require many secrets, organization-only configuration, paid thi
 1. Read the current repository walkthrough and existing templates so the new beat matches the style, file names, audience, and reset flow.
 2. Pick the demo story first, then choose trigger and safe outputs. Do not start from the most novel safe output.
 3. Fetch the official docs for the chosen trigger, safe outputs, and engine.
-4. Inspect a matching example in `githubnext/agentics` for current syntax and prompt shape.
+4. Inspect the matching source linked in [workflow-examples.md](workflow-examples.md), the gallery, or `githubnext/agentics` for current syntax and prompt shape.
 5. Create or update only the files needed for the beat: workflow `.md`, sample fixture, walkthrough text, and optional diagram/debrief notes.
 6. Include a deterministic trigger recipe: exact `gh` commands, sample PR/issue/comment body, expected wait time, expected visible output, and reset steps.
 7. Run or recommend `gh aw compile`; then inspect the generated `.lock.yml` for permissions, secret names, and the job graph. Never hand-edit `.lock.yml`.
 8. After a live run, use `gh aw audit <run-id>` to inspect tool use, firewall decisions, and safe outputs.
+
+## Beginner demo preparation
+
+- Separate setup from the customer walkthrough. Finish installation, authentication, compilation, and a complete rehearsal beforehand.
+- Keep all operator instructions in `plan.md` and customer explanation in the relevant beat debrief.
+- Name the source repository and target fork. Confirm which repository receives the secret, issue, and PR.
+- Keep a known successful run and output available. Identify them as prerecorded if used; never present a checkpoint as a live agent result.
+- For Beat 4, preserve the human-approved handoff to the modernization product. Do not add testing agents, deployment, or a repair pipeline without a separate scope decision.
 
 ## Beat writing checklist
 
@@ -80,3 +91,4 @@ Before considering the demo ready:
 3. Labels, milestones, environments, or project URLs referenced by the demo exist or are created in setup steps.
 4. The walkthrough includes a trigger command and an expected output.
 5. The reset flow restores the repository to a clean demo state.
+6. A rehearsal produces the expected visible output, not merely a successful compile or Actions status.
