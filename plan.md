@@ -482,6 +482,13 @@ After these steps your repo is back to: `main` branch only, no open PR, no open 
 
 > **You can start here.** Beat 4 does not require the Python demo repository, labels, pull requests, or issues from Beats 1-3.
 
+Beat 4 uses two local repositories:
+
+| Repository | Purpose |
+|---|---|
+| `C:\Temp\GHDemo\gh-aw-dryrun` | Demo kit. Read `plan.md` here and copy the prepared workflow files from `templates\`. |
+| `C:\Temp\GHDemo\java-migration-copilot-samples` | Target repository. This must be your GitHub fork. Run all Beat 4 commands here after Step 10.3. |
+
 ### 10.1 What this demo covers
 
 Beat 4 intentionally stops after the first four stages:
@@ -534,6 +541,21 @@ Expected remotes:
 
 - `origin` - your fork, where issues, plans, and pull requests will be created.
 - `upstream` - `Azure-Samples/java-migration-copilot-samples`.
+
+Confirm that GitHub CLI points to your fork:
+
+```powershell
+$targetRepo = gh repo view --json nameWithOwner --jq .nameWithOwner
+$targetRepo
+```
+
+Expected output:
+
+```text
+<your-github-user>/java-migration-copilot-samples
+```
+
+Do not continue if it prints `Azure-Samples/java-migration-copilot-samples`. That is the upstream repository, not your demo fork.
 
 The demo application is [asset-manager](https://github.com/Azure-Samples/java-migration-copilot-samples/tree/main/asset-manager). Its `main` baseline uses Java 8 and Spring Boot 2.7.
 
@@ -590,19 +612,41 @@ Verify these generated files exist:
 Test-Path .github\workflows\java-modernization-plan.lock.yml
 ```
 
-Beat 4 defaults to individual Copilot seat billing, which works for a fork under a personal account. Create a fine-grained PAT owned by the GitHub account with your Copilot license:
+The workflow needs a Copilot token. Add it to your fork, not to `gh-aw-dryrun` or the upstream Azure Samples repository.
 
-- Limit repository access to your `java-migration-copilot-samples` fork.
-- Grant the account permission **Copilot Requests: Read**.
-- Use the generated `github_pat_...` token; classic `ghp_...` tokens are not supported.
+1. Open <https://github.com/settings/personal-access-tokens/new>.
+2. Set **Token name** to `Beat 4 gh-aw`.
+3. Set **Resource owner** to the GitHub account that has your Copilot license.
+4. Set **Repository access** to **Only select repositories**, then select your `java-migration-copilot-samples` fork.
+5. Under **Account permissions**, set **Copilot Requests** to **Read**.
+6. Choose a short expiration, then select **Generate token**.
+7. Copy the token. It must start with `github_pat_`. A classic `ghp_` token will not work.
 
-Store it interactively so the value is not written to shell history:
+Do not grant this PAT repository write permissions. GitHub Actions uses its own token to create the plan branch and pull request.
+
+Return to PowerShell. Confirm that you are still in the target repository:
+
+```powershell
+Get-Location
+gh repo view --json nameWithOwner --jq .nameWithOwner
+```
+
+The second command must print `<your-github-user>/java-migration-copilot-samples`. Store the token as a repository secret:
 
 ```powershell
 gh aw secrets set COPILOT_GITHUB_TOKEN
+gh secret list
 ```
 
-In the fork on GitHub, open **Settings -> Actions -> General -> Workflow permissions**, enable **Allow GitHub Actions to create and approve pull requests**, and save. The agent remains read-only; the separately scoped safe-output job creates the plan PR.
+Paste the token when prompted. `gh secret list` should then show `COPILOT_GITHUB_TOKEN`.
+
+Open the same fork on GitHub:
+
+```powershell
+gh repo view --web
+```
+
+Select **Settings -> Actions -> General -> Workflow permissions**. Enable **Allow GitHub Actions to create and approve pull requests**, then save. The agent remains read-only. A separate safe-output job creates the plan PR.
 
 Commit and push the reusable demo setup:
 
