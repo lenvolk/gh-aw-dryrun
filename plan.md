@@ -19,9 +19,9 @@
 
 ### At a glance — the four Beats
 
-The diagram below shows how the *same* building block (a single markdown file → `gh aw compile` → hardened `.lock.yml`) is reused by Beats 1-3. Beat 4 is intentionally separate because it combines a gh-aw planning workflow with the supported Java modernization product.
+The diagram below shows the first three gh-aw beats and the separate Beat 4 handoff to the supported Java modernization product.
 
-![gh-aw Demo - Beats 1-3, One Building Block](assets/beats-overview.svg)
+![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg)
 
 > Editable source: [assets/beats-overview.excalidraw](assets/beats-overview.excalidraw) — open in the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor) or at <https://excalidraw.com>.
 
@@ -494,6 +494,15 @@ Beat 4 intentionally stops after the first four stages:
 Azure service migration, containerization, deployment, CI/CD, and production feedback are not part of this first customer demo.
 
 ### 10.2 One-time prerequisites
+
+Beat 4 uses two tools for two different parts of the demo:
+
+| Tool | Used for |
+|---|---|
+| GitHub CLI and gh-aw | Forking the sample, compiling the Markdown workflow, configuring its secret, creating the request issue, watching the run, merging the plan PR, and opening the implementation PR. |
+| Visual Studio Code and GitHub Copilot app modernization | Assessing Asset Manager and performing the approved Java and Spring Boot upgrade. |
+
+The VS Code extension does not require GitHub CLI. GitHub CLI is required because the first two and fourth stages are GitHub/gh-aw operations.
 
 Install or verify:
 
