@@ -67,11 +67,12 @@ You should see, with no errors:
 
 ```powershell
 winget upgrade github.cli
-gh extension upgrade aw
-gh extension list | Select-String '^gh aw\s'
+gh aw version
 ```
 
-If `gh extension upgrade aw` reports `unable to retrieve latest version`, do not keep retrying it. Follow the [SAML fallback in Step 10.2](#saml-fallback-for-gh-aw).
+If `gh aw version` reports `v0.89.21` or newer, continue. You do not need to run `gh extension upgrade aw`.
+
+If the version is older, follow the upgrade steps in [Step 10.2](#part-102-one-time-prerequisites).
 
 > **No Copilot?** You can swap to Claude (`ANTHROPIC_API_KEY`) or OpenAI (`OPENAI_API_KEY`) at Step 2.5 — change the `engine:` line in the workflow `.md` files and set the matching secret.
 
@@ -523,17 +524,19 @@ The VS Code extension does not require GitHub CLI. GitHub CLI is required becaus
 Install or verify:
 
 - Git and GitHub CLI: `git --version; gh --version; gh auth status`
-- Current gh-aw. Check it without launching the extension:
+- Current gh-aw:
 
   ```powershell
-  gh extension list | Select-String '^gh aw\s'
+  gh aw version
   ```
 
-  Beat 4 requires `github/gh-aw v0.89.21` or newer. If the command shows an older version, run:
+  Beat 4 requires `v0.89.21` or newer. If your installed version meets that requirement, continue to JDK setup. Do not run the updater again.
+
+  If the version is older, try the normal updater once:
 
   ```powershell
   gh extension upgrade aw
-  gh extension list | Select-String '^gh aw\s'
+  gh aw version
   ```
 
 #### SAML fallback for gh-aw
@@ -574,6 +577,8 @@ Install or verify:
 
   gh aw version
   ```
+
+  Success means the final command prints `gh aw version v0.89.21` or newer. The fallback installs the current binary but does not grant GitHub CLI access through the `github` organization's SAML policy. After using the fallback, `gh extension upgrade aw` may continue to fail with the same SAML error. Ignore that updater error and continue as long as `gh aw version` meets the requirement.
 - JDK 8 and JDK 21
 - Visual Studio Code
 - GitHub Copilot for Visual Studio Code
@@ -862,7 +867,7 @@ Use a new Modernization Request for each run. The plan filename includes the iss
 | Run reports a missing or rejected Copilot token | Set `COPILOT_GITHUB_TOKEN` to a fine-grained PAT with **Copilot Requests: Read**; do not use a classic PAT. |
 | Workflow cannot find the skill | Confirm `.github\skills\java-modernization\SKILL.md` exists and re-run `gh aw compile`. |
 | `gh aw` hangs or rejects `skills:` | Upgrade the official `github/gh-aw` extension. Beat 4 was validated with `v0.89.21`. |
-| `gh extension upgrade aw` cannot retrieve the latest version | Run the SAML check and checksum-verified fallback in Step 10.2. |
+| `gh extension upgrade aw` still fails after the fallback | This is expected while SAML blocks the GitHub CLI updater. Run `gh aw version`. Continue if it reports `v0.89.21` or newer. |
 | Baseline is not Java 8 / Spring Boot 2.7 | Reset from upstream `main`; do not plan from a previously upgraded branch. |
 | Maven Wrapper fails before the demo | Resolve the local temporary-directory/download issue during preflight, not in front of the customer. |
 | The baseline worker test cannot mock `ResponseInputStream` | Record it as a known baseline finding and let the modernization validation/fix loop address it; do not hand-edit the test during the demo. |
