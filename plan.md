@@ -40,10 +40,16 @@ We close with a short **security coda** that reuses Beat 2's workflow to show th
 
 ## Part 1 — Quick prerequisite check
 
-This guide assumes the following are already installed and configured. Run this one-liner in **PowerShell** to confirm everything is good:
+This section checks the prerequisites for Beats 1-3. If you are running only the Java modernization demo, skip to [Part 10](#part-10---beat-4-standalone-human-gated-java-modernization), which has its own checklist.
+
+Run this in **PowerShell**:
 
 ```powershell
-git --version; gh --version; gh auth status; python --version; gh aw --help | Select-Object -First 1
+git --version
+gh --version
+gh auth status
+python --version
+gh extension list | Select-String '^gh aw\s'
 ```
 
 You should see, with no errors:
@@ -54,15 +60,18 @@ You should see, with no errors:
 | `gh` (GitHub CLI) | Create repos, open PRs, set secrets, install extensions | `gh version 2.40+` |
 | `gh auth status` | Confirms you're signed in to github.com | `Logged in to github.com as <you>` |
 | `python` | The demo code we review is Python (not executed locally) | `Python 3.8+` |
-| `gh aw` (gh-aw extension) | Compiles markdown agents into hardened Actions workflows | usage line for `gh aw` |
+| `gh aw` (gh-aw extension) | Compiles Markdown agents into hardened Actions workflows | `gh aw github/gh-aw v...` |
 | GitHub Copilot subscription | The AI brain the workflow calls | check at <https://github.com/settings/copilot> |
 
-**Recommended before a live demo — upgrade everything to latest:**
+**Recommended before a live demo:**
 
 ```powershell
-winget upgrade github.cli      # upgrade gh first (extension cmds come from gh)
-gh extension upgrade aw        # then upgrade the gh-aw extension
+winget upgrade github.cli
+gh extension upgrade aw
+gh extension list | Select-String '^gh aw\s'
 ```
+
+If `gh extension upgrade aw` reports `unable to retrieve latest version`, do not keep retrying it. Follow the [SAML fallback in Step 10.2](#saml-fallback-for-gh-aw).
 
 > **No Copilot?** You can swap to Claude (`ANTHROPIC_API_KEY`) or OpenAI (`OPENAI_API_KEY`) at Step 2.5 — change the `engine:` line in the workflow `.md` files and set the matching secret.
 
@@ -514,7 +523,57 @@ The VS Code extension does not require GitHub CLI. GitHub CLI is required becaus
 Install or verify:
 
 - Git and GitHub CLI: `git --version; gh --version; gh auth status`
-- Current gh-aw: `gh extension install github/gh-aw` (or `gh extension upgrade aw`) and then `gh aw version`
+- Current gh-aw. Check it without launching the extension:
+
+  ```powershell
+  gh extension list | Select-String '^gh aw\s'
+  ```
+
+  Beat 4 requires `github/gh-aw v0.89.21` or newer. If the command shows an older version, run:
+
+  ```powershell
+  gh extension upgrade aw
+  gh extension list | Select-String '^gh aw\s'
+  ```
+
+#### SAML fallback for gh-aw
+
+  If the upgrade reports `unable to retrieve latest version`, check the API response:
+
+  ```powershell
+  gh api repos/github/gh-aw/releases/latest --jq .tag_name
+  ```
+
+  An HTTP 403 mentioning SAML means the GitHub CLI token cannot read release metadata from the `github` organization. Authorize GitHub CLI for that organization and retry. If you cannot change the SSO authorization, install the public release asset with checksum verification:
+
+  ```powershell
+  $release = Invoke-RestMethod `
+    https://api.github.com/repos/github/gh-aw/releases/latest `
+    -Headers @{ "User-Agent" = "gh-aw-demo-setup" }
+
+  $asset = $release.assets | Where-Object name -eq "windows-amd64.exe"
+  $sums = $release.assets | Where-Object name -eq "checksums.txt"
+  $temp = Join-Path $env:TEMP "gh-aw-$($release.tag_name)"
+  New-Item -ItemType Directory -Force $temp | Out-Null
+
+  Invoke-WebRequest $asset.browser_download_url -OutFile "$temp\gh-aw.exe"
+  Invoke-WebRequest $sums.browser_download_url -OutFile "$temp\checksums.txt"
+
+  $expected = (Get-Content "$temp\checksums.txt" |
+    Where-Object { $_ -match "windows-amd64\.exe$" } |
+    ForEach-Object { ($_ -split "\s+")[0] }).ToLowerInvariant()
+  $actual = (Get-FileHash "$temp\gh-aw.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
+  if ($actual -ne $expected) { throw "gh-aw checksum verification failed" }
+
+  $extension = Join-Path $env:LOCALAPPDATA "GitHub CLI\extensions\gh-aw"
+  Copy-Item "$extension\gh-aw.exe" "$extension\gh-aw.exe.backup" -Force
+  Copy-Item "$temp\gh-aw.exe" "$extension\gh-aw.exe" -Force
+  (Get-Content "$extension\manifest.yml") `
+    -replace "^tag: .+$", "tag: $($release.tag_name)" |
+    Set-Content "$extension\manifest.yml"
+
+  gh aw version
+  ```
 - JDK 8 and JDK 21
 - Visual Studio Code
 - GitHub Copilot for Visual Studio Code
@@ -803,6 +862,7 @@ Use a new Modernization Request for each run. The plan filename includes the iss
 | Run reports a missing or rejected Copilot token | Set `COPILOT_GITHUB_TOKEN` to a fine-grained PAT with **Copilot Requests: Read**; do not use a classic PAT. |
 | Workflow cannot find the skill | Confirm `.github\skills\java-modernization\SKILL.md` exists and re-run `gh aw compile`. |
 | `gh aw` hangs or rejects `skills:` | Upgrade the official `github/gh-aw` extension. Beat 4 was validated with `v0.89.21`. |
+| `gh extension upgrade aw` cannot retrieve the latest version | Run the SAML check and checksum-verified fallback in Step 10.2. |
 | Baseline is not Java 8 / Spring Boot 2.7 | Reset from upstream `main`; do not plan from a previously upgraded branch. |
 | Maven Wrapper fails before the demo | Resolve the local temporary-directory/download issue during preflight, not in front of the customer. |
 | The baseline worker test cannot mock `ResponseInputStream` | Record it as a known baseline finding and let the modernization validation/fix loop address it; do not hand-edit the test during the demo. |
