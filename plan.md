@@ -663,12 +663,15 @@ It prompts for the token (hidden input, never printed) and for confirmation befo
 
 The script ends with a table. Every row must be `OK` or `FIXED`. A `MANUAL` row says exactly what to do. Re-running is safe.
 
-Verify the secret and the registered workflows:
+Verify the secret and the registered workflows. The first line pins the GitHub CLI default to your fork, which stops the "Select a repo" prompt for `gh workflow`, `gh run` and `gh pr`. `gh secret` is stricter and always needs `--repo` when the clone has two remotes:
 
 ```powershell
-gh secret list
+gh repo set-default lenvolk/java-migration-copilot-samples
+gh secret list --repo lenvolk/java-migration-copilot-samples
 gh workflow list
 ```
+
+If `gh` still asks "Select a repo", choose `lenvolk/java-migration-copilot-samples`, your fork. Never choose `Azure-Samples/...`, which is upstream.
 
 You should see `COPILOT_GITHUB_TOKEN` and the workflow `Modernize Asset Manager - Pipeline`.
 
