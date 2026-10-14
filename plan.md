@@ -6,9 +6,9 @@
 
 [model-selection](https://github.com/juan-trujillo/CopilotTraining/tree/main/tech-talks/model-selection)
 
-**Who this is for:** Someone who has used GitHub through the website and maybe tried GitHub Copilot in VS Code, but has never heard of "GitHub Agentic Workflows" (gh-aw). Follow this top to bottom on a fresh Windows machine and you'll have a working three-beat introductory demo. Beat 4 is a standalone customer demo that combines gh-aw planning with GitHub Copilot app modernization for Java.
+**Who this is for:** Someone who has used GitHub through the website and maybe tried GitHub Copilot in VS Code, but has never heard of "GitHub Agentic Workflows" (gh-aw). Follow this top to bottom on a fresh Windows machine and you'll have a working three-beat introductory demo. Beat 4 is a standalone customer demo in which gh-aw plans and then executes a Java modernization with a pipeline of agents, with a human approving the plan and reviewing the result.
 
-**Time needed:** ~45 min for Beats 1-3. Beat 4 takes about 20-30 minutes after its prerequisites are installed and can be run without Beats 1-3.
+**Time needed:** ~45 min for Beats 1-3. Beat 4 needs about 15 minutes of setup (a token and one script), then you pre-run it before the meeting and replay the finished result live. It can be run without Beats 1-3.
 
 [More Examples in this Repo](https://github.com/githubnext/agentics)
 ---
@@ -19,18 +19,18 @@
 
 ### At a glance — the four Beats
 
-The diagram below shows the first three gh-aw beats and the separate Beat 4 handoff to the supported Java modernization product.
+The diagram below shows the first three gh-aw beats and Beat 4, the multi-agent Java modernization.
 
 ![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg)
 
 > Editable source: [assets/beats-overview.excalidraw](assets/beats-overview.excalidraw) — open in the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor) or at <https://excalidraw.com>.
 
-Beats 1-3 use the same self-contained gh-aw pattern. Beat 4 adds a separate, standalone product handoff:
+Beats 1-3 use the same self-contained gh-aw pattern. Beat 4 adds a standalone multi-agent pipeline:
 
 - **Beat 1 — Big-O Auditor**: When someone opens a Pull Request, the agent reads the changed code and posts a comment flagging slow algorithms (e.g., O(n²) loops) with a suggested fix.
 - **Beat 2 — Issue Triage**: When someone files a new Issue, the agent reads it, applies labels (`bug`, `feature-request`, severity, etc.), and posts a triage comment asking for missing info.
 - **Beat 3 (advanced) — Auto-Fix**: When a reviewer comments `/fix` on the Beat 1 PR, a second agent reads the auditor's advice, applies the optimization, and opens a **new pull request** with the fix. Skip this if your audience is new to gh-aw; use it if some of them already get the basics and you want a "wow" moment.
-- **Beat 4 (standalone) — Java Modernization**: A modernization request triggers a Markdown plan PR. A human merges the plan, then GitHub Copilot app modernization performs the approved Java and Spring Boot upgrade and the operator opens a reviewable implementation PR. Jump directly to **Part 10** for this customer demo.
+- **Beat 4 (standalone) — Java Modernization**: A modernization request triggers a planner agent that opens a Markdown plan PR. A human merges the plan, which starts a pipeline of five gh-aw agents and plain Actions jobs that upgrade Asset Manager from Java 8 to Java 21 on a `modernize/...` branch, run the tests, and open an Implementation PR. A human reviews it. `main` keeps the original code. Jump directly to **Part 10** for this customer demo.
 
 Same building block (a markdown file) used three times with different triggers (`pull_request`, `issues`, `slash_command`) and different outputs (`add-comment`, `add-labels`, `create-pull-request`). That contrast is the whole point of the demo.
 
@@ -492,36 +492,48 @@ After these steps your repo is back to: `main` branch only, no open PR, no open 
 
 > **You can start here.** Beat 4 does not require the Python demo repository, labels, pull requests, or issues from Beats 1-3.
 
+![Beat 4: human-gated, multi-agent Java modernization](assets/beat-4-pipeline.svg)
+
+> Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw). Open it in the Excalidraw VS Code extension or at <https://excalidraw.com>.
+
 Beat 4 uses two local repositories:
 
 | Repository | Purpose |
 |---|---|
-| `C:\Temp\GHDemo\gh-aw-dryrun` | Demo kit. Read `plan.md` here and copy the prepared workflow files from `templates\`. |
-| `C:\Temp\GHDemo\java-migration-copilot-samples` | Target repository. This must be your GitHub fork. Run all Beat 4 commands here after Step 10.3. |
+| `C:\Temp\GHDemo\gh-aw-dryrun` | Demo kit. You read this `plan.md` here. It holds the diagrams and [Beat_4_debrief.md](Beat_4_debrief.md). |
+| `C:\Temp\GHDemo\JavaModernization\java-migration-copilot-samples` | **Target repository** and the only place Beat 4 runs. This is your GitHub fork of the Asset Manager sample. **All Beat 4 workflows, agents, skills and scripts are already in it**, under `.github\` and `demo\beat4\`. Run every Beat 4 command from this folder. |
+
+The operator guide lives in the target repository: `demo\beat4\README.md`. This Part 10 is the presenter view of the same flow.
 
 ### 10.1 What this demo covers
 
-Beat 4 intentionally stops after the first four stages:
+Beat 4 shows gh-aw running a Java modernization as a set of small agents, with a human at two gates. It stops after the first four stages of a modernization lifecycle:
 
-1. **Modernization Request** - capture the business outcome in a GitHub issue.
-2. **Modernization Plan** - gh-aw inspects the application and opens a Markdown plan PR.
-3. **Modernization Execution** - after a human merges the plan, GitHub Copilot app modernization performs the approved upgrade.
-4. **Implementation Pull Request** - publish the validated code changes for human review.
+1. **Modernization Request** - a GitHub issue states the desired outcome.
+2. **Modernization Plan** - a planner agent inspects Asset Manager and opens a Markdown plan PR.
+3. **Modernization Execution** - after a human merges the plan, a pipeline of five agents and plain Actions jobs upgrades the app, runs the tests, and checks the result against the plan.
+4. **Implementation Pull Request** - the validated code changes, ready for a human to review.
+
+**Where the code lives.** The original Java 8 code stays on `main`. The modernized code lives on the branch `modernize/issue-<N>` and in the Implementation Pull Request. `main` changes only if a human merges that pull request. Do not merge it during the demo.
+
+**How this relates to GitHub Copilot app modernization.** The pipeline copies that product's pattern: assess, plan, execute in small steps, validate with build and tests. It uses our own gh-aw agents and ordinary Maven commands. It does not run the product, and it is not a supported product feature. Say so plainly if asked.
 
 Azure service migration, containerization, deployment, CI/CD, and production feedback are not part of this first customer demo.
 
+**Two modes.** Because the full run takes a while, you **pre-run** the demo before the meeting (10.3 to 10.8) and **replay** the finished result live (10.9).
+
 ### 10.2 One-time prerequisites
 
-Beat 4 uses two tools for two different parts of the demo:
+You do not need Visual Studio Code, a JDK, Maven, or any Java tooling. The upgrade runs in GitHub Actions. You need only:
 
 | Tool | Used for |
 |---|---|
-| GitHub CLI and gh-aw | Forking the sample, compiling the Markdown workflow, configuring its secret, creating the request issue, watching the run, merging the plan PR, and opening the implementation PR. |
-| Visual Studio Code and GitHub Copilot app modernization | Assessing Asset Manager and performing the approved Java and Spring Boot upgrade. |
+| Git | Cloning the fork and pushing the demo files. |
+| GitHub CLI (`gh`), signed in | Running the setup script, creating the request issue, watching runs, and merging the plan PR. |
+| gh-aw extension `v0.89.21` or newer | Compiling the agent workflows. |
+| A GitHub account with an active Copilot license | The agents call Copilot with a token you create in 10.5. |
 
-The VS Code extension does not require GitHub CLI. GitHub CLI is required because the first two and fourth stages are GitHub/gh-aw operations.
-
-Install or verify:
+Verify:
 
 - Git and GitHub CLI: `git --version; gh --version; gh auth status`
 - Current gh-aw:
@@ -530,7 +542,7 @@ Install or verify:
   gh aw version
   ```
 
-  Beat 4 requires `v0.89.21` or newer. If your installed version meets that requirement, continue to JDK setup. Do not run the updater again.
+  Beat 4 requires `v0.89.21` or newer. If your installed version meets that requirement, continue to 10.3. Do not run the updater again.
 
   If the version is older, try the normal updater once:
 
@@ -579,104 +591,41 @@ Install or verify:
   ```
 
   Success means the final command prints `gh aw version v0.89.21` or newer. The fallback installs the current binary but does not grant GitHub CLI access through the `github` organization's SAML policy. After using the fallback, `gh extension upgrade aw` may continue to fail with the same SAML error. Ignore that updater error and continue as long as `gh aw version` meets the requirement.
-- JDK 8 and JDK 21
-- Visual Studio Code
-- GitHub Copilot for Visual Studio Code
-- [GitHub Copilot app modernization](https://marketplace.visualstudio.com/items?itemName=vscjava.migrate-java-to-azure)
+The updater can fail on SAML even when `gh aw` already works. The version check above is the real test.
 
-Restart Visual Studio Code after installing the modernization extension.
+### 10.3 Confirm the target repository (presenter prep)
 
-This workflow was compiled successfully with gh-aw `v0.89.21`. Use that version or newer because Beat 4 mounts a local skill from workflow frontmatter.
-
-### 10.3 Fork the supported sample
-
-Use a fork so the demo never writes to the upstream Azure Samples repository:
+The fork already exists and is cloned at `C:\Temp\GHDemo\JavaModernization\java-migration-copilot-samples`. Open it and confirm the remotes:
 
 ```powershell
-Set-Location C:\Temp\GHDemo
-gh repo fork Azure-Samples/java-migration-copilot-samples --clone
-Set-Location .\java-migration-copilot-samples
-
+Set-Location C:\Temp\GHDemo\JavaModernization\java-migration-copilot-samples
+git branch --show-current
 git remote -v
-git status
 ```
 
-Expected remotes:
+Expected:
 
-- `origin` - your fork, where issues, plans, and pull requests will be created.
+- Branch `main`.
+- `origin` - `https://github.com/lenvolk/java-migration-copilot-samples.git`, your fork, where issues, plans and pull requests are created.
 - `upstream` - `Azure-Samples/java-migration-copilot-samples`.
 
-Confirm that GitHub CLI points to your fork:
+Never run Beat 4 against `upstream`. `setup.ps1` refuses to run if `origin` points at it.
+
+### 10.4 Check the fork before changing anything (presenter prep)
+
+Run the read-only check. It changes nothing on GitHub:
 
 ```powershell
-$targetRepo = gh repo view --json nameWithOwner --jq .nameWithOwner
-$targetRepo
+.\demo\beat4\setup.ps1 -CheckOnly
 ```
 
-Expected output:
+It reports, one row per check: tools, gh-aw version, that `origin` is your fork, whether Issues and "Actions can create pull requests" are enabled, whether `COPILOT_GITHUB_TOKEN` is set, and whether the workflows compile. On a fresh fork you should expect `MANUAL` for Issues, Actions pull-request permission, and the secret. The next step fixes them.
 
-```text
-<your-github-user>/java-migration-copilot-samples
-```
+The baseline application state matters for the story. At the revision used to validate this guide, the web module has no tests and the worker module has 4 tests with 1 error: Mockito cannot mock `software.amazon.awssdk.core.ResponseInputStream` on Java 8. The pipeline records that baseline first and compares the upgraded result with it. Do not repair it by hand.
 
-Do not continue if it prints `Azure-Samples/java-migration-copilot-samples`. That is the upstream repository, not your demo fork.
+### 10.5 Create the token and run the setup script (presenter prep)
 
-The demo application is [asset-manager](https://github.com/Azure-Samples/java-migration-copilot-samples/tree/main/asset-manager). Its `main` baseline uses Java 8 and Spring Boot 2.7.
-
-### 10.4 Preflight before the customer session
-
-Run these checks from the cloned repository root:
-
-```powershell
-java -version
-.\asset-manager\mvnw.cmd -f .\asset-manager\pom.xml -version
-.\asset-manager\mvnw.cmd -f .\asset-manager\pom.xml test
-git branch --show-current
-git status --short
-```
-
-Confirm:
-
-- JDK 8 is active for the original application.
-- Maven Wrapper starts successfully.
-- The baseline build and test result is known before the session.
-- You are on a clean `main` branch.
-- The `workshop/java-upgrade` recovery branch exists upstream:
-
-```powershell
-git ls-remote --heads upstream workshop/java-upgrade
-```
-
-If Maven Wrapper cannot unpack Maven, clear only its failed temporary download, close other Maven processes, and rerun the command before the customer session.
-
-At the repository revision used to validate this guide, the web module succeeds and one worker test fails because Mockito cannot mock `software.amazon.awssdk.core.ResponseInputStream`. Treat that as a known baseline finding for the modernization validation/fix loop; do not repair it by hand during the demo. Recheck before each customer session because the upstream sample can change.
-
-### 10.5 Install the Beat 4 workflow and skill
-
-Set the path to this demo kit, then copy the Beat 4 assets:
-
-```powershell
-$demoKit = "C:\Temp\GHDemo\gh-aw-dryrun"
-
-New-Item -ItemType Directory -Force `
-  -Path .github\workflows, .github\skills\java-modernization | Out-Null
-
-Copy-Item "$demoKit\templates\java-modernization-plan.md" `
-  .github\workflows\java-modernization-plan.md
-
-Copy-Item "$demoKit\templates\java-modernization\SKILL.md" `
-  .github\skills\java-modernization\SKILL.md
-
-gh aw compile
-```
-
-Verify these generated files exist:
-
-```powershell
-Test-Path .github\workflows\java-modernization-plan.lock.yml
-```
-
-The workflow needs a Copilot token. Add it to your fork, not to `gh-aw-dryrun` or the upstream Azure Samples repository.
+**Manual: create the token (about 2 minutes).** GitHub does not let a script create it. The agents call Copilot with this token.
 
 1. Open <https://github.com/settings/personal-access-tokens/new>.
 2. Set **Token name** to `Beat 4 gh-aw`.
@@ -686,58 +635,44 @@ The workflow needs a Copilot token. Add it to your fork, not to `gh-aw-dryrun` o
 6. Choose a short expiration, then select **Generate token**.
 7. Copy the token. It must start with `github_pat_`. A classic `ghp_` token will not work.
 
-Do not grant this PAT repository write permissions. GitHub Actions uses its own token to create the plan branch and pull request.
+Do not grant this token repository write permissions. GitHub Actions uses its own token to write to the repository.
 
-Return to PowerShell. Confirm that you are still in the target repository:
+**Automated: run the setup script.** From the target repository folder:
 
 ```powershell
-Get-Location
-gh repo view --json nameWithOwner --jq .nameWithOwner
+.\demo\beat4\setup.ps1
 ```
 
-The second command must print `<your-github-user>/java-migration-copilot-samples`. Store the token as a repository secret:
+It prompts for the token (hidden input, never printed) and for confirmation before it commits and pushes. The compile step takes about a minute.
+
+| What | Who |
+|---|---|
+| Create the fine-grained token | **You (manual)** |
+| Enable Issues and Actions on the fork | `setup.ps1` |
+| Allow Actions to create pull requests | `setup.ps1` |
+| Store `COPILOT_GITHUB_TOKEN` as a repository secret | `setup.ps1` |
+| Create the labels | `setup.ps1` |
+| Compile the six agent workflows (`gh aw compile`) | `setup.ps1` |
+| Commit and push the Beat 4 files to `main` of your fork | `setup.ps1`, after you confirm |
+
+The script ends with a table. Every row must be `OK` or `FIXED`. A `MANUAL` row says exactly what to do. Re-running is safe.
+
+Verify the secret and the registered workflows:
 
 ```powershell
-gh aw secrets set COPILOT_GITHUB_TOKEN
 gh secret list
+gh workflow list
 ```
 
-Paste the token when prompted. `gh secret list` should then show `COPILOT_GITHUB_TOKEN`.
-
-Open the same fork on GitHub:
-
-```powershell
-gh repo view --web
-```
-
-Select **Settings -> Actions -> General -> Workflow permissions**. Enable **Allow GitHub Actions to create and approve pull requests**, then save. The agent remains read-only. A separate safe-output job creates the plan PR.
-
-Commit and push the reusable demo setup:
-
-```powershell
-git add .github
-git commit -m "feat: add human-gated Java modernization planner"
-git push origin main
-```
-
-Inspect the generated lockfile before the session to verify the expected secret and scoped write job:
-
-```powershell
-Select-String -Path .github\workflows\java-modernization-plan.lock.yml `
-  -Pattern "COPILOT_GITHUB_TOKEN|contents: write|pull-requests: write"
-```
+You should see `COPILOT_GITHUB_TOKEN` and the workflow `Modernize Asset Manager - Pipeline`.
 
 ### 10.6 Stage 1 - create the Modernization Request
 
-Create the issue from the prepared request body:
-
 ```powershell
-gh issue create `
-  --title "Modernize Asset Manager to Java 21 and Spring Boot 3.5" `
-  --body-file "$demoKit\templates\java-modernization-request.md"
+.\demo\beat4\new-request.ps1
 ```
 
-The `/modernize-plan` command at the start of the body triggers the workflow.
+It creates the issue in your fork from `demo\beat4\modernization-request.md`. The `/modernize-plan` command at the start of the body triggers the planner agent.
 
 Show the customer:
 
@@ -747,10 +682,10 @@ Show the customer:
 
 ### 10.7 Stage 2 - review and approve the Modernization Plan
 
-Watch the workflow:
+Watch the planner agent:
 
 ```powershell
-gh run list --workflow java-modernization-plan.lock.yml --limit 5
+gh run list --workflow modernize-1-plan.lock.yml --limit 5
 ```
 
 The workflow should open one pull request titled:
@@ -761,10 +696,11 @@ Review the generated file under `docs/modernization/requests/`. Confirm it conta
 
 - Verified Java 8 and Spring Boot 2.7 baseline.
 - Java 21 and Spring Boot 3.5 target.
-- Impact, risks, ordered execution steps, and validation criteria.
+- A `Run Parameters` block that the pipeline agents read.
+- Impact, risks, ordered execution steps (each tagged with the agent that performs it), and validation criteria.
 - Explicit exclusions for Azure service migration, containers, deployment, and production operations.
 
-**Human approval is the merge.** If the plan is correct, merge it:
+**Human approval is the merge.** If the plan is correct, merge it. The merge starts Stage 3 automatically:
 
 ```powershell
 $planPr = gh pr list `
@@ -774,105 +710,128 @@ $planPr = gh pr list `
   --jq '.[0].number'
 
 gh pr merge $planPr --squash --delete-branch
-git pull origin main
 ```
 
 Do not continue if the plan is wrong. Update or reject it instead.
 
-### 10.8 Stage 3 - run the supported modernization
+### 10.8 Stage 3 - the agent pipeline runs
 
-Open only the application folder in Visual Studio Code:
+The plan merge starts the pipeline. Watch it:
 
 ```powershell
-code .\asset-manager
+gh run list --workflow modernize-pipeline.yml --limit 3
+gh run watch
 ```
 
-In Visual Studio Code:
+Or open **Actions -> Modernize Asset Manager - Pipeline** on GitHub. The run graph shows the parallel lanes. A tracker comment on the Implementation PR shows each stage's status.
 
-1. Open the **GitHub Copilot app modernization** pane.
-2. Select **Start Assessment**.
-3. Review the assessment issues.
-4. Run **Upgrade Runtime & Frameworks**.
-5. Choose Java 21 and Spring Boot 3.5.
-6. Allow the agent to create its working branch and plan.
-7. Let the validation and fix loop finish without interruption.
-8. Review the generated summary and select **Keep** only when the result is acceptable.
+The pipeline is a plain GitHub Actions workflow that calls five gh-aw agent workflows as reusable workflows. Plain jobs do the deterministic work; agents do the judgment work.
 
-The modernization product owns dependency changes, compatibility fixes, build validation, CVE validation, test validation, consistency validation, and completeness validation. The human approves the task and reviews the result; the human does not write migration code during this demo.
+| Phase | Worker | Type | Runs | What it does |
+|---|---|---|---|---|
+| 0 | Prepare | Actions job | first | Creates branch `modernize/issue-<N>`, opens a **draft** Implementation PR, starts the tracker comment |
+| 1 | Baseline tests | Actions job | parallel | Runs the original tests on JDK 8 and records the result |
+| 1 | Compatibility Analyst | gh-aw agent | parallel | Read-only. Finds `javax` to `jakarta` and Spring Boot 3 source changes |
+| 1 | Dependency Analyst | gh-aw agent | parallel | Read-only. Maps dependencies and the Maven wrapper to Boot 3.5 and Java 21 |
+| 2 | Build Upgrader | gh-aw agent | sequential | Edits only the Maven build files, pushes a commit to the branch |
+| 2 | Code Fixer | gh-aw agent | sequential | Fixes source and tests in a build and test loop, pushes commits |
+| 3 | Verify build and tests | Actions job | parallel | JDK 21 build, tests and packaging, compared with the baseline |
+| 3 | Verify versions | Actions job | parallel | Checks Boot 3.5.x, Java 21 and no remaining `javax` imports |
+| 4 | Plan-conformance Reviewer | gh-aw agent | after 3 | Compares the diff with the approved plan, writes the PR summary and a verdict |
+| 5 | Finalize | Actions job | last | Marks the PR ready for review, or labels it `needs-attention` |
 
-### 10.9 Stage 4 - open the Implementation Pull Request
+Why this design, in one sentence each:
 
-Back in PowerShell, inspect the branch and changes:
+- **Parallel where it is safe.** The analysts and checks only read, so they run side by side.
+- **Sequential where code changes.** One writer at a time on one shared branch avoids merge conflicts.
+- **Agents only for judgment.** Tests, builds and version checks are deterministic Actions jobs.
+- **Agents never write directly.** gh-aw safe outputs push validated commits; the agent job itself is read-only.
+- **Concurrency.** One pipeline run per request, never cancelled mid-upgrade; each agent has its own engine concurrency group so agents can run in parallel.
+
+Each agent is defined once as a role in `.github/agents/modernize-*.agent.md`, with shared rules in `.github/skills/java-upgrade-rules/`. The plan skill is `.github/skills/java-modernization/`.
+
+### 10.9 Stage 4 - review the Implementation Pull Request
+
+When the pipeline finishes, open the Implementation Pull Request: `[modernization] Upgrade Asset Manager to Java 21 and Spring Boot 3.5 (#<issue-number>)`.
 
 ```powershell
-git branch --show-current
-git status --short
-git diff --stat main...HEAD
-```
-
-If the modernization agent left uncommitted changes, commit them:
-
-```powershell
-git add asset-manager
-git commit -m "feat: upgrade Asset Manager to Java 21 and Spring Boot 3.5"
-```
-
-Push the modernization branch and open the implementation PR:
-
-```powershell
-git push -u origin HEAD
-gh pr create `
-  --base main `
-  --title "Upgrade Asset Manager to Java 21 and Spring Boot 3.5" `
-  --body "Implements the approved modernization plan. Review the product-generated summary and validation results before merging."
+gh pr list --search "[modernization] in:title"
+git fetch origin
+git diff --stat main...origin/modernize/issue-<N>
 ```
 
 Show the customer:
 
-- The source and target version changes.
-- Compatibility changes made by the modernization agent.
-- Build, test, and validation evidence.
-- The final human merge decision. Do not merge during the demo unless that is intentional.
+- The tracker comment: every stage, and baseline versus final test results.
+- The Compatibility and Dependency analyst comments.
+- The diff: build files first, then `javax` to `jakarta`.
+- The Plan-conformance review: `Verdict: PASS`, and the PR description it wrote.
+- The label `ready-for-human-review`, and that the PR was a draft until all checks passed.
 
-Then open [Beat_4_debrief.md](Beat_4_debrief.md) and walk through what the customer learned.
+**Do not merge it.** `main` keeps the original Java 8 code. The modernized code stays on `modernize/issue-<N>`. A human merge is the only way it reaches `main`.
 
-### 10.10 Recovery and reset
+### 10.10 Live walkthrough with a pre-run (customer session)
 
-If the live upgrade needs troubleshooting, compare its result with the product-maintained checkpoint:
+Because the full run takes a while, **pre-run Beat 4 before the meeting** (10.3 to 10.8) and keep the result open. In the meeting, replay it in this order. Roughly 15 minutes.
+
+1. **Show the diagram** at the top of this Part (3 min). Name the two human gates: approve the plan, review the result.
+2. **Show the Modernization Request issue** (1 min). Point out the scope and the exclusions.
+3. **Show the plan pull request** (2 min). Open the plan file: baseline, target, steps tagged by agent. Say: "Merging this is the approval."
+4. **Show the pipeline run graph** in Actions (3 min). Point at the parallel lanes, then the sequential upgrade, then the review.
+5. **Open one agent run** (2 min), for example the Code Fixer. Show its prompt role, its read-only job, and the validated push done by a separate job.
+6. **Show the Implementation PR** (3 min): tracker comment, baseline versus final tests, reviewer verdict.
+7. **Show where the code lives** (1 min): `main` is original, `modernize/issue-<N>` is modernized.
+8. Open [Beat_4_debrief.md](Beat_4_debrief.md) and close with the takeaways.
+
+If a customer asks for a live run, start a fresh Modernization Request while you walk the pre-run result, and come back to it at the end.
+
+### 10.11 Recovery and reset
+
+Each stage is its own job or workflow. A failure stops the pipeline at that stage; earlier commits stay on the branch.
+
+1. Open the failed run in **Actions** and read the failed job.
+2. Select **Re-run failed jobs**. Only the failed stage and the stages after it run again.
+3. To run one agent alone, dispatch it with the pull request details:
+
+   ```powershell
+   gh workflow run modernize-worker-codefix.lock.yml `
+     -f issue_number=<N> -f pr_number=<PR> `
+     -f branch=modernize/issue-<N> `
+     -f plan_path=docs/modernization/requests/<N>-asset-manager-java-upgrade.md
+   ```
+
+4. If the pipeline did not start after the plan merge, dispatch it:
+
+   ```powershell
+   gh workflow run modernize-pipeline.yml `
+     -f plan_path=docs/modernization/requests/<N>-asset-manager-java-upgrade.md
+   ```
+
+To reset for another session, from the target repository:
 
 ```powershell
-git fetch upstream workshop/java-upgrade
-git diff --stat HEAD..upstream/workshop/java-upgrade -- asset-manager
+.\demo\beat4\reset.ps1                  # lists runs, deletes nothing
+.\demo\beat4\reset.ps1 -CloseRun <N>    # closes the PR and deletes modernize/issue-<N>
 ```
 
-To reset for another session:
+Keep your pre-run until after the customer meeting. Use a new Modernization Request for each run. The plan filename includes the issue number, so previous approved plans remain auditable and do not block a rerun.
 
-```powershell
-# Close the implementation PR and delete its remote branch in GitHub first.
-gh pr list --state open
-
-git switch main
-git pull origin main
-git branch --list
-```
-
-Use a new Modernization Request for each run. The plan filename includes the issue number, so previous approved plans remain auditable and do not block a rerun.
-
-### 10.11 Beat 4 troubleshooting
+### 10.12 Beat 4 troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| `/modernize-plan` does not trigger | Confirm it is the first word in the issue body and inspect `gh run list`. |
-| No plan PR appears | Open the workflow run and inspect the safe-output job; verify Actions and PR creation are enabled. |
-| Run reports a missing or rejected Copilot token | Set `COPILOT_GITHUB_TOKEN` to a fine-grained PAT with **Copilot Requests: Read**; do not use a classic PAT. |
-| Workflow cannot find the skill | Confirm `.github\skills\java-modernization\SKILL.md` exists and re-run `gh aw compile`. |
-| `gh aw` hangs or rejects `skills:` | Upgrade the official `github/gh-aw` extension. Beat 4 was validated with `v0.89.21`. |
-| `gh extension upgrade aw` still fails after the fallback | This is expected while SAML blocks the GitHub CLI updater. Run `gh aw version`. Continue if it reports `v0.89.21` or newer. |
-| Baseline is not Java 8 / Spring Boot 2.7 | Reset from upstream `main`; do not plan from a previously upgraded branch. |
-| Maven Wrapper fails before the demo | Resolve the local temporary-directory/download issue during preflight, not in front of the customer. |
-| The baseline worker test cannot mock `ResponseInputStream` | Record it as a known baseline finding and let the modernization validation/fix loop address it; do not hand-edit the test during the demo. |
-| Modernization stalls or produces unexpected changes | Stop before accepting changes and compare with `upstream/workshop/java-upgrade`. |
-| Product UI differs from this guide | Follow the current Asset Manager workshop and Microsoft Learn quickstart; the product changes more frequently than this demo kit. |
+| `setup.ps1` shows `MANUAL` for Issues or Actions | Enable them in the fork's Settings, then re-run. Forks start with both off. |
+| `/modernize-plan` does not trigger | The issue body must start with `/modernize-plan`. Check `gh run list` and that Actions is enabled. |
+| No plan PR appears | Open the planner run and inspect the safe-output job. Verify "Allow GitHub Actions to create and approve pull requests". |
+| Run reports a missing or rejected Copilot token | Set `COPILOT_GITHUB_TOKEN` to a fine-grained PAT with **Copilot Requests: Read**. Do not use a classic PAT. |
+| Pipeline did not start after the merge | The plan PR title must start with `[modernization-plan]` and change a file under `docs/modernization/requests/`. Otherwise dispatch it (10.11). |
+| `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -CloseRun <N>`, then re-run. |
+| `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run the Code Fixer (10.11). |
+| An agent cannot download Maven dependencies | The workers allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in the worker `.md`, then `gh aw compile`. |
+| Workflow cannot find a skill or agent | Confirm the files under `.github\skills\` and `.github\agents\` exist and re-run `gh aw compile`. |
+| `gh extension upgrade aw` fails with SAML | Expected. Run `gh aw version`. Continue if it reports `v0.89.21` or newer. |
+| The baseline worker test fails on JDK 8 | Known baseline finding. Do not hand-edit it. The pipeline compares against it. |
+| The first full run behaves differently from this guide | Treat the pre-run as the rehearsal. This pipeline was compiled and statically checked, but its agent behavior is proven only by running it. Fix, then pre-run again until it is clean twice. |
 
 ---
 
@@ -881,5 +840,7 @@ Use a new Modernization Request for each run. The plan filename includes the iss
 - gh-aw docs: <https://github.github.com/gh-aw/>
 - Quick Start: <https://github.github.com/gh-aw/setup/quick-start/>
 - Example agents: <https://github.com/githubnext/agentics>
-- GitHub Copilot app modernization quickstart: <https://learn.microsoft.com/azure/developer/github-copilot-app-modernization/quickstart-upgrade>
+- GitHub Copilot app modernization quickstart (the product whose plan, execute, validate pattern this pipeline copies; the demo does not run it): <https://learn.microsoft.com/azure/developer/github-copilot-app-modernization/quickstart-upgrade>
 - Asset Manager workshop: <https://github.com/Azure-Samples/java-migration-copilot-samples/tree/main/asset-manager>
+- gh-aw OrchestratorOps pattern: <https://github.github.com/gh-aw/patterns/orchestrator-ops/>
+- gh-aw concurrency: <https://github.github.com/gh-aw/reference/concurrency/>

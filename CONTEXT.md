@@ -17,21 +17,37 @@ The human review and merge of a Modernization Plan pull request, which authorize
 _Avoid_: Validation, confirmation, approval comment
 
 **Modernization Slice**:
-The Asset Manager Java 8 to 21 and Spring Boot 2.7 to 3.5 runtime and framework upgrade, including the product's validation and fix loop.
+The Asset Manager Java 8 to 21 and Spring Boot 2.7 to 3.5 runtime and framework upgrade, including its build and test validation.
 _Avoid_: Full modernization, migration phase
 
 **Implementation Pull Request**:
-A pull request containing the approved Modernization Slice and its validation evidence.
+A draft pull request from the branch `modernize/issue-<N>` containing the approved Modernization Slice and its validation evidence. It becomes ready for review only after the verification jobs pass. `main` keeps the original code until a human merges it.
 _Avoid_: Coding-agent output, generated patch
 
 **Beat 4**:
-A standalone hybrid demo in which gh-aw manages the Modernization Request, Modernization Plan, and Plan Approval, while GitHub Copilot app modernization executes and validates the approved Modernization Slice against Asset Manager.
-_Avoid_: Add-on step, Beat 3 extension
+A standalone demo in which gh-aw plans a modernization, a human approves the plan, a pipeline of gh-aw agents and plain Actions jobs executes and validates the Modernization Slice against Asset Manager, and a human reviews the Implementation Pull Request.
+_Avoid_: Add-on step, Beat 3 extension, hybrid handoff
 
-**Modernization Executor**:
-The supported GitHub Copilot app modernization experience that applies the approved Modernization Slice and performs its validation and fix loop.
-_Avoid_: gh-aw implementation agent, VS Code coding agent
+**Modernization Pipeline**:
+The GitHub Actions workflow `modernize-pipeline.yml` that starts when a Modernization Plan is merged. It orchestrates the Micro-Agents and deterministic jobs and enforces one run per request.
+_Avoid_: Executor, orchestrator agent
+
+**Micro-Agent**:
+A single-purpose gh-aw agent workflow, defined by a custom agent file in `.github/agents/`, with the least access its job needs. The five are Compatibility Analyst, Dependency Analyst, Build Upgrader, Code Fixer, and Plan-conformance Reviewer.
+_Avoid_: Sub-agent, worker bot
+
+**Working Branch**:
+The branch `modernize/issue-<N>` that holds the modernized code and is the shared workspace for the writing Micro-Agents, one at a time. It is separate from `main`.
+_Avoid_: Feature branch, fork
+
+**Tracker Comment**:
+The single pull request comment, marked `<!-- modernize-tracker -->`, that records each pipeline stage's status and the baseline test result.
+_Avoid_: Status check, dashboard
+
+**Reference Product**:
+GitHub Copilot app modernization. Its assess, plan, execute, and validate pattern inspired the Modernization Pipeline. The demo does not run it and does not claim to be it.
+_Avoid_: Modernization Executor, underlying engine
 
 **Checkpoint Branch**:
-A product-maintained Asset Manager branch representing a known-good workshop stage for comparison, recovery, or skipping ahead.
+A product-maintained branch in the upstream Asset Manager sample (`workshop/java-upgrade`) representing a known-good upgrade. The demo does not use it. It is available only as a private presenter comparison.
 _Avoid_: Backup branch, golden patch

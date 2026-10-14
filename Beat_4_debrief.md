@@ -1,75 +1,121 @@
-# Beat 4 debrief - human-gated Java modernization
+# Beat 4 debrief - multi-agent Java modernization with human gates
+
+**In one sentence:** a GitHub issue became a reviewed plan, a team of small agents upgraded a Java 8 app to Java 21 and tested it, and a human decided what reached `main`.
+
+![Who does what in Beat 4](assets/beat-4-who-does-what.svg)
+
+> Editable source: [assets/beat-4-who-does-what.excalidraw](assets/beat-4-who-does-what.excalidraw)
 
 ## What the customer just saw
 
-Beat 4 demonstrated only the first four stages of a larger modernization journey:
-
-```mermaid
-flowchart LR
-    A["1. Modernization Request<br/>business outcome in a GitHub issue"]
-    B["2. Modernization Plan<br/>gh-aw creates a plan PR"]
-    C["3. Modernization Execution<br/>App Modernization upgrades Java and Spring Boot"]
-    D["4. Implementation PR<br/>validated code changes await human review"]
-
-    A --> B --> C --> D
-```
-
-Testing agents, AI review, CI/CD gates, deployment, and production feedback were intentionally not part of this first customer demo.
-
-## The simple story
-
-| Stage | What happened | Who controlled the decision |
+| # | What happened | Who decided |
 |---|---|---|
-| 1. Request | A GitHub issue stated the business outcome and boundaries. | Human |
-| 2. Plan | gh-aw inspected Asset Manager and opened a Markdown plan pull request. | Agent proposed; human reviewed |
-| 3. Modernize | GitHub Copilot app modernization upgraded Java 8 to 21 and Spring Boot 2.7 to 3.5. | Human launched the approved task |
-| 4. Review | The validated changes were pushed as an implementation pull request. | Human decides whether to merge |
+| 1 | A GitHub issue stated the outcome and the boundaries: Java 21, Spring Boot 3.5, no Azure migration. | Human |
+| 2 | A planner agent inspected Asset Manager and opened a plan pull request. | Agent proposed, human reviewed |
+| 3 | The human merged the plan. The merge is the approval. | **Human gate 1** |
+| 4 | Five agents and a few plain Actions jobs upgraded the code, ran the tests, and checked the result against the plan. | Automated and auditable |
+| 5 | An Implementation Pull Request arrived with test evidence and a review verdict. | **Human gate 2** |
 
-## Why two agent surfaces were used
+Nothing reaches `main` unless a human merges it.
 
-GitHub Agentic Workflows and GitHub Copilot app modernization have different jobs:
+## The pipeline
 
-- **gh-aw** turns repository intent into an auditable, reviewable plan.
-- **GitHub Copilot app modernization** performs the supported Java upgrade and its validation/fix loop.
+![Beat 4 pipeline](assets/beat-4-pipeline.svg)
 
-Beat 4 does not pretend that the VS Code modernization extension runs inside GitHub Actions. The handoff after plan approval is explicit and visible.
+> Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw)
+
+Read it left to right in three steps:
+
+1. **Assess in parallel.** The baseline tests, a Compatibility Analyst, and a Dependency Analyst run side by side. They only read.
+2. **Upgrade in sequence.** A Build Upgrader changes the Maven files. Then a Code Fixer changes the Java code until it builds and the tests pass. One writer at a time, on one branch.
+3. **Verify in parallel, then review.** Two deterministic checks run side by side. A Reviewer agent then compares the result with the approved plan.
+
+## Meet the agents
+
+| Agent | Reads or writes | What it produces |
+|---|---|---|
+| Planner | Reads code, opens a plan PR | The Modernization Plan |
+| Compatibility Analyst | Read-only | A comment: `javax` to `jakarta` and Spring Boot 3 changes |
+| Dependency Analyst | Read-only | A comment: dependency and Maven wrapper decisions |
+| Build Upgrader | Pushes a commit | Updated `pom.xml` files |
+| Code Fixer | Pushes commits | Updated source and tests |
+| Plan-conformance Reviewer | Updates the PR description, one comment | A verdict and the PR summary |
+
+Plain Actions jobs, not agents, do the baseline tests, the JDK 21 build and test run, the version checks, and the final hand-off. Where a result can be computed, it is computed. Agents handle judgment.
+
+## Why several agents instead of one
+
+Think of it like small services instead of one monolith.
+
+- **Faster.** Analysis and verification run in parallel.
+- **Safer.** Each agent has one job and the least access it needs. The analysts cannot change code.
+- **Easier to track.** Each stage is its own job with its own log and a row in the tracker comment.
+- **Easier to recover.** A failed stage can be re-run alone. Earlier commits stay on the branch.
 
 ## Where the human stays in control
 
-The human makes both irreversible decisions:
+1. **Merge the plan** to authorize the work.
+2. **Review the Implementation Pull Request** and merge or reject it.
 
-1. Merge the Modernization Plan pull request to authorize implementation.
-2. Merge or reject the Implementation Pull Request after reviewing the code and validation evidence.
+Along the way:
 
-The human does not need to write modernization code during the demo. The modernization agent owns analysis, changes, build repair, and test repair.
+- Agents never write to the repository directly. A separate, validated job pushes their commits.
+- The Implementation PR stays a **draft** until the checks pass.
+- The Reviewer states in writing whether the result matches the plan.
 
-## What made the demo recoverable
+## Where the code lives
 
-The official Asset Manager workshop includes product-maintained checkpoint branches:
+| Location | Contents |
+|---|---|
+| `main` | The original Java 8 / Spring Boot 2.7 code. Agents never touch it. |
+| `modernize/issue-<N>` | The modernized Java 21 / Spring Boot 3.5 code. |
+| Implementation Pull Request | The review surface for the branch. Merging it is the only way the new code reaches `main`. |
 
-- `main` - original Java 8 / Spring Boot 2.7 application.
-- `workshop/java-upgrade` - known-good state after the runtime and framework upgrade.
-- `workshop/expected` - later Azure service migration state, outside this demo.
+## What if something fails
 
-If a live upgrade needs troubleshooting, compare with `workshop/java-upgrade` or use that checkpoint to explain the expected result.
+| Failure | What you see | Recovery |
+|---|---|---|
+| A test fails after the upgrade | `Verify build and tests` is red; the tracker shows baseline versus final | Re-run the Code Fixer |
+| An agent cannot finish | That job is red; the branch still holds earlier work | Re-run the failed job from the Actions run |
+| The plan is wrong | The pipeline has not started yet | Reject the plan PR and file a new request |
 
-## What to show on screen
+## Be honest about the boundaries
+
+- This pipeline **copies the plan, execute, validate pattern** of GitHub Copilot app modernization. It uses our own agents and standard Maven commands. It does not run that product, and it is not a supported product feature.
+- The baseline has one failing worker test (Mockito cannot mock a final AWS class on Java 8). The pipeline records it first and compares against it. Whether the upgrade makes it pass is a result to report, not a promise.
+- Agent behavior is proven by running it. The pre-run you showed is that proof.
+
+## What to have open on screen
 
 1. The Modernization Request issue.
-2. The generated Markdown plan and its merged pull request.
-3. The App Modernization assessment and upgrade progress.
-4. The Implementation Pull Request, changed files, and validation summary.
+2. The plan pull request and its plan file.
+3. The pipeline run graph in Actions.
+4. One agent run, to show a read-only job and a separate validated write.
+5. The Implementation Pull Request: tracker comment, test comparison, reviewer verdict.
+
+## Questions you may get
+
+**Is this the Copilot app modernization product?**
+No. It follows the same plan, execute, validate pattern with gh-aw agents. The product remains the supported route for production work.
+
+**Can it run without a human?**
+It could. This demo deliberately keeps two gates. The approval model does not change if you add more stages.
+
+**What if an agent is wrong?**
+The Reviewer checks the diff against the plan, deterministic jobs run the tests, and a human reviews before anything reaches `main`.
+
+**Why not one big agent?**
+Parallel work, least privilege, and per-stage recovery. The same reasons teams split services.
 
 ## Customer takeaway
 
-> We did not ask an agent to modernize production code without oversight. We captured intent, reviewed the plan, authorized a supported modernization tool, and received reviewable code changes. The next stages can be added later without changing this approval model.
+> We did not ask an agent to modernize production code without oversight. We captured intent, reviewed the plan, let a team of small agents do the work in parallel where it was safe, and received reviewable code with test evidence. The next stages can be added later without changing this approval model.
 
 ## Deliberately deferred
 
 - Azure Database for PostgreSQL migration
 - Azure Blob Storage migration
 - Azure Service Bus migration
-- Custom modernization skills
 - Containerization
 - Azure deployment
 - CI/CD quality gates

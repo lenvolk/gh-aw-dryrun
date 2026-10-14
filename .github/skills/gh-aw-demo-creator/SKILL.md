@@ -101,7 +101,7 @@ For requests like "add a follow-up beat", "create another AW demo", or "make thi
 
 Use the staged extension rules in [references/workflow-examples.md](references/workflow-examples.md). Define each stage's input, output, validation, and human approval before implementing it. Add one stage at a time when requested; do not build a complete pipeline merely because an example collection contains more workflows.
 
-Keep Beat 4's current scope. gh-aw proposes the Asset Manager plan; a human merges it and launches GitHub Copilot app modernization in VS Code. A plan merge is authorization for that manual handoff, not an automatic invocation of the extension. Preserve human acceptance of the implementation PR and leave later SDLC stages out of the beginner demo.
+Keep Beat 4's current scope. Beat 4 is standalone and lives in the target fork (`JavaModernization\java-migration-copilot-samples`), not in this kit: a planner agent proposes the Asset Manager plan, a human merges it (Plan Approval), and a pipeline of gh-aw agent workflows and plain Actions jobs executes the upgrade on a `modernize/issue-<N>` branch and opens a draft Implementation PR. `main` keeps the original code. The pipeline copies the plan, execute, validate pattern of GitHub Copilot app modernization but does not run that product; never describe it as the product or as supported. Preserve both human gates (plan merge, implementation PR review), keep parallelism to read-only workers, and leave later SDLC stages out of the beginner demo. Agent behavior is proven only by a real run, so require a clean pre-run before presenting.
 
 ## Troubleshooting entry points
 
