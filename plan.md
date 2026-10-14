@@ -701,7 +701,7 @@ The workflow should open one pull request titled:
 
 `[modernization-plan] Plan Asset Manager Java modernization for #<issue-number>`
 
-Review the generated file under `docs/modernization/requests/`. Confirm it contains:
+Review the plan file. It is in the **Java app fork** (`java-migration-copilot-samples`), not in `gh-aw-dryrun`. To find it, open the plan PR on GitHub, select **Files changed**, and open `docs/modernization/requests/<issue-number>-asset-manager-java-upgrade.md`. It is the only file in that PR. The folder does not exist on `main` until the plan is merged. Confirm it contains:
 
 - Verified Java 8 and Spring Boot 2.7 baseline.
 - Java 21 and Spring Boot 3.5 target.
