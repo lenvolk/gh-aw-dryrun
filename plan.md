@@ -713,23 +713,34 @@ Review the plan file. It is in the **Java app fork** (`java-migration-copilot-sa
 - Impact, risks, ordered execution steps (each tagged with the agent that performs it), and validation criteria.
 - Explicit exclusions for Azure service migration, containers, deployment, and production operations.
 
-**Human approval is the merge.** If the plan is correct, merge it. The merge starts Stage 3 automatically:
+**Human approval is the merge.** If the plan is correct, merge the plan PR into `main` of your fork. It adds only the plan file (a Markdown document, no code). The modernized code goes to a separate branch, `modernize/issue-<N>`, so `main` keeps the original Java 8 app.
+
+In the GitHub UI, select **Squash and merge**, then **Confirm**. Or run:
 
 ```powershell
 $planPr = gh pr list `
+  --repo lenvolk/java-migration-copilot-samples `
   --search '"[modernization-plan]" in:title' `
   --state open `
   --json number `
   --jq '.[0].number'
 
-gh pr merge $planPr --squash --delete-branch
+gh pr merge $planPr --repo lenvolk/java-migration-copilot-samples --squash --delete-branch
 ```
 
-Do not continue if the plan is wrong. Update or reject it instead.
+`--delete-branch` removes the planner's branch after the merge. Do not continue if the plan is wrong. Update or reject it instead.
 
 ### 10.8 Stage 3 - the agent pipeline runs
 
-The plan merge starts the pipeline. Watch it:
+The plan merge starts the workflow [modernize-pipeline.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-pipeline.yml), named **Modernize Asset Manager - Pipeline**. It is a plain GitHub Actions workflow, not an agent. It triggers on a merged PR into `main` whose title starts with `[modernization-plan]` and whose files include `docs/modernization/requests/*.md`.
+
+The agents start in this order:
+
+1. **Prepare** (Actions job) runs first and creates the branch and draft PR. No agent yet.
+2. **Compatibility Analyst** and **Dependency Analyst** are the first agents. They start together with the baseline tests, as soon as Prepare finishes.
+3. **Build Upgrader**, then **Code Fixer** run in sequence. The **Plan-conformance Reviewer** runs last, after the two verify checks pass. The table below shows the full order.
+
+Watch it:
 
 ```powershell
 gh run list --workflow modernize-pipeline.yml --limit 3
