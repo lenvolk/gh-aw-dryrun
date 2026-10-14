@@ -173,14 +173,14 @@ You'll be prompted to paste a value. Paste your personal access token and press 
 > 1. Go to <https://github.com/settings/personal-access-tokens/new> — this is the **fine-grained** PAT page. The Copilot CLI engine **rejects classic PATs (`ghp_…`)**; you must use a fine-grained one (`github_pat_…`).
 > 2. **Token name:** `gh-aw demo` so future-you knows what it's for.
 > 3. **Expiration:** 30 or 60 days — just enough for the demo. Never pick "No expiration".
-> 4. **Resource owner:** your user (or the org that owns the demo repo).
+> 4. **Resource owner:** your personal user account. Do not pick an organization: the Copilot Requests permission is not offered for organization-owned tokens.
 > 5. **Repository access:** *Only select repositories* → pick `gh-aw-demo`.
 > 6. **Repository permissions** (all Read/Write unless noted):
 >    - `Contents`: **Read and write** (Beat 3 pushes a new branch; Beats 1 & 2 alone only need Read)
 >    - `Pull requests`: **Read and write**
 >    - `Issues`: **Read and write**
 >    - `Metadata`: **Read** (auto-selected)
-> 7. **Account permissions:** `Copilot Chat`: **Read-only** (this is what lets the engine call Copilot's chat-completion API — the plain "Copilot" permission doesn't exist; "Copilot Editor Context" and "Copilot Requests" are for different surfaces and aren't needed).
+> 7. **Account permissions** (the **Account** tab, not **Repositories**): `Copilot Requests`: **Read**. This is what lets the engine call Copilot. gh-aw's pre-filled link sets it for you: <https://github.com/settings/personal-access-tokens/new?name=COPILOT_GITHUB_TOKEN&description=GitHub+Agentic+Workflows+-+Copilot+engine+authentication&user_copilot_requests=read>. "Copilot Chat" is not the permission gh-aw documents.
 > 8. Click **Generate token**, then **copy it immediately** — GitHub only shows it once. It will start with `github_pat_`.
 > 9. Back to the vscode terminal: Paste it when `gh secret set COPILOT_GITHUB_TOKEN` prompts you.
 >
@@ -627,15 +627,21 @@ The baseline application state matters for the story. At the revision used to va
 
 **Manual: create the token (about 2 minutes).** GitHub does not let a script create it. The agents call Copilot with this token.
 
-1. Open <https://github.com/settings/personal-access-tokens/new>.
-2. Set **Token name** to `Beat 4 gh-aw`.
-3. Set **Resource owner** to the GitHub account that has your Copilot license.
-4. Set **Repository access** to **Only select repositories**, then select your `java-migration-copilot-samples` fork.
-5. Under **Account permissions**, set **Copilot Requests** to **Read**.
-6. Choose a short expiration, then select **Generate token**.
-7. Copy the token. It must start with `github_pat_`. A classic `ghp_` token will not work.
+1. Open this link. It is gh-aw's official link and pre-fills the token name and the **Copilot Requests** permission, so you do not have to find it in the dropdown:
 
-Do not grant this token repository write permissions. GitHub Actions uses its own token to write to the repository.
+   <https://github.com/settings/personal-access-tokens/new?name=COPILOT_GITHUB_TOKEN&description=GitHub+Agentic+Workflows+-+Copilot+engine+authentication&user_copilot_requests=read>
+
+2. Set **Resource owner** to **your personal user account**, not an organization. The Copilot Requests permission is not offered for organization-owned tokens. The account must have an active Copilot license.
+3. Set **Repository access** to **Only select repositories**, then select your `java-migration-copilot-samples` fork.
+4. Open the **Permissions** section and select the **Account** tab (not **Repositories**). Confirm **Copilot Requests** is listed with access **Read**.
+
+   If it is not listed: select **Add permissions** while the **Account** tab is active, search for `Copilot`, and tick **Copilot Requests**. On the **Repositories** tab the search only shows repository permissions such as "Copilot agent settings", which is the wrong one.
+5. Choose a short expiration, then select **Generate token**.
+6. Copy the token. It must start with `github_pat_`. A classic `ghp_` token will not work.
+
+Do not grant this token repository permissions. GitHub Actions uses its own token to write to the repository.
+
+> **Why a token at all?** gh-aw can skip the token with `copilot-requests: write`, but that bills the organization and needs an organization-owned repository. This fork is under a personal account, so the token is required.
 
 **Automated: run the setup script.** From the target repository folder:
 
@@ -823,7 +829,7 @@ Keep your pre-run until after the customer meeting. Use a new Modernization Requ
 | `setup.ps1` shows `MANUAL` for Issues or Actions | Enable them in the fork's Settings, then re-run. Forks start with both off. |
 | `/modernize-plan` does not trigger | The issue body must start with `/modernize-plan`. Check `gh run list` and that Actions is enabled. |
 | No plan PR appears | Open the planner run and inspect the safe-output job. Verify "Allow GitHub Actions to create and approve pull requests". |
-| Run reports a missing or rejected Copilot token | Set `COPILOT_GITHUB_TOKEN` to a fine-grained PAT with **Copilot Requests: Read**. Do not use a classic PAT. |
+| Run reports a missing or rejected Copilot token | Use a fine-grained `github_pat_` token owned by your user account (not an organization) with **Account permissions: Copilot Requests: Read**. Do not use a classic PAT. |
 | Pipeline did not start after the merge | The plan PR title must start with `[modernization-plan]` and change a file under `docs/modernization/requests/`. Otherwise dispatch it (10.11). |
 | `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -CloseRun <N>`, then re-run. |
 | `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run the Code Fixer (10.11). |
