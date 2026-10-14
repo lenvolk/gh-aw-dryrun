@@ -683,6 +683,8 @@ You should see `COPILOT_GITHUB_TOKEN` and the workflow `Modernize Asset Manager 
 
 It creates the issue in your fork from `demo\beat4\modernization-request.md`. The `/modernize-plan` command at the start of the body triggers the planner agent.
 
+The planner agent is the workflow [modernize-1-plan.md](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-1-plan.md) in your fork. Its `on: slash_command: name: modernize-plan` trigger (lines 5-7) makes it wait for an issue or issue comment that starts with `/modernize-plan`. Without that first line, nothing runs.
+
 Show the customer:
 
 - The business outcome and explicit scope.
