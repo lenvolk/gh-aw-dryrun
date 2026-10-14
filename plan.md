@@ -853,6 +853,7 @@ Keep your pre-run until after the customer meeting. Use a new Modernization Requ
 | `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run the Code Fixer (10.11). |
 | An agent cannot download Maven dependencies | The workers allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in the worker `.md`, then `gh aw compile`. |
 | Workflow cannot find a skill or agent | Confirm the files under `.github\skills\` and `.github\agents\` exist and re-run `gh aw compile`. |
+| An agent's comment shows another agent's content, or `safe_outputs` fails with `No handler loaded for type` | Artifact name collision. Each worker needs a unique `stage` input (already set). If you add a worker, give it its own default. |
 | `gh extension upgrade aw` fails with SAML | Expected. Run `gh aw version`. Continue if it reports `v0.89.21` or newer. |
 | The baseline worker test fails on JDK 8 | Known baseline finding. Do not hand-edit it. The pipeline compares against it. |
 | The first full run behaves differently from this guide | Treat the pre-run as the rehearsal. This pipeline was compiled and statically checked, but its agent behavior is proven only by running it. Fix, then pre-run again until it is clean twice. |
