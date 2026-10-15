@@ -673,7 +673,7 @@ gh workflow list
 
 If `gh` still asks "Select a repo", choose `lenvolk/java-migration-copilot-samples`, your fork. Never choose `Azure-Samples/...`, which is upstream.
 
-You should see `COPILOT_GITHUB_TOKEN` and the workflow `Modernize Asset Manager - Pipeline`.
+You should see `COPILOT_GITHUB_TOKEN` and seven `modernize-*` workflows: `modernize-planner`, `modernize-pipeline`, and the five agents.
 
 ### 10.6 Stage 1 - create the Modernization Request
 
@@ -683,7 +683,7 @@ You should see `COPILOT_GITHUB_TOKEN` and the workflow `Modernize Asset Manager 
 
 It creates the issue in your fork from `demo\beat4\modernization-request.md`. The `/modernize-plan` command at the start of the body triggers the planner agent.
 
-The planner agent is the workflow [modernize-1-plan.md](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-1-plan.md) in your fork. Its `on: slash_command: name: modernize-plan` trigger (lines 5-7) makes it wait for an issue or issue comment that starts with `/modernize-plan`. Without that first line, nothing runs.
+The planner agent is the workflow [modernize-planner.md](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-planner.md) in your fork, listed as **modernize-planner** in Actions. Its `on: slash_command: name: modernize-plan` trigger (lines 5-7) makes it wait for an issue or issue comment that starts with `/modernize-plan`. Without that first line, nothing runs.
 
 Show the customer:
 
@@ -693,10 +693,10 @@ Show the customer:
 
 ### 10.7 Stage 2 - review and approve the Modernization Plan
 
-Watch the planner agent:
+Watch `modernize-planner`:
 
 ```powershell
-gh run list --workflow modernize-1-plan.lock.yml --limit 5
+gh run list --workflow modernize-planner.lock.yml --limit 5
 ```
 
 The workflow should open one pull request titled:
@@ -732,13 +732,15 @@ gh pr merge $planPr --repo lenvolk/java-migration-copilot-samples --squash --del
 
 ### 10.8 Stage 3 - the agent pipeline runs
 
-The plan merge starts the workflow [modernize-pipeline.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-pipeline.yml), named **Modernize Asset Manager - Pipeline**. It is a plain GitHub Actions workflow, not an agent. It triggers on a merged PR into `main` whose title starts with `[modernization-plan]` and whose files include `docs/modernization/requests/*.md`.
+The plan merge starts the workflow [modernize-pipeline.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-pipeline.yml). It is a plain GitHub Actions workflow, not an agent. It triggers on a merged PR into `main` whose title starts with `[modernization-plan]` and whose files include `docs/modernization/requests/*.md`.
+
+**One name everywhere.** Each agent uses the same name for its workflow file, its entry in the Actions sidebar, its job in the run graph, and its custom agent. For example, `modernize-code-fixer` is `.github/workflows/modernize-code-fixer.md`, the **modernize-code-fixer** workflow, the `modernize-code-fixer` job, and `.github/agents/modernize-code-fixer.agent.md`.
 
 The agents start in this order:
 
-1. **Prepare** (Actions job) runs first and creates the branch and draft PR. No agent yet.
-2. **Compatibility Analyst** and **Dependency Analyst** are the first agents. They start together with the baseline tests, as soon as Prepare finishes.
-3. **Build Upgrader**, then **Code Fixer** run in sequence. The **Plan-conformance Reviewer** runs last, after the two verify checks pass. The table below shows the full order.
+1. `prepare` (Actions job) runs first and creates the branch and draft PR. No agent yet.
+2. `modernize-compat-analyst` and `modernize-dependency-analyst` are the first agents. They start together with `baseline-test`, as soon as `prepare` finishes.
+3. `modernize-build-upgrader`, then `modernize-code-fixer` run in sequence. `modernize-conformance-reviewer` runs last, after `verify-build` and `verify-static`. The table below shows the full order.
 
 Watch it:
 
@@ -747,22 +749,24 @@ gh run list --workflow modernize-pipeline.yml --limit 3
 gh run watch
 ```
 
-Or open **Actions -> Modernize Asset Manager - Pipeline** on GitHub. The run graph shows the parallel lanes. A tracker comment on the Implementation PR shows each stage's status.
+Or open **Actions -> modernize-pipeline** on GitHub. The run graph shows the parallel lanes. A tracker comment on the Implementation PR shows each stage's status.
 
 The pipeline is a plain GitHub Actions workflow that calls five gh-aw agent workflows as reusable workflows. Plain jobs do the deterministic work; agents do the judgment work.
 
-| Phase | Worker | Type | Runs | What it does |
+| Phase | Job (same name in the run graph) | Type | Runs | What it does |
 |---|---|---|---|---|
-| 0 | Prepare | Actions job | first | Creates branch `modernize/issue-<N>`, opens a **draft** Implementation PR, starts the tracker comment |
-| 1 | Baseline tests | Actions job | parallel | Runs the original tests on JDK 8 and records the result |
-| 1 | Compatibility Analyst | gh-aw agent | parallel | Read-only. Finds `javax` to `jakarta` and Spring Boot 3 source changes |
-| 1 | Dependency Analyst | gh-aw agent | parallel | Read-only. Maps dependencies and the Maven wrapper to Boot 3.5 and Java 21 |
-| 2 | Build Upgrader | gh-aw agent | sequential | Edits only the Maven build files, pushes a commit to the branch |
-| 2 | Code Fixer | gh-aw agent | sequential | Fixes source and tests in a build and test loop, pushes commits |
-| 3 | Verify build and tests | Actions job | parallel | JDK 21 build, tests and packaging, compared with the baseline |
-| 3 | Verify versions | Actions job | parallel | Checks Boot 3.5.x, Java 21 and no remaining `javax` imports |
-| 4 | Plan-conformance Reviewer | gh-aw agent | after 3 | Compares the diff with the approved plan, writes the PR summary and a verdict |
-| 5 | Finalize | Actions job | last | Marks the PR ready for review, or labels it `needs-attention` |
+| 0 | `prepare` | Actions job | first | Creates branch `modernize/issue-<N>`, opens a **draft** Implementation PR, starts the tracker comment |
+| 1 | `baseline-test` | Actions job | parallel | Runs the original tests on JDK 8 and records the result |
+| 1 | `modernize-compat-analyst` | gh-aw agent | parallel | Read-only. Finds `javax` to `jakarta` and Spring Boot 3 source changes |
+| 1 | `modernize-dependency-analyst` | gh-aw agent | parallel | Read-only. Maps dependencies and the Maven wrapper to Boot 3.5 and Java 21 |
+| 2 | `modernize-build-upgrader` | gh-aw agent | sequential | Edits only the Maven build files, pushes a commit to the branch |
+| 2 | `modernize-code-fixer` | gh-aw agent | sequential | Fixes source and tests in a build and test loop, pushes commits |
+| 3 | `verify-build` | Actions job | parallel | JDK 21 build, tests and packaging, compared with the baseline |
+| 3 | `verify-static` | Actions job | parallel | Checks Boot 3.5.x, Java 21 and no remaining `javax` imports |
+| 4 | `modernize-conformance-reviewer` | gh-aw agent | after 3 | Compares the diff with the approved plan, writes the PR summary and a verdict |
+| 5 | `finalize` | Actions job | last | Marks the PR ready for review, or labels it `needs-attention` |
+
+`track-analysis` and `track-build` also appear in the graph. They only update the tracker comment.
 
 Why this design, in one sentence each:
 
@@ -787,9 +791,9 @@ git diff --stat main...origin/modernize/issue-<N>
 Show the customer:
 
 - The tracker comment: every stage, and baseline versus final test results.
-- The Compatibility and Dependency analyst comments.
+- The `modernize-compat-analyst` and `modernize-dependency-analyst` comments.
 - The diff: build files first, then `javax` to `jakarta`.
-- The Plan-conformance review: `Verdict: PASS`, and the PR description it wrote.
+- The `modernize-conformance-reviewer` comment: `Verdict: PASS`, and the PR description it wrote.
 - The label `ready-for-human-review`, and that the PR was a draft until all checks passed.
 
 **Do not merge it.** `main` keeps the original Java 8 code. The modernized code stays on `modernize/issue-<N>`. A human merge is the only way it reaches `main`.
@@ -802,7 +806,7 @@ Because the full run takes a while, **pre-run Beat 4 before the meeting** (10.3 
 2. **Show the Modernization Request issue** (1 min). Point out the scope and the exclusions.
 3. **Show the plan pull request** (2 min). Open the plan file: baseline, target, steps tagged by agent. Say: "Merging this is the approval."
 4. **Show the pipeline run graph** in Actions (3 min). Point at the parallel lanes, then the sequential upgrade, then the review.
-5. **Open one agent run** (2 min), for example the Code Fixer. Show its prompt role, its read-only job, and the validated push done by a separate job.
+5. **Open one agent run** (2 min), for example `modernize-code-fixer`. Show its prompt role, its read-only job, and the validated push done by a separate job.
 6. **Show the Implementation PR** (3 min): tracker comment, baseline versus final tests, reviewer verdict.
 7. **Show where the code lives** (1 min): `main` is original, `modernize/issue-<N>` is modernized.
 8. Open [Beat_4_debrief.md](Beat_4_debrief.md) and close with the takeaways.
@@ -818,7 +822,7 @@ Each stage is its own job or workflow. A failure stops the pipeline at that stag
 3. To run one agent alone, dispatch it with the pull request details:
 
    ```powershell
-   gh workflow run modernize-worker-codefix.lock.yml `
+   gh workflow run modernize-code-fixer.lock.yml `
      -f issue_number=<N> -f pr_number=<PR> `
      -f branch=modernize/issue-<N> `
      -f plan_path=docs/modernization/requests/<N>-asset-manager-java-upgrade.md
@@ -851,8 +855,8 @@ Keep your pre-run until after the customer meeting.
 | Run reports a missing or rejected Copilot token | Use a fine-grained `github_pat_` token owned by your user account (not an organization) with **Account permissions: Copilot Requests: Read**. Do not use a classic PAT. |
 | Pipeline did not start after the merge | The plan PR title must start with `[modernization-plan]` and change a file under `docs/modernization/requests/`. Otherwise dispatch it (10.11). |
 | `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -Full`, then create a new request. |
-| `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run the Code Fixer (10.11). |
-| An agent cannot download Maven dependencies | The workers allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in the worker `.md`, then `gh aw compile`. |
+| `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run `modernize-code-fixer` (10.11). |
+| An agent cannot download Maven dependencies | The agent workflows allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in that agent's workflow `.md`, then `gh aw compile`. |
 | Workflow cannot find a skill or agent | Confirm the files under `.github\skills\` and `.github\agents\` exist and re-run `gh aw compile`. |
 | An agent's comment shows another agent's content, or `safe_outputs` fails with `No handler loaded for type` | Artifact name collision. Each worker needs a unique `stage` input (already set). If you add a worker, give it its own default. |
 | `gh extension upgrade aw` fails with SAML | Expected. Run `gh aw version`. Continue if it reports `v0.89.21` or newer. |

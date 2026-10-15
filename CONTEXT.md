@@ -33,7 +33,7 @@ The GitHub Actions workflow `modernize-pipeline.yml` that starts when a Moderniz
 _Avoid_: Executor, orchestrator agent
 
 **Micro-Agent**:
-A single-purpose gh-aw agent workflow, defined by a custom agent file in `.github/agents/`, with the least access its job needs. The five are Compatibility Analyst, Dependency Analyst, Build Upgrader, Code Fixer, and Plan-conformance Reviewer.
+A single-purpose gh-aw agent workflow, defined by a custom agent file in `.github/agents/`, with the least access its job needs. The five are `modernize-compat-analyst`, `modernize-dependency-analyst`, `modernize-build-upgrader`, `modernize-code-fixer`, and `modernize-conformance-reviewer`. Each name is the same for the workflow file, the Actions entry, the pipeline job, and the custom agent.
 _Avoid_: Sub-agent, worker bot
 
 **Working Branch**:

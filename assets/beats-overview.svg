@@ -90,7 +90,7 @@
   <polygon points="218,562 210,558 210,566" fill="#f59e0b"/>
 
   <rect x="220" y="530" width="150" height="64" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="295" y="557" class="node">Planner agent</text>
+  <text x="295" y="557" class="node">modernize-planner</text>
   <text x="295" y="576" class="node">opens plan PR</text>
 
   <line x1="372" y1="562" x2="393" y2="562" stroke="#f59e0b" stroke-width="2"/>
@@ -104,7 +104,7 @@
   <polygon points="608,562 600,558 600,566" fill="#f59e0b"/>
 
   <rect x="610" y="530" width="140" height="64" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
-  <text x="680" y="550" class="node">5 agents + tests</text>
+  <text x="680" y="550" class="node" style="font-size:13px">modernize-pipeline</text>
   <text x="680" y="569" class="node">Implementation PR</text>
   <text x="680" y="588" class="node">human decides</text>
 

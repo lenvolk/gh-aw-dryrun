@@ -26,20 +26,22 @@ Nothing reaches `main` unless a human merges it.
 
 Read it left to right in three steps:
 
-1. **Assess in parallel.** The baseline tests, a Compatibility Analyst, and a Dependency Analyst run side by side. They only read.
-2. **Upgrade in sequence.** A Build Upgrader changes the Maven files. Then a Code Fixer changes the Java code until it builds and the tests pass. One writer at a time, on one branch.
-3. **Verify in parallel, then review.** Two deterministic checks run side by side. A Reviewer agent then compares the result with the approved plan.
+1. **Assess in parallel.** `baseline-test`, `modernize-compat-analyst` and `modernize-dependency-analyst` run side by side. They only read.
+2. **Upgrade in sequence.** `modernize-build-upgrader` changes the Maven files. Then `modernize-code-fixer` changes the Java code until it builds and the tests pass. One writer at a time, on one branch.
+3. **Verify in parallel, then review.** `verify-build` and `verify-static` run side by side. `modernize-conformance-reviewer` then compares the result with the approved plan.
 
 ## Meet the agents
 
+Each agent has one name everywhere: its workflow file, its entry in the Actions sidebar, its job in the run graph, and its custom agent file.
+
 | Agent | Reads or writes | What it produces |
 |---|---|---|
-| Planner | Reads code, opens a plan PR | The Modernization Plan |
-| Compatibility Analyst | Read-only | A comment: `javax` to `jakarta` and Spring Boot 3 changes |
-| Dependency Analyst | Read-only | A comment: dependency and Maven wrapper decisions |
-| Build Upgrader | Pushes a commit | Updated `pom.xml` files |
-| Code Fixer | Pushes commits | Updated source and tests |
-| Plan-conformance Reviewer | Updates the PR description, one comment | A verdict and the PR summary |
+| `modernize-planner` | Reads code, opens a plan PR | The Modernization Plan |
+| `modernize-compat-analyst` | Read-only | A comment: `javax` to `jakarta` and Spring Boot 3 changes |
+| `modernize-dependency-analyst` | Read-only | A comment: dependency and Maven wrapper decisions |
+| `modernize-build-upgrader` | Pushes a commit | Updated `pom.xml` files |
+| `modernize-code-fixer` | Pushes commits | Updated source and tests |
+| `modernize-conformance-reviewer` | Updates the PR description, one comment | A verdict and the PR summary |
 
 Plain Actions jobs, not agents, do the baseline tests, the JDK 21 build and test run, the version checks, and the final hand-off. Where a result can be computed, it is computed. Agents handle judgment.
 
@@ -61,7 +63,7 @@ Along the way:
 
 - Agents never write to the repository directly. A separate, validated job pushes their commits.
 - The Implementation PR stays a **draft** until the checks pass.
-- The Reviewer states in writing whether the result matches the plan.
+- `modernize-conformance-reviewer` states in writing whether the result matches the plan.
 
 ## Where the code lives
 
@@ -75,7 +77,7 @@ Along the way:
 
 | Failure | What you see | Recovery |
 |---|---|---|
-| A test fails after the upgrade | `Verify build and tests` is red; the tracker shows baseline versus final | Re-run the Code Fixer |
+| A test fails after the upgrade | `verify-build` is red; the tracker shows baseline versus final | Re-run `modernize-code-fixer` |
 | An agent cannot finish | That job is red; the branch still holds earlier work | Re-run the failed job from the Actions run |
 | The plan is wrong | The pipeline has not started yet | Reject the plan PR and file a new request |
 
@@ -102,7 +104,7 @@ No. It follows the same plan, execute, validate pattern with gh-aw agents. The p
 It could. This demo deliberately keeps two gates. The approval model does not change if you add more stages.
 
 **What if an agent is wrong?**
-The Reviewer checks the diff against the plan, deterministic jobs run the tests, and a human reviews before anything reaches `main`.
+`modernize-conformance-reviewer` checks the diff against the plan, deterministic jobs run the tests, and a human reviews before anything reaches `main`.
 
 **Why not one big agent?**
 Parallel work, least privilege, and per-stage recovery. The same reasons teams split services.
