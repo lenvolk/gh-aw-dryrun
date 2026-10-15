@@ -335,7 +335,7 @@ Go back to the pull request you opened in Part 3 (the one the Big-O Auditor alre
 1. Within ~10 seconds: a status comment appears ("Started…") with a link to the new Actions run. That's auto-created by the `slash_command` trigger — you didn't configure it.
 2. The new run appears under **Actions → Auto-Fix Agent**. Open it and keep it visible on screen.
 3. ~2–3 minutes later: a **new pull request** appears in the repo. Title looks like `[ai] Optimize find_matching_records to O(n)`. It targets `main` (the default branch) and contains just the optimized function.
-4. Open the child PR. On the **Conversation** tab, read the description (it links back to the audit comment). Click the **Files changed** tab to see the diff — the slow function rewritten exactly as the auditor suggested.
+4. Open the child PR. On the **Overview** tab (**Conversation** in older GitHub layouts), read the description (it links back to the audit comment). Click the **Files changed** tab to see the diff — the slow function rewritten exactly as the auditor suggested.
 
 ### 5.4 Close the loop on stage
 
@@ -703,7 +703,7 @@ The workflow should open one pull request titled:
 
 `[modernization-plan] Plan Asset Manager Java modernization for #<issue-number>`
 
-Open its **Conversation** tab first. The description has three sections: **Summary** (a flow diagram, the version diff the plan proposes, and the run order), **Evidence** (the baseline the planner read, and the checks the next PR must pass), and **Merge Danger** (what merging starts and what a revert cannot undo).
+Open the PR. Its **Overview** tab (called **Conversation** in older GitHub layouts) shows the description first. The description has three sections: **Summary** (a flow diagram, the version diff the plan proposes, and the run order), **Evidence** (the baseline the planner read, and the checks the next PR must pass), and **Merge Danger** (what merging starts and what a revert cannot undo).
 
 Review the plan file. It is in the **Java app fork** (`java-migration-copilot-samples`), not in `gh-aw-dryrun`. To find it, open the plan PR on GitHub, select **Files changed**, and open `docs/modernization/requests/<issue-number>-asset-manager-java-upgrade.md`. It is the only file in that PR. The folder does not exist on `main` until the plan is merged. Confirm it contains:
 
