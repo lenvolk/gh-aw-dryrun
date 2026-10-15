@@ -831,14 +831,15 @@ Each stage is its own job or workflow. A failure stops the pipeline at that stag
      -f plan_path=docs/modernization/requests/<N>-asset-manager-java-upgrade.md
    ```
 
-To reset for another session, from the target repository:
+To reset the fork for a fresh run. It closes all open issues and PRs, deletes every branch except `main`, and deletes all workflow runs. Merged plans on `main` stay; each uses a new issue number, so they never conflict.
 
 ```powershell
-.\demo\beat4\reset.ps1                  # lists runs, deletes nothing
-.\demo\beat4\reset.ps1 -CloseRun <N>    # closes the PR and deletes modernize/issue-<N>
+cd C:\Temp\GHDemo\JavaModernization\java-migration-copilot-samples
+.\demo\beat4\reset.ps1          # preview, changes nothing
+.\demo\beat4\reset.ps1 -Full    # reset; type the repo name to confirm
 ```
 
-Keep your pre-run until after the customer meeting. Use a new Modernization Request for each run. The plan filename includes the issue number, so previous approved plans remain auditable and do not block a rerun.
+Keep your pre-run until after the customer meeting.
 
 ### 10.12 Beat 4 troubleshooting
 
@@ -849,7 +850,7 @@ Keep your pre-run until after the customer meeting. Use a new Modernization Requ
 | No plan PR appears | Open the planner run and inspect the safe-output job. Verify "Allow GitHub Actions to create and approve pull requests". |
 | Run reports a missing or rejected Copilot token | Use a fine-grained `github_pat_` token owned by your user account (not an organization) with **Account permissions: Copilot Requests: Read**. Do not use a classic PAT. |
 | Pipeline did not start after the merge | The plan PR title must start with `[modernization-plan]` and change a file under `docs/modernization/requests/`. Otherwise dispatch it (10.11). |
-| `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -CloseRun <N>`, then re-run. |
+| `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -Full`, then create a new request. |
 | `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run the Code Fixer (10.11). |
 | An agent cannot download Maven dependencies | The workers allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in the worker `.md`, then `gh aw compile`. |
 | Workflow cannot find a skill or agent | Confirm the files under `.github\skills\` and `.github\agents\` exist and re-run `gh aw compile`. |
