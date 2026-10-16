@@ -45,6 +45,23 @@ Each agent has one name everywhere: its workflow file, its entry in the Actions 
 
 Plain Actions jobs, not agents, do the baseline tests, the JDK 21 build and test run, the version checks, and the final hand-off. Where a result can be computed, it is computed. Agents handle judgment.
 
+## Why different models
+
+Each workflow pins its requested model in `engine.model`. All use the same Copilot engine and existing token; the plain Actions jobs use no model.
+
+| Workflow | Model ID | Decision |
+|---|---|---|
+| `modernize-planner` | `claude-sonnet-4.6` | Balance reasoning and readable plan writing. |
+| `modernize-compat-analyst` | `gpt-5.4-mini` | Smaller model for bounded, read-only source analysis. |
+| `modernize-dependency-analyst` | `claude-haiku-4.5` | Lightweight model for dependency inventory and recommendations. |
+| `modernize-build-upgrader` | `gpt-5-mini` | Smaller model for plan-guided edits limited to Maven configuration. |
+| `modernize-code-fixer` | `gpt-5.3-codex` | Coding-focused model for Java edits and the compile/test/fix loop. |
+| `modernize-conformance-reviewer` | `gpt-5.4` | Reasoning-oriented model for comparing the plan, diff and evidence. |
+
+These are role-based demo choices, not measured claims that one model is best. Six different models demonstrate selection, not a production requirement. The compiler accepts the configuration, but token-owner access, policy and availability for the gh-aw integration must be verified by a fresh pre-run. Earlier successful runs used the previous configuration.
+
+Show two workflow files side by side: the engine stays `copilot`, while `model` changes. See the [gh-aw engine reference](https://github.github.com/gh-aw/reference/engines/) for configuration.
+
 ## Why several agents instead of one
 
 Think of it like small services instead of one monolith.

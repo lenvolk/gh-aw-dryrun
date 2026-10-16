@@ -778,6 +778,27 @@ Why this design, in one sentence each:
 
 Each agent is defined once as a role in `.github/agents/modernize-*.agent.md`, with shared rules in `.github/skills/java-upgrade-rules/`. The plan skill is `.github/skills/java-modernization/`.
 
+#### Model choices for the demo
+
+Each gh-aw workflow explicitly selects a different model under `engine.model`. All six use the `copilot` engine and the existing `COPILOT_GITHUB_TOKEN`; different models do not require separate provider API keys.
+
+| Workflow | Model ID | Why we chose it |
+|---|---|---|
+| `modernize-planner` | `claude-sonnet-4.6` | Balance reasoning and clear writing for the assessment and human-reviewable plan. |
+| `modernize-compat-analyst` | `gpt-5.4-mini` | Use a smaller model for bounded, read-only source compatibility analysis. |
+| `modernize-dependency-analyst` | `claude-haiku-4.5` | Favor a lightweight model for dependency inventory and upgrade recommendations, with no code writes. |
+| `modernize-build-upgrader` | `gpt-5-mini` | Keep a narrowly scoped Maven configuration edit on a smaller model, guided by the plan and analysis. |
+| `modernize-code-fixer` | `gpt-5.3-codex` | Use a coding-focused model for Java edits and the compile/test/fix loop. |
+| `modernize-conformance-reviewer` | `gpt-5.4` | Use a reasoning-oriented model to compare the plan, diff and validation evidence. |
+
+These are demo design choices, not benchmark results or guarantees of speed, cost or correctness. The model mix makes per-workflow selection visible; six different models are not a production requirement. Deterministic Actions jobs (`baseline-test`, `verify-build`, `verify-static`, and the orchestration/tracker jobs) use no AI model.
+
+**Show the customer:** open one workflow `.md`, point at `engine.id: copilot` and `engine.model`, then compare another workflow. The engine stays the same; the requested model changes by role.
+
+The selections compile with gh-aw v0.89.21 with no model warnings. Compilation does not prove the token owner can use every model: account access, organization policy and availability for the gh-aw integration still apply. Rehearse the full flow before presenting; do not treat a previous run as evidence for this new model mix. Changing models affects future runs only.
+
+References: [gh-aw engine configuration](https://github.github.com/gh-aw/reference/engines/) and [Copilot supported models](https://docs.github.com/en/copilot/reference/ai-models/supported-models).
+
 ### 10.9 Stage 4 - review the Implementation Pull Request
 
 When the pipeline finishes, open the Implementation Pull Request: `[modernization] Upgrade Asset Manager to Java 21 and Spring Boot 3.5 (#<issue-number>)`.
