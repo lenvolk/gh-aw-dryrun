@@ -3,44 +3,996 @@
   "version": 2,
   "source": "gh-aw-dryrun/plan.md",
   "elements": [
-    { "type": "rectangle", "id": "canvas-bg", "x": 0, "y": 0, "width": 800, "height": 740, "backgroundColor": "#ffffff", "fillStyle": "solid", "strokeColor": "#ffffff", "strokeWidth": 0, "locked": true },
-    { "type": "text", "id": "title", "x": 100, "y": 18, "width": 600, "height": 55, "text": "gh-aw Demo — Four Beats, Human-Gated Modernization", "fontSize": 22, "fontFamily": 2, "strokeColor": "#000000", "textAlign": "center" },
-    { "type": "text", "id": "subtitle", "x": 130, "y": 50, "width": 540, "height": 35, "text": "intent  →  agentic plan  →  human approval  →  reviewable output", "fontSize": 14, "fontFamily": 2, "strokeColor": "#000000", "textAlign": "center" },
-
-    { "type": "rectangle", "id": "b1zone", "x": 30, "y": 88, "width": 740, "height": 100, "backgroundColor": "#edf4ff", "fillStyle": "solid", "strokeColor": "#4a9eed", "strokeWidth": 1, "opacity": 100, "roundness": { "type": 3 } },
-    { "type": "text", "id": "b1label", "x": 44, "y": 96, "width": 260, "height": 40, "text": "Beat 1 — Big-O Auditor", "fontSize": 16, "fontFamily": 2, "strokeColor": "#000000" },
-    { "type": "rectangle", "id": "b1t", "x": 60, "y": 122, "width": 170, "height": 56, "backgroundColor": "#a5d8ff", "fillStyle": "solid", "strokeColor": "#4a9eed", "roundness": { "type": 3 }, "label": { "text": "pull_request\nopened", "fontSize": 16 } },
-    { "type": "arrow", "id": "b1a1", "x": 230, "y": 150, "width": 60, "height": 0, "points": [[0,0],[60,0]], "strokeColor": "#4a9eed", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b1m", "x": 290, "y": 122, "width": 200, "height": 56, "backgroundColor": "#d0bfff", "fillStyle": "solid", "strokeColor": "#8b5cf6", "roundness": { "type": 3 }, "label": { "text": "big-o-auditor.md\n(AI reviews diff)", "fontSize": 16 } },
-    { "type": "arrow", "id": "b1a2", "x": 490, "y": 150, "width": 60, "height": 0, "points": [[0,0],[60,0]], "strokeColor": "#4a9eed", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b1o", "x": 550, "y": 122, "width": 200, "height": 56, "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeColor": "#22c55e", "roundness": { "type": 3 }, "label": { "text": "add-comment\n\"O(n²) → use set\"", "fontSize": 16 } },
-
-    { "type": "rectangle", "id": "b2zone", "x": 30, "y": 218, "width": 740, "height": 100, "backgroundColor": "#effbf1", "fillStyle": "solid", "strokeColor": "#22c55e", "strokeWidth": 1, "opacity": 100, "roundness": { "type": 3 } },
-    { "type": "text", "id": "b2label", "x": 44, "y": 226, "width": 240, "height": 40, "text": "Beat 2 — Issue Triage", "fontSize": 16, "fontFamily": 2, "strokeColor": "#000000" },
-    { "type": "rectangle", "id": "b2t", "x": 60, "y": 252, "width": 170, "height": 56, "backgroundColor": "#a5d8ff", "fillStyle": "solid", "strokeColor": "#4a9eed", "roundness": { "type": 3 }, "label": { "text": "issues\nopened", "fontSize": 16 } },
-    { "type": "arrow", "id": "b2a1", "x": 230, "y": 280, "width": 60, "height": 0, "points": [[0,0],[60,0]], "strokeColor": "#22c55e", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b2m", "x": 290, "y": 252, "width": 200, "height": 56, "backgroundColor": "#d0bfff", "fillStyle": "solid", "strokeColor": "#8b5cf6", "roundness": { "type": 3 }, "label": { "text": "issue-triage.md\n(AI classifies)", "fontSize": 16 } },
-    { "type": "arrow", "id": "b2a2", "x": 490, "y": 280, "width": 60, "height": 0, "points": [[0,0],[60,0]], "strokeColor": "#22c55e", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b2o", "x": 550, "y": 252, "width": 200, "height": 56, "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeColor": "#22c55e", "roundness": { "type": 3 }, "label": { "text": "add-labels +\nadd-comment", "fontSize": 16 } },
-
-    { "type": "rectangle", "id": "b3zone", "x": 30, "y": 348, "width": 740, "height": 100, "backgroundColor": "#f4f0ff", "fillStyle": "solid", "strokeColor": "#8b5cf6", "strokeWidth": 1, "opacity": 100, "roundness": { "type": 3 } },
-    { "type": "text", "id": "b3label", "x": 44, "y": 356, "width": 320, "height": 40, "text": "Beat 3 — Auto-Fix  (advanced)", "fontSize": 16, "fontFamily": 2, "strokeColor": "#000000" },
-    { "type": "rectangle", "id": "b3t", "x": 60, "y": 382, "width": 170, "height": 56, "backgroundColor": "#a5d8ff", "fillStyle": "solid", "strokeColor": "#4a9eed", "roundness": { "type": 3 }, "label": { "text": "slash_command\n/fix on PR", "fontSize": 16 } },
-    { "type": "arrow", "id": "b3a1", "x": 230, "y": 410, "width": 60, "height": 0, "points": [[0,0],[60,0]], "strokeColor": "#8b5cf6", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b3m", "x": 290, "y": 382, "width": 200, "height": 56, "backgroundColor": "#d0bfff", "fillStyle": "solid", "strokeColor": "#8b5cf6", "roundness": { "type": 3 }, "label": { "text": "auto-fix.md\n(AI writes patch)", "fontSize": 16 } },
-    { "type": "arrow", "id": "b3a2", "x": 490, "y": 410, "width": 60, "height": 0, "points": [[0,0],[60,0]], "strokeColor": "#8b5cf6", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b3o", "x": 550, "y": 382, "width": 200, "height": 56, "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeColor": "#22c55e", "roundness": { "type": 3 }, "label": { "text": "create-pull-request\n(stacked fix)", "fontSize": 16 } },
-
-    { "type": "rectangle", "id": "b4zone", "x": 30, "y": 478, "width": 740, "height": 140, "backgroundColor": "#fff9db", "fillStyle": "solid", "strokeColor": "#f59e0b", "strokeWidth": 2, "roundness": { "type": 3 } },
-    { "type": "text", "id": "b4label", "x": 44, "y": 486, "width": 360, "height": 40, "text": "Beat 4 — Java App Modernization", "fontSize": 16, "fontFamily": 2, "strokeColor": "#000000" },
-    { "type": "rectangle", "id": "b4t", "x": 50, "y": 530, "width": 145, "height": 64, "backgroundColor": "#a5d8ff", "fillStyle": "solid", "strokeColor": "#4a9eed", "strokeWidth": 2, "roundness": { "type": 3 }, "label": { "text": "Request issue\n/modernize-plan", "fontSize": 13 } },
-    { "type": "arrow", "id": "b4a1", "x": 195, "y": 562, "width": 25, "height": 0, "points": [[0,0],[25,0]], "strokeColor": "#f59e0b", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b4m", "x": 220, "y": 530, "width": 150, "height": 64, "backgroundColor": "#d0bfff", "fillStyle": "solid", "strokeColor": "#8b5cf6", "strokeWidth": 2, "roundness": { "type": 3 }, "label": { "text": "modernize-planner\nopens plan PR", "fontSize": 13 } },
-    { "type": "arrow", "id": "b4a2", "x": 370, "y": 562, "width": 25, "height": 0, "points": [[0,0],[25,0]], "strokeColor": "#f59e0b", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b4h", "x": 395, "y": 530, "width": 190, "height": 64, "backgroundColor": "#fff3bf", "fillStyle": "solid", "strokeColor": "#f59e0b", "strokeWidth": 2, "roundness": { "type": 3 }, "label": { "text": "Human merges plan\n(approval gate)", "fontSize": 13 } },
-    { "type": "arrow", "id": "b4a3", "x": 585, "y": 562, "width": 25, "height": 0, "points": [[0,0],[25,0]], "strokeColor": "#f59e0b", "strokeWidth": 2, "endArrowhead": "arrow" },
-    { "type": "rectangle", "id": "b4o", "x": 610, "y": 530, "width": 140, "height": 64, "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeColor": "#22c55e", "strokeWidth": 2, "roundness": { "type": 3 }, "label": { "text": "modernize-pipeline\nImplementation PR\nhuman decides", "fontSize": 12 } },
-    { "type": "rectangle", "id": "foot", "x": 90, "y": 648, "width": 620, "height": 56, "backgroundColor": "#fff3bf", "fillStyle": "solid", "strokeColor": "#f59e0b", "strokeWidth": 2, "roundness": { "type": 3 }, "opacity": 70, "label": { "text": "Beats 1–3: self-contained gh-aw | Beat 4: human-gated, multi-agent modernization", "fontSize": 15 } }
+    {
+      "type": "rectangle",
+      "id": "canvas-bg",
+      "x": 0,
+      "y": 0,
+      "width": 800,
+      "height": 970,
+      "backgroundColor": "#ffffff",
+      "fillStyle": "solid",
+      "strokeColor": "#ffffff",
+      "strokeWidth": 0,
+      "locked": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "x": 100,
+      "y": 18,
+      "width": 600,
+      "height": 55,
+      "text": "gh-aw Demo — Four Beats, Human-Gated Modernization",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#000000",
+      "textAlign": "center"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "x": 130,
+      "y": 50,
+      "width": 540,
+      "height": 35,
+      "text": "intent  →  agentic plan  →  human approval  →  reviewable output",
+      "fontSize": 14,
+      "fontFamily": 2,
+      "strokeColor": "#000000",
+      "textAlign": "center"
+    },
+    {
+      "type": "rectangle",
+      "id": "b1zone",
+      "x": 30,
+      "y": 88,
+      "width": 740,
+      "height": 100,
+      "backgroundColor": "#edf4ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "type": "text",
+      "id": "b1label",
+      "x": 44,
+      "y": 96,
+      "width": 260,
+      "height": 40,
+      "text": "Beat 1 — Big-O Auditor",
+      "fontSize": 16,
+      "fontFamily": 2,
+      "strokeColor": "#000000"
+    },
+    {
+      "type": "rectangle",
+      "id": "b1t",
+      "x": 60,
+      "y": 122,
+      "width": 170,
+      "height": 56,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "pull_request\nopened",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "b1a1",
+      "x": 230,
+      "y": 150,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "b1m",
+      "x": 290,
+      "y": 122,
+      "width": 200,
+      "height": 56,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "big-o-auditor.md\n(AI reviews diff)",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "b1a2",
+      "x": 490,
+      "y": 150,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "b1o",
+      "x": 550,
+      "y": 122,
+      "width": 200,
+      "height": 56,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "add-comment\n\"O(n²) → use set\"",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b2zone",
+      "x": 30,
+      "y": 218,
+      "width": 740,
+      "height": 100,
+      "backgroundColor": "#effbf1",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "type": "text",
+      "id": "b2label",
+      "x": 44,
+      "y": 226,
+      "width": 240,
+      "height": 40,
+      "text": "Beat 2 — Issue Triage",
+      "fontSize": 16,
+      "fontFamily": 2,
+      "strokeColor": "#000000"
+    },
+    {
+      "type": "rectangle",
+      "id": "b2t",
+      "x": 60,
+      "y": 252,
+      "width": 170,
+      "height": 56,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "issues\nopened",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "b2a1",
+      "x": 230,
+      "y": 280,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "b2m",
+      "x": 290,
+      "y": 252,
+      "width": 200,
+      "height": 56,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "issue-triage.md\n(AI classifies)",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "b2a2",
+      "x": 490,
+      "y": 280,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "b2o",
+      "x": 550,
+      "y": 252,
+      "width": 200,
+      "height": 56,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "add-labels +\nadd-comment",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b3zone",
+      "x": 30,
+      "y": 348,
+      "width": 740,
+      "height": 100,
+      "backgroundColor": "#f4f0ff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "type": "text",
+      "id": "b3label",
+      "x": 44,
+      "y": 356,
+      "width": 320,
+      "height": 40,
+      "text": "Beat 3 — Auto-Fix  (advanced)",
+      "fontSize": 16,
+      "fontFamily": 2,
+      "strokeColor": "#000000"
+    },
+    {
+      "type": "rectangle",
+      "id": "b3t",
+      "x": 60,
+      "y": 382,
+      "width": 170,
+      "height": 56,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "slash_command\n/fix on PR",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "b3a1",
+      "x": 230,
+      "y": 410,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "b3m",
+      "x": 290,
+      "y": 382,
+      "width": 200,
+      "height": 56,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "auto-fix.md\n(AI writes patch)",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "b3a2",
+      "x": 490,
+      "y": 410,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "b3o",
+      "x": 550,
+      "y": 382,
+      "width": 200,
+      "height": 56,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "create-pull-request\n(stacked fix)",
+        "fontSize": 16
+      }
+    },
+    {
+      "id": "b4-detail-1",
+      "type": "rectangle",
+      "x": 30.0,
+      "y": 478.0,
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 1,
+      "isDeleted": false,
+      "seed": 1,
+      "width": 740.0,
+      "height": 380.0,
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "id": "b4-detail-2",
+      "type": "text",
+      "x": 48.0,
+      "y": 484.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 2,
+      "isDeleted": false,
+      "seed": 2,
+      "text": "Beat 4 — Java App Modernization",
+      "originalText": "Beat 4 — Java App Modernization",
+      "fontSize": 16.0,
+      "fontFamily": 2,
+      "width": 277.76000000000005,
+      "height": 40.0,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-3",
+      "type": "text",
+      "x": 48.0,
+      "y": 510.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 3,
+      "isDeleted": false,
+      "seed": 3,
+      "text": "Two independent, event-triggered workflows: propose → approve → execute",
+      "originalText": "Two independent, event-triggered workflows: propose → approve → execute",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 556.6400000000001,
+      "height": 35.0,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-4",
+      "type": "rectangle",
+      "x": 50.0,
+      "y": 542.0,
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 4,
+      "isDeleted": false,
+      "seed": 4,
+      "width": 210.0,
+      "height": 76.0,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "id": "b4-detail-5",
+      "type": "text",
+      "x": 45.239999999999995,
+      "y": 552.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 5,
+      "isDeleted": false,
+      "seed": 5,
+      "text": "Issue or comment starts with",
+      "originalText": "Issue or comment starts with",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 219.52,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-6",
+      "type": "text",
+      "x": 96.19999999999999,
+      "y": 574.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 6,
+      "isDeleted": false,
+      "seed": 6,
+      "text": "/modernize-plan",
+      "originalText": "/modernize-plan",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 117.60000000000001,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-7",
+      "type": "arrow",
+      "x": 262.0,
+      "y": 580.0,
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 7,
+      "isDeleted": false,
+      "seed": 7,
+      "width": 36.0,
+      "height": 0.0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          36.0,
+          0.0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startArrowhead": null
+    },
+    {
+      "id": "b4-detail-8",
+      "type": "rectangle",
+      "x": 300.0,
+      "y": 542.0,
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 8,
+      "isDeleted": false,
+      "seed": 8,
+      "width": 450.0,
+      "height": 76.0,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "id": "b4-detail-9",
+      "type": "text",
+      "x": 423.08,
+      "y": 550.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 9,
+      "isDeleted": false,
+      "seed": 9,
+      "text": "modernize-planner.lock.yml",
+      "originalText": "modernize-planner.lock.yml",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 203.84000000000003,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-10",
+      "type": "text",
+      "x": 336.84,
+      "y": 571.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 10,
+      "isDeleted": false,
+      "seed": 10,
+      "text": "gh-aw agent assesses the app and opens a plan PR",
+      "originalText": "gh-aw agent assesses the app and opens a plan PR",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 376.32000000000005,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-11",
+      "type": "text",
+      "x": 360.36,
+      "y": 592.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 11,
+      "isDeleted": false,
+      "seed": 11,
+      "text": "Proposes work only; no application changes",
+      "originalText": "Proposes work only; no application changes",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 329.28000000000003,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-12",
+      "type": "arrow",
+      "x": 525.0,
+      "y": 620.0,
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 12,
+      "isDeleted": false,
+      "seed": 12,
+      "width": 0.0,
+      "height": 20.0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.0,
+          20.0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startArrowhead": null
+    },
+    {
+      "id": "b4-detail-13",
+      "type": "rectangle",
+      "x": 300.0,
+      "y": 642.0,
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 13,
+      "isDeleted": false,
+      "seed": 13,
+      "width": 450.0,
+      "height": 64.0,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "id": "b4-detail-14",
+      "type": "text",
+      "x": 415.24,
+      "y": 653.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 14,
+      "isDeleted": false,
+      "seed": 14,
+      "text": "STOP: human reviews the plan",
+      "originalText": "STOP: human reviews the plan",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 219.52,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-15",
+      "type": "text",
+      "x": 317.24,
+      "y": 675.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 15,
+      "isDeleted": false,
+      "seed": 15,
+      "text": "Merge the plan PR into main = approval + next trigger",
+      "originalText": "Merge the plan PR into main = approval + next trigger",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 415.52000000000004,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-16",
+      "type": "arrow",
+      "x": 525.0,
+      "y": 708.0,
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 16,
+      "isDeleted": false,
+      "seed": 16,
+      "width": 0.0,
+      "height": 22.0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.0,
+          22.0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startArrowhead": null
+    },
+    {
+      "id": "b4-detail-17",
+      "type": "rectangle",
+      "x": 300.0,
+      "y": 732.0,
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 17,
+      "isDeleted": false,
+      "seed": 17,
+      "width": 450.0,
+      "height": 76.0,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "id": "b4-detail-18",
+      "type": "text",
+      "x": 438.76,
+      "y": 740.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 18,
+      "isDeleted": false,
+      "seed": 18,
+      "text": "modernize-pipeline.yml",
+      "originalText": "modernize-pipeline.yml",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 172.48000000000002,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-19",
+      "type": "text",
+      "x": 329.0,
+      "y": 761.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 19,
+      "isDeleted": false,
+      "seed": 19,
+      "text": "Plain Actions coordinator calls five gh-aw workers",
+      "originalText": "Plain Actions coordinator calls five gh-aw workers",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 392.00000000000006,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-20",
+      "type": "text",
+      "x": 297.64,
+      "y": 782.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 20,
+      "isDeleted": false,
+      "seed": 20,
+      "text": "Passes the approved plan; orders workers, builds and tests",
+      "originalText": "Passes the approved plan; orders workers, builds and tests",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 454.72,
+      "height": 35.0,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-21",
+      "type": "text",
+      "x": 50.0,
+      "y": 815.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 21,
+      "isDeleted": false,
+      "seed": 21,
+      "text": "Result: Implementation PR on modernize/issue-N → human reviews. main keeps the original app.",
+      "originalText": "Result: Implementation PR on modernize/issue-N → human reviews. main keeps the original app.",
+      "fontSize": 14.0,
+      "fontFamily": 2,
+      "width": 721.2800000000001,
+      "height": 35.0,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-22",
+      "type": "text",
+      "x": 50.0,
+      "y": 836.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 22,
+      "isDeleted": false,
+      "seed": 22,
+      "text": "The planner runs before approval, independently of the execution pipeline.",
+      "originalText": "The planner runs before approval, independently of the execution pipeline.",
+      "fontSize": 13.0,
+      "fontFamily": 2,
+      "width": 538.72,
+      "height": 32.5,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "b4-detail-23",
+      "type": "rectangle",
+      "x": 90.0,
+      "y": 888.0,
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 23,
+      "isDeleted": false,
+      "seed": 23,
+      "width": 620.0,
+      "height": 56.0,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      }
+    },
+    {
+      "id": "b4-detail-24",
+      "type": "text",
+      "x": 63.99999999999994,
+      "y": 907.0,
+      "strokeColor": "#000000",
+      "strokeWidth": 2,
+      "angle": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "version": 1,
+      "versionNonce": 24,
+      "isDeleted": false,
+      "seed": 24,
+      "text": "Beats 1–3: self-contained gh-aw | Beat 4: human-gated, multi-agent modernization",
+      "originalText": "Beats 1–3: self-contained gh-aw | Beat 4: human-gated, multi-agent modernization",
+      "fontSize": 15.0,
+      "fontFamily": 2,
+      "width": 672.0000000000001,
+      "height": 37.5,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "lineHeight": 1.25
+    }
   ],
   "appState": {
     "viewBackgroundColor": "#ffffff",
