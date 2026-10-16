@@ -619,7 +619,7 @@ Run the read-only check. It changes nothing on GitHub:
 .\demo\beat4\setup.ps1 -CheckOnly
 ```
 
-It reports, one row per check: tools, gh-aw version, that `origin` is your fork, whether Issues and "Actions can create pull requests" are enabled, whether `COPILOT_GITHUB_TOKEN` is set, and whether the workflows compile. On a fresh fork you should expect `MANUAL` for Issues, Actions pull-request permission, and the secret. The next step fixes them.
+It reports, one row per check: tools, gh-aw version, that `origin` is your fork, whether Issues and "Actions can create pull requests" are enabled, whether the `assessment-review` approval environment requires a reviewer, whether `COPILOT_GITHUB_TOKEN` is set, and whether the workflows compile. On a fresh fork you should expect `MANUAL` for Issues, Actions pull-request permission, the approval environment, and the secret. The next step fixes them.
 
 The baseline application state matters for the story. At the revision used to validate this guide, the web module has no tests and the worker module has 4 tests with 1 error: Mockito cannot mock `software.amazon.awssdk.core.ResponseInputStream` on Java 8. The pipeline records that baseline first and compares the upgraded result with it. Do not repair it by hand.
 
@@ -670,11 +670,12 @@ Verify the secret and the registered workflows. The first line pins the GitHub C
 gh repo set-default lenvolk/java-migration-copilot-samples
 gh secret list --repo lenvolk/java-migration-copilot-samples
 gh workflow list
+gh api repos/lenvolk/java-migration-copilot-samples/environments/assessment-review --jq '.protection_rules[] | {type, reviewers: [.reviewers[].reviewer.login]}'
 ```
 
 If `gh` still asks "Select a repo", choose `lenvolk/java-migration-copilot-samples`, your fork. Never choose `Azure-Samples/...`, which is upstream.
 
-You should see `COPILOT_GITHUB_TOKEN` and seven `modernize-*` workflows: `modernize-planner`, `modernize-pipeline`, and the five agents.
+You should see `COPILOT_GITHUB_TOKEN`, seven `modernize-*` workflows (`modernize-planner`, `modernize-pipeline`, and the five agents), and the `assessment-review` environment with type `required_reviewers` and your login. Without that reviewer the pipeline would not pause for the assessment approval.
 
 ### 10.6 Stage 1 - create the Modernization Request
 
