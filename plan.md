@@ -21,7 +21,7 @@
 
 The diagram below shows the first three gh-aw beats and Beat 4, the multi-agent Java modernization.
 
-![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg)
+![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg?v=820257d)
 
 > Editable source: [assets/beats-overview.excalidraw](assets/beats-overview.excalidraw) — open in the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor) or at <https://excalidraw.com>.
 
