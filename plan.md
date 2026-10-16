@@ -21,7 +21,7 @@
 
 The diagram below shows the first three gh-aw beats and Beat 4, the multi-agent Java modernization.
 
-![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg?v=820257d)
+![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg?v=gate2)
 
 > Editable source: [assets/beats-overview.excalidraw](assets/beats-overview.excalidraw) — open in the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor) or at <https://excalidraw.com>.
 
@@ -30,7 +30,7 @@ Beats 1-3 use the same self-contained gh-aw pattern. Beat 4 adds a standalone mu
 - **Beat 1 — Big-O Auditor**: When someone opens a Pull Request, the agent reads the changed code and posts a comment flagging slow algorithms (e.g., O(n²) loops) with a suggested fix.
 - **Beat 2 — Issue Triage**: When someone files a new Issue, the agent reads it, applies labels (`bug`, `feature-request`, severity, etc.), and posts a triage comment asking for missing info.
 - **Beat 3 (advanced) — Auto-Fix**: When a reviewer comments `/fix` on the Beat 1 PR, a second agent reads the auditor's advice, applies the optimization, and opens a **new pull request** with the fix. Skip this if your audience is new to gh-aw; use it if some of them already get the basics and you want a "wow" moment.
-- **Beat 4 (standalone) — Java Modernization**: A modernization request triggers a planner agent that opens a Markdown plan PR. A human merges the plan, which starts a pipeline of five gh-aw agents and plain Actions jobs that upgrade Asset Manager from Java 8 to Java 21 on a `modernize/...` branch, run the tests, and open an Implementation PR. A human reviews it. `main` keeps the original code. Jump directly to **Part 10** for this customer demo.
+- **Beat 4 (standalone) — Java Modernization**: A modernization request triggers a planner agent that opens a Markdown plan PR. A human merges the plan, which starts read-only analysis by gh-aw agents and an assessment report. A human approves that report. Only then does the pipeline of agents and plain Actions jobs upgrade Asset Manager from Java 8 to Java 21 on a `modernize/...` branch, run the tests, and open an Implementation PR. A human reviews it. `main` keeps the original code. Jump directly to **Part 10** for this customer demo.
 
 Same building block (a markdown file) used three times with different triggers (`pull_request`, `issues`, `slash_command`) and different outputs (`add-comment`, `add-labels`, `create-pull-request`). That contrast is the whole point of the demo.
 
@@ -492,7 +492,7 @@ After these steps your repo is back to: `main` branch only, no open PR, no open 
 
 > **You can start here.** Beat 4 does not require the Python demo repository, labels, pull requests, or issues from Beats 1-3.
 
-![Beat 4: human-gated, multi-agent Java modernization](assets/beat-4-pipeline.svg)
+![Beat 4: human-gated, multi-agent Java modernization](assets/beat-4-pipeline.svg?v=gate2)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw). Open it in the Excalidraw VS Code extension or at <https://excalidraw.com>.
 
@@ -507,11 +507,11 @@ The operator guide lives in the target repository: `demo\beat4\README.md`. This 
 
 ### 10.1 What this demo covers
 
-Beat 4 shows gh-aw running a Java modernization as a set of small agents, with a human at two gates. It stops after the first four stages of a modernization lifecycle:
+Beat 4 shows gh-aw running a Java modernization as a set of small agents, with a human at three gates: approve the plan, approve the assessment report before any code changes, and review the final result. It stops after the first four stages of a modernization lifecycle:
 
 1. **Modernization Request** - a GitHub issue states the desired outcome.
 2. **Modernization Plan** - a planner agent inspects Asset Manager and opens a Markdown plan PR.
-3. **Modernization Execution** - after a human merges the plan, a pipeline of five agents and plain Actions jobs upgrades the app, runs the tests, and checks the result against the plan.
+3. **Modernization Execution** - after a human merges the plan, read-only agents assess the code and the pipeline publishes an **Assessment Report**. A human approves it. Only then does a pipeline of agents and plain Actions jobs upgrade the app, run the tests, and check the result against the plan.
 4. **Implementation Pull Request** - the validated code changes, ready for a human to review.
 
 **Where the code lives.** The original Java 8 code stays on `main`. The modernized code lives on the branch `modernize/issue-<N>` and in the Implementation Pull Request. `main` changes only if a human merges that pull request. Do not merge it during the demo.
@@ -658,6 +658,7 @@ It prompts for the token (hidden input, never printed) and for confirmation befo
 | Allow Actions to create pull requests | `setup.ps1` |
 | Store `COPILOT_GITHUB_TOKEN` as a repository secret | `setup.ps1` |
 | Create the labels | `setup.ps1` |
+| Create the `assessment-review` approval environment, with you as the required reviewer | `setup.ps1` |
 | Compile the six agent workflows (`gh aw compile`) | `setup.ps1` |
 | Commit and push the Beat 4 files to `main` of your fork | `setup.ps1`, after you confirm |
 
@@ -713,7 +714,7 @@ Review the plan file. It is in the **Java app fork** (`java-migration-copilot-sa
 - Impact, risks, ordered execution steps (each tagged with the agent that performs it), and validation criteria.
 - Explicit exclusions for Azure service migration, containers, deployment, and production operations.
 
-**Human approval is the merge.** If the plan is correct, merge the plan PR into `main` of your fork. It adds only the plan file (a Markdown document, no code). The modernized code goes to a separate branch, `modernize/issue-<N>`, so `main` keeps the original Java 8 app.
+**Human approval is the merge.** If the plan is correct, merge the plan PR into `main` of your fork. It adds only the plan file (a Markdown document, no code). The modernized code goes to a separate branch, `modernize/issue-<N>`, so `main` keeps the original Java 8 app. The merge starts only read-only analysis; the pipeline then stops for a second approval of the Assessment Report (10.8) before any code changes.
 
 In the GitHub UI, select **Squash and merge**, then **Confirm**. Or run:
 
@@ -739,8 +740,9 @@ The plan merge starts the workflow [modernize-pipeline.yml](https://github.com/l
 The agents start in this order:
 
 1. `prepare` (Actions job) runs first and creates the branch and draft PR. No agent yet.
-2. `modernize-compat-analyst` and `modernize-dependency-analyst` are the first agents. They start together with `baseline-test`, as soon as `prepare` finishes.
-3. `modernize-build-upgrader`, then `modernize-code-fixer` run in sequence. `modernize-conformance-reviewer` runs last, after `verify-build` and `verify-static`. The table below shows the full order.
+2. `modernize-compat-analyst` and `modernize-dependency-analyst` are the first agents. They start together with `baseline-test`, as soon as `prepare` finishes. They only read.
+3. `assessment-report` combines their findings into one **Assessment Report**, and `assessment-approval` **stops the run until a human approves it**. No application file has changed at this point.
+4. `modernize-build-upgrader`, then `modernize-code-fixer` run in sequence, only after the approval. `modernize-conformance-reviewer` runs last, after `verify-build` and `verify-static`. The table below shows the full order.
 
 Watch it:
 
@@ -751,6 +753,16 @@ gh run watch
 
 Or open **Actions -> modernize-pipeline** on GitHub. The run graph shows the parallel lanes. A tracker comment on the Implementation PR shows each stage's status.
 
+#### Approve the Assessment Report (human gate 2)
+
+This is the review that happens **before any change**. About 5 to 15 minutes after the plan merge, the run shows **Waiting** at `assessment-approval`.
+
+1. Open the draft Implementation PR and read the comment **Assessment report**. It answers "what will change and how?": the baseline test result, source compatibility findings per file, dependency decisions per artifact, and what each later job will do. The same text is on the run's summary page and in the downloadable `assessment-report` artifact. The two analysts' own comments hold the raw agent output.
+2. Check that the findings match the approved plan and stay in scope.
+3. Open the run, select **Review deployments**, tick `assessment-review`, then **Approve and deploy**. **Reject** stops the pipeline with no application change.
+
+The report comment records who approved, and the tracker row **Assessment review** turns green. `setup.ps1` creates the `assessment-review` environment with you as the required reviewer; without that protection the run would not pause, so `assessment-report` fails if the environment is missing or has no reviewer. Environments with required reviewers need a public repository or a paid GitHub plan.
+
 The pipeline is a plain GitHub Actions workflow that calls five gh-aw agent workflows as reusable workflows. Plain jobs do the deterministic work; agents do the judgment work.
 
 | Phase | Job (same name in the run graph) | Type | Runs | What it does |
@@ -759,11 +771,13 @@ The pipeline is a plain GitHub Actions workflow that calls five gh-aw agent work
 | 1 | `baseline-test` | Actions job | parallel | Runs the original tests on JDK 8 and records the result |
 | 1 | `modernize-compat-analyst` | gh-aw agent | parallel | Read-only. Finds `javax` to `jakarta` and Spring Boot 3 source changes |
 | 1 | `modernize-dependency-analyst` | gh-aw agent | parallel | Read-only. Maps dependencies and the Maven wrapper to Boot 3.5 and Java 21 |
+| 1 | `assessment-report` | Actions job | after analysis | Posts the **Assessment Report** comment, run summary and artifact |
+| 1 | `assessment-approval` | Actions job + environment | **human gate** | Waits for a required reviewer. Nothing changes before it |
 | 2 | `modernize-build-upgrader` | gh-aw agent | sequential | Edits only the Maven build files, pushes a commit to the branch |
 | 2 | `modernize-code-fixer` | gh-aw agent | sequential | Fixes source and tests in a build and test loop, pushes commits |
 | 3 | `verify-build` | Actions job | parallel | JDK 21 build, tests and packaging, compared with the baseline |
 | 3 | `verify-static` | Actions job | parallel | Checks Boot 3.5.x, Java 21 and no remaining `javax` imports |
-| 4 | `modernize-conformance-reviewer` | gh-aw agent | after 3 | Compares the diff with the approved plan, writes the PR summary and a verdict |
+| 4 | `modernize-conformance-reviewer` | gh-aw agent | after 3 | Compares the diff with the approved plan and assessment, writes the PR summary and a verdict |
 | 5 | `finalize` | Actions job | last | Marks the PR ready for review, or labels it `needs-attention` |
 
 `track-analysis` and `track-build` also appear in the graph. They only update the tracker comment.
@@ -811,8 +825,9 @@ git diff --stat main...origin/modernize/issue-<N>
 
 Show the customer:
 
-- The tracker comment: every stage, and baseline versus final test results.
-- The `modernize-compat-analyst` and `modernize-dependency-analyst` comments.
+- The tracker comment: every stage, the **Assessment review** row, and baseline versus final test results.
+- The **Assessment report** comment: what the analysts found before any change, and who approved it.
+- The `modernize-compat-analyst` and `modernize-dependency-analyst` comments (raw agent output).
 - The diff: build files first, then `javax` to `jakarta`.
 - The `modernize-conformance-reviewer` comment: `Verdict: PASS`, and the PR description it wrote.
 - The label `ready-for-human-review`, and that the PR was a draft until all checks passed.
@@ -823,14 +838,15 @@ Show the customer:
 
 Because the full run takes a while, **pre-run Beat 4 before the meeting** (10.3 to 10.8) and keep the result open. In the meeting, replay it in this order. Roughly 15 minutes.
 
-1. **Show the diagram** at the top of this Part (3 min). Name the two human gates: approve the plan, review the result.
+1. **Show the diagram** at the top of this Part (3 min). Name the three human gates: approve the plan, approve the assessment report, review the result.
 2. **Show the Modernization Request issue** (1 min). Point out the scope and the exclusions.
-3. **Show the plan pull request** (2 min). Open the plan file: baseline, target, steps tagged by agent. Say: "Merging this is the approval."
-4. **Show the pipeline run graph** in Actions (3 min). Point at the parallel lanes, then the sequential upgrade, then the review.
-5. **Open one agent run** (2 min), for example `modernize-code-fixer`. Show its prompt role, its read-only job, and the validated push done by a separate job.
-6. **Show the Implementation PR** (3 min): tracker comment, baseline versus final tests, reviewer verdict.
-7. **Show where the code lives** (1 min): `main` is original, `modernize/issue-<N>` is modernized.
-8. Open [Beat_4_debrief.md](Beat_4_debrief.md) and close with the takeaways.
+3. **Show the plan pull request** (2 min). Open the plan file: baseline, target, steps tagged by agent. Say: "Merging this is the first approval."
+4. **Show the pipeline run graph** in Actions (3 min). Point at the parallel read-only lanes, the `assessment-approval` gate, then the sequential upgrade, then the review.
+5. **Show the Assessment report** on the draft PR (3 min). Say: "This is what and how it will change, reviewed before anything is touched. Approving it is the second gate."
+6. **Open one agent run** (2 min), for example `modernize-code-fixer`. Show its prompt role, its read-only job, and the validated push done by a separate job.
+7. **Show the Implementation PR** (3 min): tracker comment, baseline versus final tests, reviewer verdict.
+8. **Show where the code lives** (1 min): `main` is original, `modernize/issue-<N>` is modernized.
+9. Open [Beat_4_debrief.md](Beat_4_debrief.md) and close with the takeaways.
 
 If a customer asks for a live run, start a fresh Modernization Request while you walk the pre-run result, and come back to it at the end.
 
@@ -877,6 +893,10 @@ Keep your pre-run until after the customer meeting.
 | Pipeline did not start after the merge | The plan PR title must start with `[modernization-plan]` and change a file under `docs/modernization/requests/`. Otherwise dispatch it (10.11). |
 | `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -Full`, then create a new request. |
 | `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run `modernize-code-fixer` (10.11). |
+| The run shows **Waiting** at `assessment-approval` | Expected. It is human gate 2. Open the run, select **Review deployments** and approve (10.8). |
+| No **Review deployments** button | You are not a required reviewer of `assessment-review`, or the environment is missing. Run `setup.ps1`. Environments with reviewers need a public repository or a paid plan. |
+| `assessment-report` fails with `no required reviewer` or `does not exist` | The gate would not pause. Run `setup.ps1`, then re-run the failed jobs. |
+| `assessment-report` fails with `No comment from modernize-...-analyst` | An analyst did not post its comment. Re-run that analyst, then `assessment-report`. |
 | An agent cannot download Maven dependencies | The agent workflows allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in that agent's workflow `.md`, then `gh aw compile`. |
 | Workflow cannot find a skill or agent | Confirm the files under `.github\skills\` and `.github\agents\` exist and re-run `gh aw compile`. |
 | An agent's comment shows another agent's content, or `safe_outputs` fails with `No handler loaded for type` | Artifact name collision. Each worker needs a unique `stage` input (already set). If you add a worker, give it its own default. |

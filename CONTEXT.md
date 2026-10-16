@@ -13,8 +13,16 @@ A Markdown proposal produced from a Modernization Request that describes the ass
 _Avoid_: Spec, assessment report
 
 **Plan Approval**:
-The human review and merge of a Modernization Plan pull request, which authorizes the implementation workflow to create an Implementation Pull Request.
+The human review and merge of a Modernization Plan pull request, which authorizes the Modernization Pipeline to start its read-only assessment. It does not authorize any code change.
 _Avoid_: Validation, confirmation, approval comment
+
+**Assessment Report**:
+One report, published on the draft Implementation Pull Request before any code changes, that combines the baseline test result with the read-only analysts' findings: what will change, in which files and dependencies, and how. It is stored as a pull request comment, on the run summary, and as the `assessment-report` artifact.
+_Avoid_: Plan, analyst comment, assessment file
+
+**Assessment Approval**:
+The human approval of the Assessment Report in the Actions run, through the required reviewer on the `assessment-review` environment. It authorizes the code-writing agents to start. Rejecting it stops the pipeline with no application change.
+_Avoid_: Plan Approval, deployment approval
 
 **Modernization Slice**:
 The Asset Manager Java 8 to 21 and Spring Boot 2.7 to 3.5 runtime and framework upgrade, including its build and test validation.
@@ -25,11 +33,11 @@ A draft pull request from the branch `modernize/issue-<N>` containing the approv
 _Avoid_: Coding-agent output, generated patch
 
 **Beat 4**:
-A standalone demo in which gh-aw plans a modernization, a human approves the plan, a pipeline of gh-aw agents and plain Actions jobs executes and validates the Modernization Slice against Asset Manager, and a human reviews the Implementation Pull Request.
+A standalone demo in which gh-aw plans a modernization, a human approves the plan, read-only agents assess the code and a human approves the Assessment Report, a pipeline of gh-aw agents and plain Actions jobs then executes and validates the Modernization Slice against Asset Manager, and a human reviews the Implementation Pull Request.
 _Avoid_: Add-on step, Beat 3 extension, hybrid handoff
 
 **Modernization Pipeline**:
-The GitHub Actions workflow `modernize-pipeline.yml` that starts when a Modernization Plan is merged. It orchestrates the Micro-Agents and deterministic jobs and enforces one run per request.
+The GitHub Actions workflow `modernize-pipeline.yml` that starts when a Modernization Plan is merged. It orchestrates the Micro-Agents and deterministic jobs, pauses for Assessment Approval before any code changes, and enforces one run per request.
 _Avoid_: Executor, orchestrator agent
 
 **Micro-Agent**:

@@ -36,7 +36,7 @@ The repo's [runbook](../../../../plan.md) and [templates](../../../../templates)
 
 - Keep Beats 1, 2, and 3 focused on review, issue triage, and a requested code fix.
 - Keep Beat 4 focused on Asset Manager intent, a Markdown plan PR, human approval, and a reviewable Java upgrade result.
-- Use gh-aw for Beat 4 end to end: a planner agent, then a pipeline of small agent workflows (read-only analysts in parallel, one writer at a time on a shared branch, deterministic Actions jobs for builds and tests, a conformance reviewer). Orchestrate with plain GitHub Actions calling reusable gh-aw workflows (see the OrchestratorOps pattern) and keep the two human gates.
+- Use gh-aw for Beat 4 end to end: a planner agent, then a pipeline of small agent workflows (read-only analysts in parallel, one writer at a time on a shared branch, deterministic Actions jobs for builds and tests, a conformance reviewer). Orchestrate with plain GitHub Actions calling reusable gh-aw workflows (see the OrchestratorOps pattern) and keep the three human gates (plan merge, assessment approval through a protected GitHub Environment, implementation PR review).
 - Do not claim that importing an Awesome Copilot workflow supplies an unattended interface to the modernization extension.
 
 ## Extend the SDLC only when requested

@@ -2,7 +2,7 @@
 
 **In one sentence:** a GitHub issue became a reviewed plan, a team of small agents upgraded a Java 8 app to Java 21 and tested it, and a human decided what reached `main`.
 
-![Who does what in Beat 4](assets/beat-4-who-does-what.svg)
+![Who does what in Beat 4](assets/beat-4-who-does-what.svg?v=gate2)
 
 > Editable source: [assets/beat-4-who-does-what.excalidraw](assets/beat-4-who-does-what.excalidraw)
 
@@ -12,23 +12,26 @@
 |---|---|---|
 | 1 | A GitHub issue stated the outcome and the boundaries: Java 21, Spring Boot 3.5, no Azure migration. | Human |
 | 2 | A planner agent inspected Asset Manager and opened a plan pull request. | Agent proposed, human reviewed |
-| 3 | The human merged the plan. The merge is the approval. | **Human gate 1** |
-| 4 | Five agents and a few plain Actions jobs upgraded the code, ran the tests, and checked the result against the plan. | Automated and auditable |
-| 5 | An Implementation Pull Request arrived with test evidence and a review verdict. | **Human gate 2** |
+| 3 | The human merged the plan. The merge is the first approval. | **Human gate 1** |
+| 4 | Two read-only agents assessed the code while the baseline tests ran. The pipeline published one Assessment Report with what will change and how, then stopped. Nothing was changed yet. | Automated and auditable |
+| 5 | The human read the Assessment Report and approved it. | **Human gate 2** |
+| 6 | The code-writing agents upgraded the code, tests ran, and the result was checked against the plan. | Automated and auditable |
+| 7 | An Implementation Pull Request arrived with test evidence and a review verdict. | **Human gate 3** |
 
-Nothing reaches `main` unless a human merges it.
+Nothing is changed before the assessment is approved, and nothing reaches `main` unless a human merges it.
 
 ## The pipeline
 
-![Beat 4 pipeline](assets/beat-4-pipeline.svg)
+![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=gate2)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw)
 
-Read it left to right in three steps:
+Read it left to right in four steps:
 
 1. **Assess in parallel.** `baseline-test`, `modernize-compat-analyst` and `modernize-dependency-analyst` run side by side. They only read.
-2. **Upgrade in sequence.** `modernize-build-upgrader` changes the Maven files. Then `modernize-code-fixer` changes the Java code until it builds and the tests pass. One writer at a time, on one branch.
-3. **Verify in parallel, then review.** `verify-build` and `verify-static` run side by side. `modernize-conformance-reviewer` then compares the result with the approved plan.
+2. **Review the assessment.** `assessment-report` combines their findings into one report. `assessment-approval` stops the run until a human approves it. No application file has changed.
+3. **Upgrade in sequence.** `modernize-build-upgrader` changes the Maven files. Then `modernize-code-fixer` changes the Java code until it builds and the tests pass. One writer at a time, on one branch.
+4. **Verify in parallel, then review.** `verify-build` and `verify-static` run side by side. `modernize-conformance-reviewer` then compares the result with the approved plan and assessment.
 
 ## Meet the agents
 
@@ -73,14 +76,15 @@ Think of it like small services instead of one monolith.
 
 ## Where the human stays in control
 
-1. **Merge the plan** to authorize the work.
-2. **Review the Implementation Pull Request** and merge or reject it.
+1. **Merge the plan** to authorize the assessment.
+2. **Approve the Assessment Report** to authorize any code change. This is a GitHub Environment approval in the Actions run, and the report comment records who approved.
+3. **Review the Implementation Pull Request** and merge or reject it.
 
 Along the way:
 
 - Agents never write to the repository directly. A separate, validated job pushes their commits.
 - The Implementation PR stays a **draft** until the checks pass.
-- `modernize-conformance-reviewer` states in writing whether the result matches the plan.
+- `modernize-conformance-reviewer` states in writing whether the result matches the plan and the approved assessment.
 
 ## Where the code lives
 
@@ -97,6 +101,7 @@ Along the way:
 | A test fails after the upgrade | `verify-build` is red; the tracker shows baseline versus final | Re-run `modernize-code-fixer` |
 | An agent cannot finish | That job is red; the branch still holds earlier work | Re-run the failed job from the Actions run |
 | The plan is wrong | The pipeline has not started yet | Reject the plan PR and file a new request |
+| The assessment is wrong or out of scope | The run waits at `assessment-approval`; no application file has changed | Select Reject in the run, fix the plan or request, and start again |
 
 ## Be honest about the boundaries
 
@@ -108,9 +113,10 @@ Along the way:
 
 1. The Modernization Request issue.
 2. The plan pull request and its plan file.
-3. The pipeline run graph in Actions.
-4. One agent run, to show a read-only job and a separate validated write.
-5. The Implementation Pull Request: tracker comment, test comparison, reviewer verdict.
+3. The pipeline run graph in Actions, stopped at `assessment-approval`.
+4. The Assessment Report comment on the draft Implementation Pull Request.
+5. One agent run, to show a read-only job and a separate validated write.
+6. The Implementation Pull Request: tracker comment, test comparison, reviewer verdict.
 
 ## Questions you may get
 
@@ -118,7 +124,7 @@ Along the way:
 No. It follows the same plan, execute, validate pattern with gh-aw agents. The product remains the supported route for production work.
 
 **Can it run without a human?**
-It could. This demo deliberately keeps two gates. The approval model does not change if you add more stages.
+It could. This demo deliberately keeps three gates. The approval model does not change if you add more stages.
 
 **What if an agent is wrong?**
 `modernize-conformance-reviewer` checks the diff against the plan, deterministic jobs run the tests, and a human reviews before anything reaches `main`.
@@ -128,7 +134,7 @@ Parallel work, least privilege, and per-stage recovery. The same reasons teams s
 
 ## Customer takeaway
 
-> We did not ask an agent to modernize production code without oversight. We captured intent, reviewed the plan, let a team of small agents do the work in parallel where it was safe, and received reviewable code with test evidence. The next stages can be added later without changing this approval model.
+> We did not ask an agent to modernize production code without oversight. We captured intent, reviewed the plan, reviewed a detailed assessment of what would change before anything was touched, let a team of small agents do the work in parallel where it was safe, and received reviewable code with test evidence. The next stages can be added later without changing this approval model.
 
 ## Deliberately deferred
 
