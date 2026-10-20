@@ -1,118 +1,125 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1275 850" width="1275" height="850"><defs><marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#495057"/></marker></defs>
-<rect x="0" y="0" width="1275" height="850" rx="10" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
-<text x="637.5" y="38.7" font-size="26" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Beat 4: human-gated, multi-agent Java modernization</text>
-<text x="637.5" y="68.2" font-size="17" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">gh-aw agents do the judgment work. Actions jobs do the checks. Humans approve the plan, approve the assessment, then review the result.</text>
-<rect x="25" y="112" width="275" height="80" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="162.5" y="147.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Modernization Request</text>
-<text x="162.5" y="167.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">GitHub issue: /modernize-plan</text>
-<text x="25" y="103.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">STAGE 1</text>
-<rect x="340" y="112" width="275" height="80" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="477.5" y="137.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-planner</text>
-<text x="477.5" y="157.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">claude-sonnet-4.6</text>
-<text x="477.5" y="177.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gh-aw agent writes the plan</text>
-<text x="340" y="103.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">STAGE 2</text>
-<line x1="300" y1="152" x2="340" y2="152" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="655" y="112" width="275" height="80" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
-<text x="792.5" y="147.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Plan pull request</text>
-<text x="792.5" y="167.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">docs/modernization/requests/</text>
-<line x1="615" y1="152" x2="655" y2="152" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="970" y="112" width="275" height="80" rx="10" fill="#ffe8a3" stroke="#f59e0b" stroke-width="2"/>
-<text x="1107.5" y="147.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">HUMAN GATE 1</text>
-<text x="1107.5" y="167.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">merge the plan = approval</text>
-<text x="970" y="103.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">PLAN APPROVAL</text>
-<line x1="930" y1="152" x2="970" y2="152" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="12" y="235" width="1250" height="395" rx="10" fill="#f8f9fa" stroke="#868e96" stroke-width="1" stroke-dasharray="8 6"/>
-<text x="30" y="264.1" font-size="18" text-anchor="start" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">STAGE 3   modernize-pipeline: one GitHub Actions run (concurrency: one run per request, never cancelled)</text>
-<text x="185" y="295.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">PARALLEL, READ-ONLY</text>
-<text x="420" y="295.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">HUMAN GATE 2</text>
-<text x="625" y="295.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">SEQUENTIAL</text>
-<text x="845" y="295.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">PARALLEL</text>
-<text x="1070" y="295.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">REVIEW</text>
-<line x1="1107" y1="192" x2="1107" y2="235" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<text x="930" y="218.3" font-size="14" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">merge starts the pipeline</text>
-<rect x="20" y="380" width="140" height="120" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="90.0" y="407.4" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">prepare</text>
-<text x="90.0" y="426.1" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">branch</text>
-<text x="90.0" y="444.9" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize/issue-N</text>
-<text x="90.0" y="463.6" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">+ draft PR</text>
-<text x="90.0" y="482.4" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">+ tracker</text>
-<rect x="185" y="305" width="205" height="78" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="287.5" y="339.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">baseline-test</text>
-<text x="287.5" y="359.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">JDK 8 on main</text>
-<rect x="185" y="405" width="205" height="78" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="287.5" y="431.1" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-compat-analyst</text>
-<text x="287.5" y="448.6" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gpt-5.4-mini</text>
-<text x="287.5" y="466.1" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">agent, read-only</text>
-<rect x="185" y="505" width="205" height="78" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="287.5" y="522.3" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-</text>
-<text x="287.5" y="539.8" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">dependency-analyst</text>
-<text x="287.5" y="557.3" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">claude-haiku-4.5</text>
-<text x="287.5" y="574.8" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">agent, read-only</text>
-<line x1="160" y1="440" x2="185" y2="344" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="160" y1="440" x2="185" y2="444" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="160" y1="440" x2="185" y2="544" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="420" y="325" width="170" height="80" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="505.0" y="351.1" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment-report</text>
-<text x="505.0" y="369.9" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">what and how it</text>
-<text x="505.0" y="388.6" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">will change</text>
-<line x1="390" y1="344" x2="420" y2="365" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="390" y1="444" x2="420" y2="365" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="390" y1="544" x2="420" y2="365" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="420" y="445" width="170" height="100" rx="10" fill="#ffe8a3" stroke="#f59e0b" stroke-width="2"/>
-<text x="505.0" y="471.8" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment-approval</text>
-<text x="505.0" y="490.5" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">HUMAN GATE 2</text>
-<text x="505.0" y="509.2" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">approve the report</text>
-<text x="505.0" y="528.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">before any change</text>
-<line x1="505" y1="405" x2="505" y2="445" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="625" y="335" width="185" height="84" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="717.5" y="356.9" font-size="13" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-build-upgrader</text>
-<text x="717.5" y="373.1" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gpt-5-mini</text>
-<text x="717.5" y="389.4" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">agent: pom.xml,</text>
-<text x="717.5" y="405.6" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Maven wrapper</text>
-<rect x="625" y="455" width="185" height="84" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="717.5" y="476.9" font-size="13" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-code-fixer</text>
-<text x="717.5" y="493.1" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gpt-5.3-codex</text>
-<text x="717.5" y="509.4" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">agent: javax to jakarta,</text>
-<text x="717.5" y="525.6" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">build and test loop</text>
-<line x1="590" y1="495" x2="625" y2="377" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="717" y1="419" x2="717" y2="455" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="845" y="320" width="190" height="78" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="940.0" y="354.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">verify-build</text>
-<text x="940.0" y="374.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">JDK 21 vs baseline</text>
-<rect x="845" y="420" width="190" height="78" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="940.0" y="454.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">verify-static</text>
-<text x="940.0" y="474.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">versions + jakarta</text>
-<line x1="810" y1="497" x2="845" y2="359" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="810" y1="497" x2="845" y2="459" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="1070" y="335" width="185" height="110" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="1162.5" y="361.7" font-size="13" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-</text>
-<text x="1162.5" y="378.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">conformance-reviewer</text>
-<text x="1162.5" y="394.2" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gpt-5.4</text>
-<text x="1162.5" y="410.5" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">agent: diff vs plan</text>
-<text x="1162.5" y="426.7" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">and assessment</text>
-<line x1="1035" y1="359" x2="1070" y2="380" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<line x1="1035" y1="459" x2="1070" y2="410" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="1070" y="490" width="185" height="80" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="1162.5" y="525.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">finalize</text>
-<text x="1162.5" y="545.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">draft to ready</text>
-<line x1="1162" y1="445" x2="1162" y2="490" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<text x="30" y="613.2" font-size="16" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Purple: gh-aw agents with configured model IDs. Blue: deterministic Actions jobs, no AI model. All agents use Copilot.</text>
-<text x="25" y="663.3" font-size="14" text-anchor="start" fill="#868e96" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">STAGE 4</text>
-<rect x="25" y="672" width="700" height="100" rx="10" fill="#c3fae8" stroke="#12b886" stroke-width="2"/>
-<text x="375.0" y="707.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Where the code lives</text>
-<text x="375.0" y="727.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">main = the original Java 8 / Spring Boot 2.7 code (never touched by agents)</text>
-<text x="375.0" y="747.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize/issue-N = the modernized Java 21 / Spring Boot 3.5 code</text>
-<rect x="760" y="672" width="485" height="100" rx="10" fill="#ffe8a3" stroke="#f59e0b" stroke-width="2"/>
-<text x="1002.5" y="707.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Implementation Pull Request (draft to ready)</text>
-<text x="1002.5" y="727.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">HUMAN GATE 3: review it,</text>
-<text x="1002.5" y="747.2" font-size="16" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">merge only if satisfied</text>
-<line x1="1162" y1="570" x2="1162" y2="672" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<rect x="25" y="805" width="26" height="26" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
-<text x="61" y="822.2" font-size="16" text-anchor="start" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Agent (gh-aw workflow)</text>
-<rect x="299" y="805" width="26" height="26" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="335" y="822.2" font-size="16" text-anchor="start" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Plain GitHub Actions job</text>
-<rect x="591" y="805" width="26" height="26" rx="10" fill="#ffe8a3" stroke="#f59e0b" stroke-width="2"/>
-<text x="627" y="822.2" font-size="16" text-anchor="start" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Human gate</text>
-<rect x="757" y="805" width="26" height="26" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
-<text x="793" y="822.2" font-size="16" text-anchor="start" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Output</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1010" width="1500" height="1010">
+<defs><marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#495057"/></marker></defs>
+<rect x="0" y="0" width="1500" height="1010" rx="10" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="750" y="40" font-size="26" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Beat 4: assess, plan, execute, validate. A human approves each step.</text>
+<text x="750" y="70" font-size="17" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Tools measure the facts. gh-aw agents do the judgment work. Actions jobs do the checks. Nothing changes before gate 2.</text>
+<rect x="30" y="93" width="26" height="20" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
+<text x="66" y="108" font-size="14" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Human step or gate</text>
+<rect x="220" y="93" width="26" height="20" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="256" y="108" font-size="14" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">gh-aw agent (AI, read-only job)</text>
+<rect x="514" y="93" width="26" height="20" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="550" y="108" font-size="14" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Actions job (no AI)</text>
+<rect x="712" y="93" width="26" height="20" rx="10" fill="#b2f2bb" stroke="#2f9e44" stroke-width="2"/>
+<text x="748" y="108" font-size="14" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">What a human reviews</text>
+<rect x="15" y="128" width="1470" height="290" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="30" y="150" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">1  ASSESS   workflow modernize-assessment</text>
+<rect x="30" y="190" width="180" height="190" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
+<text x="120.0" y="272" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Request issue</text>
+<text x="120.0" y="290" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">starts with</text>
+<text x="120.0" y="308" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">/modernize</text>
+<rect x="240" y="162" width="290" height="240" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="385.0" y="224" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment-facts</text>
+<text x="385.0" y="242" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">mvnw test on JDK 8</text>
+<text x="385.0" y="260" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">mvnw dependency:tree</text>
+<text x="385.0" y="278" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">versions-maven-plugin</text>
+<text x="385.0" y="296" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">jdeps, jdeprscan (JDK 21)</text>
+<text x="385.0" y="314" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">SpotBugs (JDK 21)</text>
+<text x="385.0" y="332" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">OpenRewrite dry run</text>
+<text x="385.0" y="350" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">OSV.dev advisories</text>
+<text x="705" y="160" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">in parallel, read-only</text>
+<rect x="560" y="172" width="290" height="100" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="705.0" y="218" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-compat-analyst</text>
+<text x="705.0" y="236" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">source findings C-01 ...</text>
+<rect x="560" y="292" width="290" height="100" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="705.0" y="338" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-dependency-analyst</text>
+<text x="705.0" y="356" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">dependency findings D-01 ...</text>
+<rect x="880" y="162" width="270" height="240" rx="10" fill="#b2f2bb" stroke="#2f9e44" stroke-width="2"/>
+<text x="1015.0" y="233" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Assessment report</text>
+<text x="1015.0" y="251" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">on the request issue</text>
+<text x="1015.0" y="269" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">finding IDs, permalinks</text>
+<text x="1015.0" y="287" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Mermaid charts</text>
+<text x="1015.0" y="305" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">decisions to confirm</text>
+<text x="1015.0" y="323" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">tool evidence</text>
+<text x="1015.0" y="341" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">AI cost estimate</text>
+<rect x="1180" y="182" width="290" height="200" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
+<text x="1325.0" y="251" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">GATE 1</text>
+<text x="1325.0" y="269" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Approve the assessment</text>
+<text x="1325.0" y="287" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Review deployments:</text>
+<text x="1325.0" y="305" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment-review</text>
+<text x="1325.0" y="323" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">No file has changed</text>
+<path d="M210,285 L240,285" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M530,222 L560,222" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M530,342 L560,342" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M850,222 L880,222" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M850,342 L880,342" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M1150,282 L1180,282" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="15" y="440" width="1470" height="200" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="30" y="462" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">2  PLAN   same run, after gate 1</text>
+<rect x="240" y="480" width="290" height="140" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="385.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">open-plan-pr</text>
+<text x="385.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">branch modernize/plan-N</text>
+<text x="385.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment.md, findings.json</text>
+<text x="385.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">evidence/ committed</text>
+<rect x="560" y="480" width="290" height="140" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="705.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-planner</text>
+<text x="705.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">writes plan.md</text>
+<text x="705.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">every finding ID owned</text>
+<text x="705.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">by one step</text>
+<rect x="880" y="480" width="270" height="140" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="1015.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">plan-ready</text>
+<text x="1015.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">plan validation, no AI</text>
+<text x="1015.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">measured cost estimate</text>
+<text x="1015.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">PR ready for review</text>
+<rect x="1180" y="480" width="290" height="140" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
+<text x="1325.0" y="537" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">GATE 2</text>
+<text x="1325.0" y="555" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Merge the plan</text>
+<text x="1325.0" y="573" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">pull request</text>
+<path d="M1325,382 L1325,425 L385,425 L385,480" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M530,550 L560,550" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M850,550 L880,550" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M1150,550 L1180,550" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="15" y="662" width="1470" height="270" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="170" y="684" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">3  EXECUTE AND VALIDATE   workflow modernize-pipeline, branch modernize/issue-N</text>
+<rect x="30" y="735" width="215" height="160" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="137.5" y="802" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-build-upgrader</text>
+<text x="137.5" y="820" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">POM files only</text>
+<text x="137.5" y="838" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commit build(D-..)</text>
+<rect x="270" y="735" width="215" height="160" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="377.5" y="793" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-code-fixer</text>
+<text x="377.5" y="811" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">sources and tests</text>
+<text x="377.5" y="829" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">build and test loop</text>
+<text x="377.5" y="847" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commits fix(C-..)</text>
+<text x="625" y="710" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">in parallel, no AI</text>
+<rect x="510" y="720" width="230" height="90" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="625.0" y="752" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">verify-build</text>
+<text x="625.0" y="770" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">JDK 21 tests, JUnit check</text>
+<text x="625.0" y="788" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">OSV.dev, SpotBugs re-scan</text>
+<rect x="510" y="825" width="230" height="90" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="625.0" y="866" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">verify-static</text>
+<text x="625.0" y="884" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">versions, javax, scope</text>
+<text x="905" y="710" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">in parallel, read-only</text>
+<rect x="765" y="720" width="280" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="905.0" y="761" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-conformance-reviewer</text>
+<text x="905.0" y="779" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Spec: every finding ID traced</text>
+<rect x="765" y="825" width="280" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="905.0" y="866" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-standards-reviewer</text>
+<text x="905.0" y="884" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Standards: rules, inline comments</text>
+<rect x="1070" y="735" width="160" height="160" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
+<text x="1150.0" y="802" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">finalize</text>
+<text x="1150.0" y="820" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">actual AI cost</text>
+<text x="1150.0" y="838" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">draft to ready</text>
+<rect x="1255" y="735" width="215" height="160" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
+<text x="1362.5" y="802" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">GATE 3</text>
+<text x="1362.5" y="820" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Review the</text>
+<text x="1362.5" y="838" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Implementation PR</text>
+<path d="M1325,620 L1325,650 L137,650 L137,735" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M245,815 L270,815" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M485,790 L510,765" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M485,840 L510,870" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M740,765 L765,765" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M740,870 L765,870" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M1045,765 L1070,790" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M1045,870 L1070,840" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M1230,815 L1255,815" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<text x="750" y="975" font-size="16" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Only Markdown and evidence reach main when the plan is merged. Code stays on modernize/issue-N until a human merges the Implementation PR.</text>
 </svg>

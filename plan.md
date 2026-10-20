@@ -21,7 +21,7 @@
 
 The diagram below shows the first three gh-aw beats and Beat 4, the multi-agent Java modernization.
 
-![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg?v=gate2)
+![gh-aw Demo - Four Beats, Human-Gated Modernization](assets/beats-overview.svg?v=assess-first)
 
 > Editable source: [assets/beats-overview.excalidraw](assets/beats-overview.excalidraw) — open in the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor) or at <https://excalidraw.com>.
 
@@ -30,7 +30,7 @@ Beats 1-3 use the same self-contained gh-aw pattern. Beat 4 adds a standalone mu
 - **Beat 1 — Big-O Auditor**: When someone opens a Pull Request, the agent reads the changed code and posts a comment flagging slow algorithms (e.g., O(n²) loops) with a suggested fix.
 - **Beat 2 — Issue Triage**: When someone files a new Issue, the agent reads it, applies labels (`bug`, `feature-request`, severity, etc.), and posts a triage comment asking for missing info.
 - **Beat 3 (advanced) — Auto-Fix**: When a reviewer comments `/fix` on the Beat 1 PR, a second agent reads the auditor's advice, applies the optimization, and opens a **new pull request** with the fix. Skip this if your audience is new to gh-aw; use it if some of them already get the basics and you want a "wow" moment.
-- **Beat 4 (standalone) — Java Modernization**: A modernization request triggers a planner agent that opens a Markdown plan PR. A human merges the plan, which starts read-only analysis by gh-aw agents and an assessment report. A human approves that report. Only then does the pipeline of agents and plain Actions jobs upgrade Asset Manager from Java 8 to Java 21 on a `modernize/...` branch, run the tests, and open an Implementation PR. A human reviews it. `main` keeps the original code. Jump directly to **Part 10** for this customer demo.
+- **Beat 4 (standalone) — Java Modernization**: Assess, plan, execute, validate, with a human gate at each step. A modernization request makes standard Java tools measure Asset Manager (tests, dependency tree, jdeps, OpenRewrite preview, OSV.dev advisories), and read-only gh-aw agents turn the facts into an Assessment Report with finding IDs. A human approves it. A planner agent then writes a plan PR that assigns every finding to a step, with a measured AI cost estimate. A human merges it. Only then does the pipeline of agents and plain Actions jobs upgrade Asset Manager from Java 8 to Java 21 on a `modernize/...` branch, verify it against the baseline, review it on two axes, and open an Implementation PR. A human reviews it. `main` keeps the original code. Jump directly to **Part 10** for this customer demo.
 
 Same building block (a markdown file) used three times with different triggers (`pull_request`, `issues`, `slash_command`) and different outputs (`add-comment`, `add-labels`, `create-pull-request`). That contrast is the whole point of the demo.
 
@@ -492,7 +492,7 @@ After these steps your repo is back to: `main` branch only, no open PR, no open 
 
 > **You can start here.** Beat 4 does not require the Python demo repository, labels, pull requests, or issues from Beats 1-3.
 
-![Beat 4: human-gated, multi-agent Java modernization](assets/beat-4-pipeline.svg?v=gate2)
+![Beat 4: assess, plan, execute, validate, with a human gate at each step](assets/beat-4-pipeline.svg?v=assess-first)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw). Open it in the Excalidraw VS Code extension or at <https://excalidraw.com>.
 
@@ -507,20 +507,23 @@ The operator guide lives in the target repository: `demo\beat4\README.md`. This 
 
 ### 10.1 What this demo covers
 
-Beat 4 shows gh-aw running a Java modernization as a set of small agents, with a human at three gates: approve the plan, approve the assessment report before any code changes, and review the final result. It stops after the first four stages of a modernization lifecycle:
+Beat 4 shows gh-aw running a Java modernization in the same order as GitHub Copilot app modernization: **assess, plan, execute, validate**. A human approves each step before the next one starts. It stops after the first stages of a modernization lifecycle:
 
-1. **Modernization Request** - a GitHub issue states the desired outcome.
-2. **Modernization Plan** - a planner agent inspects Asset Manager and opens a Markdown plan PR.
-3. **Modernization Execution** - after a human merges the plan, read-only agents assess the code and the pipeline publishes an **Assessment Report**. A human approves it. Only then does a pipeline of agents and plain Actions jobs upgrade the app, run the tests, and check the result against the plan.
-4. **Implementation Pull Request** - the validated code changes, ready for a human to review.
+1. **Modernization Request** - a GitHub issue that starts with `/modernize` states the desired outcome.
+2. **Assessment** - standard Java tools measure the facts with no AI: tests on JDK 8, `mvn dependency:tree`, `versions-maven-plugin`, `jdeps` and `jdeprscan` on JDK 21, a SpotBugs static analysis baseline, an OpenRewrite dry run that previews the change, and OSV.dev advisories. Two read-only agents turn the facts into ranked findings with stable IDs. One **Assessment Report** with Mermaid charts, permalinks, decisions and a cost estimate appears on the issue. **Gate 1:** a human approves it.
+3. **Modernization Plan** - a planner agent writes `plan.md` into a plan pull request that already holds the approved assessment and its evidence. A deterministic check confirms every finding ID is owned by a step; the pipeline adds a measured AI cost estimate. **Gate 2:** a human merges the plan.
+4. **Execution and validation** - agents upgrade the code on a branch, Actions jobs build and test on JDK 21 against the baseline re-run SpotBugs and the advisory scan, publish a native JUnit check, and two reviewer agents check the result in parallel: Spec (every finding ID traced to a commit) and Standards (rules and smells, adapted from the `code-review` skill).
+5. **Implementation Pull Request** - the validated change with before-and-after evidence and the actual AI cost. **Gate 3:** a human reviews it.
 
-**Where the code lives.** The original Java 8 code stays on `main`. The modernized code lives on the branch `modernize/issue-<N>` and in the Implementation Pull Request. `main` changes only if a human merges that pull request. Do not merge it during the demo.
+**Why this order lands with Java developers.** Every number they see at gate 1 comes from a tool they already trust, not from an AI. The OpenRewrite preview shows the diff before anyone approves anything. Finding IDs carry from the report to the plan, the commit messages and the review, so nothing is lost or invented on the way.
 
-**How this relates to GitHub Copilot app modernization.** The pipeline copies that product's pattern: assess, plan, execute in small steps, validate with build and tests. It uses our own gh-aw agents and ordinary Maven commands. It does not run the product, and it is not a supported product feature. Say so plainly if asked.
+**Where the code lives.** The original Java 8 code stays on `main`. Only Markdown and evidence reach `main` when the plan is merged. The modernized code lives on the branch `modernize/issue-<N>` and in the Implementation Pull Request. `main` changes only if a human merges that pull request. Do not merge it during the demo.
+
+**How this relates to GitHub Copilot app modernization.** The pipeline copies that product's order: assess, plan, execute in small steps, validate with build and tests. It uses our own gh-aw agents and standard Java tools. It does not run the product, and it is not a supported product feature. Say so plainly if asked. The product assesses a whole repository for cloud readiness with its own rule engine; this demo assesses one application for one runtime and framework upgrade.
 
 Azure service migration, containerization, deployment, CI/CD, and production feedback are not part of this first customer demo.
 
-**Two modes.** Because the full run takes a while, you **pre-run** the demo before the meeting (10.3 to 10.8) and **replay** the finished result live (10.9).
+**Two modes.** Because the full run takes a while, you **pre-run** the demo before the meeting (10.3 to 10.9) and **replay** the finished result live (10.10).
 
 ### 10.2 One-time prerequisites
 
@@ -659,7 +662,7 @@ It prompts for the token (hidden input, never printed) and for confirmation befo
 | Store `COPILOT_GITHUB_TOKEN` as a repository secret | `setup.ps1` |
 | Create the labels | `setup.ps1` |
 | Create the `assessment-review` approval environment, with you as the required reviewer | `setup.ps1` |
-| Compile the six agent workflows (`gh aw compile`) | `setup.ps1` |
+| Compile the seven agent workflows (`gh aw compile`) | `setup.ps1` |
 | Commit and push the Beat 4 files to `main` of your fork | `setup.ps1`, after you confirm |
 
 The script ends with a table. Every row must be `OK` or `FIXED`. A `MANUAL` row says exactly what to do. Re-running is safe.
@@ -675,7 +678,7 @@ gh api repos/lenvolk/java-migration-copilot-samples/environments/assessment-revi
 
 If `gh` still asks "Select a repo", choose `lenvolk/java-migration-copilot-samples`, your fork. Never choose `Azure-Samples/...`, which is upstream.
 
-You should see `COPILOT_GITHUB_TOKEN`, seven `modernize-*` workflows (`modernize-planner`, `modernize-pipeline`, and the five agents), and the `assessment-review` environment with type `required_reviewers` and your login. Without that reviewer the pipeline would not pause for the assessment approval.
+You should see `COPILOT_GITHUB_TOKEN`, nine `modernize-*` workflows (`modernize-assessment`, `modernize-pipeline`, and the seven agents), and the `assessment-review` environment with type `required_reviewers` and your login. Without that reviewer the assessment run would not pause at gate 1.
 
 ### 10.6 Stage 1 - create the Modernization Request
 
@@ -683,41 +686,86 @@ You should see `COPILOT_GITHUB_TOKEN`, seven `modernize-*` workflows (`modernize
 .\demo\beat4\new-request.ps1
 ```
 
-It creates the issue in your fork from `demo\beat4\modernization-request.md`. The `/modernize-plan` command at the start of the body triggers the planner agent.
+It creates the issue in your fork from `demo\beat4\modernization-request.md`. The body starts with `/modernize`, which starts the plain Actions workflow [modernize-assessment.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-assessment.yml). Its `prepare` job only continues when the issue or comment starts with `/modernize` and its author is the owner, a member or a collaborator.
 
-The planner agent is the workflow [modernize-planner.md](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-planner.md) in your fork, listed as **modernize-planner** in Actions. Its `on: slash_command: name: modernize-plan` trigger (lines 5-7) makes it wait for an issue or issue comment that starts with `/modernize-plan`. Without that first line, nothing runs.
+Within a minute a comment **Modernization status** appears on the issue. It is the status board for the whole lifecycle: one row per stage across both workflows, with links to every run. Keep this issue open in a tab.
 
 Show the customer:
 
 - The business outcome and explicit scope.
-- The first four stages included in the request.
+- The lifecycle in the request: assessment, plan and code review each need a human.
 - The later modernization stages explicitly excluded.
 
-### 10.7 Stage 2 - review and approve the Modernization Plan
+### 10.7 Stage 2 - review and approve the Assessment Report (gate 1)
 
-Watch `modernize-planner`:
+Watch the assessment:
 
 ```powershell
-gh run list --workflow modernize-planner.lock.yml --limit 5
+gh run list --workflow modernize-assessment.yml --limit 3
+gh run watch
 ```
 
-The workflow should open one pull request titled:
+```text
+modernize-assessment
+  prepare                                  status board on the issue
+  assessment-facts                         tools only, no AI
+    Baseline tests on JDK 8 (mvnw test)
+    Dependency tree (mvnw dependency:tree)
+    Newer versions on Maven Central (versions-maven-plugin)
+    Java 21 readiness (jdeps, jdeprscan)
+    Static analysis baseline (SpotBugs on JDK 21)
+    Preview of the change (OpenRewrite dry run on JDK 21)
+    Known vulnerabilities (OSV.dev)
+  modernize-compat-analyst                 in parallel, read-only agent
+  modernize-dependency-analyst             in parallel, read-only agent
+  assessment-report
+  assessment-approval                      GATE 1, waits for you
+  open-plan-pr -> modernize-planner -> plan-ready
+```
 
-`[modernization-plan] Plan Asset Manager Java modernization for #<issue-number>`
+Open the `assessment-facts` job for Java developers: every tool is its own named step with its own log. These are the commands they would run themselves.
 
-Open the PR. Its **Overview** tab (called **Conversation** in older GitHub layouts) shows the description first. The description has three sections: **Summary** (a flow diagram, the version diff the plan proposes, and the run order), **Evidence** (the baseline the planner read, and the checks the next PR must pass), and **Merge Danger** (what merging starts and what a revert cannot undo).
+About 10 to 15 minutes after the request, the comment **Assessment report for issue N** appears on the issue and the run shows **Waiting** at `assessment-approval`. Nothing in the repository has changed. Walk it top to bottom:
 
-Review the plan file. It is in the **Java app fork** (`java-migration-copilot-samples`), not in `gh-aw-dryrun`. To find it, open the plan PR on GitHub, select **Files changed**, and open `docs/modernization/requests/<issue-number>-asset-manager-java-upgrade.md`. It is the only file in that PR. The folder does not exist on `main` until the plan is merged. Confirm it contains:
+| Section | What it shows | Where the numbers come from |
+|---|---|---|
+| At a glance | Gate flow diagram, key numbers (Java and Spring Boot now and target, classes and lines, baseline tests, javax imports, jdeps hits, advisories, preview size, findings by rank, estimated AI cost), a module map, pies of findings by rank and advisories by severity | Tools and agents |
+| Decisions for the reviewer | Checkboxes: target Spring Boot version, `web` has no tests, the test that already fails on JDK 8, analyst questions | Tools and agents |
+| Findings | One row per finding: stable ID (`C-..` source, `D-..` dependencies), rank (Blocker, Change, Watch, No change), permalink to the exact line, proposed change, owning agent, confidence | Analyst agents, from the tool evidence |
+| Dependency decisions | Artifact, current, decision (BOM-managed, explicit upgrade, replace, remove), target | Dependency analyst |
+| Analyst summaries | Each analyst's own comment, collapsed | Analyst agents |
+| Evidence measured by tools (no AI) | Build facts, code inventory, the JDK 8 tests case by case, every javax import, direct dependencies, newer versions, jdeps and jdeprscan, OSV.dev advisories by artifact, the SpotBugs baseline, the OpenRewrite preview diff | Tools only |
+| After you approve | Next steps, estimated AI cost of plan and execution, actual cost of the two analysts | gh-aw usage records |
 
-- Verified Java 8 and Spring Boot 2.7 baseline.
-- Java 21 and Spring Boot 3.5 target.
-- A `Run Parameters` block that the pipeline agents read.
-- Impact, risks, ordered execution steps (each tagged with the agent that performs it), and validation criteria.
-- Explicit exclusions for Azure service migration, containers, deployment, and production operations.
+In the pre-run of 2026-10-19 (issue 16) the report showed: 4 tests with 1 error on JDK 8 (`MockitoException: Cannot mock/spy class ResponseInputStream`), 9 javax imports in 5 files to migrate and `javax.imageio` to keep, `logback-classic 1.2.12` using `sun.reflect.Reflection` which JDK 21 removed, 169 known advisories, 9 SpotBugs patterns, an OpenRewrite preview of 7 files with Spring Boot 3.5.16, and 34 findings (11 Blocker). The dependency analyst also proposed a few questionable pins, which is exactly what gate 1 is for. Treat your own pre-run as the source of truth.
 
-**Human approval is the merge.** If the plan is correct, merge the plan PR into `main` of your fork. It adds only the plan file (a Markdown document, no code). The modernized code goes to a separate branch, `modernize/issue-<N>`, so `main` keeps the original Java 8 app. The merge starts only read-only analysis; the pipeline then stops for a second approval of the Assessment Report (10.8) before any code changes.
+To approve: open the run, select **Review deployments**, tick `assessment-review`, then **Approve and deploy**. **Reject** stops here with no change. The report's status line records who approved, and the board row **Assessment approval** turns green.
 
-In the GitHub UI, select **Squash and merge**, then **Confirm**. Or run:
+### 10.8 Stage 3 - review and approve the Modernization Plan (gate 2)
+
+After gate 1 the same run continues:
+
+1. `open-plan-pr` creates the branch `modernize/plan-<N>`, commits the approved report and its evidence, and opens a **draft** pull request `[modernization-plan] Plan Asset Manager Java modernization for #<N>`.
+2. `modernize-planner` writes `plan.md` into that pull request with the push safe output, and rewrites the description.
+3. `plan-ready` checks the plan without AI, replaces its **Cost Estimate** section with measured numbers, posts a **Plan validation** comment, and marks the pull request ready for review. If a check fails, the pull request stays a draft with `needs-attention`.
+
+```powershell
+gh pr list --search "[modernization-plan] in:title"
+```
+
+**Files changed** shows, under `docs/modernization/requests/<N>/`:
+
+| File | What it is |
+|---|---|
+| `assessment.md` | The approved report, exactly as approved |
+| `findings.json` | The same findings as data. The validator and the reviewers read it |
+| `evidence/` | `facts.json`, `rewrite.patch`, `osv.json`, `dependency-tree-*.txt`, `jdeps-*.txt` |
+| `cost-estimate.md` | Estimated AI credits of the execution stage |
+| `plan.md` | Run Parameters, Assessment Summary, Scope, Execution Plan (each step with its finding IDs, a small diff and "done when"), Finding Coverage, Validation, Risks and Rollback, Cost Estimate, Approval Checklist |
+
+The **Plan validation** comment proves, without AI, that every finding ID is owned by a step, no ID was invented, all sections exist, the Run Parameters are complete, and the Execution Plan has no deployment or Azure steps.
+
+**Human approval is the merge.** It adds only Markdown and evidence to `main`, no code. Select **Squash and merge**, then **Confirm**. Or run:
 
 ```powershell
 $planPr = gh pr list `
@@ -730,150 +778,155 @@ $planPr = gh pr list `
 gh pr merge $planPr --repo lenvolk/java-migration-copilot-samples --squash --delete-branch
 ```
 
-`--delete-branch` removes the planner's branch after the merge. Do not continue if the plan is wrong. Update or reject it instead.
+Do not continue if the plan is wrong. Comment on the plan pull request and close it, then file a new request.
 
-### 10.8 Stage 3 - the agent pipeline runs
+### 10.9 Stage 4 - execution and the Implementation Pull Request (gate 3)
 
-The plan merge starts the workflow [modernize-pipeline.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-pipeline.yml). It is a plain GitHub Actions workflow, not an agent. It triggers on a merged PR into `main` whose title starts with `[modernization-plan]` and whose files include `docs/modernization/requests/*.md`.
-
-**One name everywhere.** Each agent uses the same name for its workflow file, its entry in the Actions sidebar, its job in the run graph, and its custom agent. For example, `modernize-code-fixer` is `.github/workflows/modernize-code-fixer.md`, the **modernize-code-fixer** workflow, the `modernize-code-fixer` job, and `.github/agents/modernize-code-fixer.agent.md`.
-
-The agents start in this order:
-
-1. `prepare` (Actions job) runs first and creates the branch and draft PR. No agent yet.
-2. `modernize-compat-analyst` and `modernize-dependency-analyst` are the first agents. They start together with `baseline-test`, as soon as `prepare` finishes. They only read.
-3. `assessment-report` combines their findings into one **Assessment Report**, and `assessment-approval` **stops the run until a human approves it**. No application file has changed at this point.
-4. `modernize-build-upgrader`, then `modernize-code-fixer` run in sequence, only after the approval. `modernize-conformance-reviewer` runs last, after `verify-build` and `verify-static`. The table below shows the full order.
-
-Watch it:
+The merge starts [modernize-pipeline.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-pipeline.yml), a plain GitHub Actions workflow. It triggers on a merged pull request into `main` whose title starts with `[modernization-plan]` and that contains `docs/modernization/requests/<N>/plan.md`.
 
 ```powershell
 gh run list --workflow modernize-pipeline.yml --limit 3
 gh run watch
 ```
 
-Or open **Actions -> modernize-pipeline** on GitHub. The run graph shows the parallel lanes. A tracker comment on the Implementation PR shows each stage's status.
-
-#### Approve the Assessment Report (human gate 2)
-
-This is the review that happens **before any change**. About 5 to 15 minutes after the plan merge, the run shows **Waiting** at `assessment-approval`.
-
-1. Open the draft Implementation PR and read the comment **Assessment report**. It answers "what will change and how?": the baseline test result, source compatibility findings per file, dependency decisions per artifact, and what each later job will do. The same text is on the run's summary page and in the downloadable `assessment-report` artifact. The two analysts' own comments hold the raw agent output.
-2. Check that the findings match the approved plan and stay in scope.
-3. Open the run, select **Review deployments**, tick `assessment-review`, then **Approve and deploy**. **Reject** stops the pipeline with no application change.
-
-The report comment records who approved, and the tracker row **Assessment review** turns green. `setup.ps1` creates the `assessment-review` environment with you as the required reviewer; without that protection the run would not pause, so `assessment-report` fails if the environment is missing or has no reviewer. Environments with required reviewers need a public repository or a paid GitHub plan.
-
-The pipeline is a plain GitHub Actions workflow that calls five gh-aw agent workflows as reusable workflows. Plain jobs do the deterministic work; agents do the judgment work.
+**One name everywhere.** Each agent uses the same name for its workflow file, its entry in the Actions sidebar, its job in the run graph, and its custom agent. For example, `modernize-code-fixer` is `.github/workflows/modernize-code-fixer.md`, the **modernize-code-fixer** workflow, the `modernize-code-fixer` job, and `.github/agents/modernize-code-fixer.agent.md`.
 
 | Phase | Job (same name in the run graph) | Type | Runs | What it does |
 |---|---|---|---|---|
-| 0 | `prepare` | Actions job | first | Creates branch `modernize/issue-<N>`, opens a **draft** Implementation PR, starts the tracker comment |
-| 1 | `baseline-test` | Actions job | parallel | Runs the original tests on JDK 8 and records the result |
-| 1 | `modernize-compat-analyst` | gh-aw agent | parallel | Read-only. Finds `javax` to `jakarta` and Spring Boot 3 source changes |
-| 1 | `modernize-dependency-analyst` | gh-aw agent | parallel | Read-only. Maps dependencies and the Maven wrapper to Boot 3.5 and Java 21 |
-| 1 | `assessment-report` | Actions job | after analysis | Posts the **Assessment Report** comment, run summary and artifact |
-| 1 | `assessment-approval` | Actions job + environment | **human gate** | Waits for a required reviewer. Nothing changes before it |
-| 2 | `modernize-build-upgrader` | gh-aw agent | sequential | Edits only the Maven build files, pushes a commit to the branch |
-| 2 | `modernize-code-fixer` | gh-aw agent | sequential | Fixes source and tests in a build and test loop, pushes commits |
-| 3 | `verify-build` | Actions job | parallel | JDK 21 build, tests and packaging, compared with the baseline |
-| 3 | `verify-static` | Actions job | parallel | Checks Boot 3.5.x, Java 21 and no remaining `javax` imports |
-| 4 | `modernize-conformance-reviewer` | gh-aw agent | after 3 | Compares the diff with the approved plan and assessment, writes the PR summary and a verdict |
-| 5 | `finalize` | Actions job | last | Marks the PR ready for review, or labels it `needs-attention` |
+| 0 | `prepare` | Actions job | first | Reads the plan and target version, creates `modernize/issue-<N>`, opens a **draft** Implementation PR |
+| 1 | `modernize-build-upgrader` | gh-aw agent | sequential | POM files and Maven Wrapper only; commit `build(D-..)` |
+| 1 | `modernize-code-fixer` | gh-aw agent | sequential | Sources and tests in a build and test loop; commits `fix(C-..)`, or `fix(unplanned)` with a reason |
+| 2 | `verify-build` | Actions job | parallel | JDK 21 build, tests and packaging, OSV.dev and SpotBugs re-scan, compared with the approved baseline; posts **Verification on JDK 21** and a **JUnit on JDK 21** check |
+| 2 | `verify-static` | Actions job | parallel | Spring Boot matches the plan, Java 21, no Jakarta-bound `javax` imports, no files outside scope |
+| 3 | `modernize-conformance-reviewer` | gh-aw agent | parallel | **Spec** axis: every finding ID traced to a commit; writes the PR description |
+| 3 | `modernize-standards-reviewer` | gh-aw agent | parallel | **Standards** axis: documented rules and smells, inline review comments |
+| 4 | `finalize` | Actions job | last | Posts the actual AI cost next to the estimate; marks the PR ready only if every check passed and both reviews say PASS, otherwise keeps it a draft with `needs-attention` |
 
-`track-analysis` and `track-build` also appear in the graph. They only update the tracker comment.
+`track-build` also appears in the graph. It only updates the status board.
+
+The two reviewers follow the `modernization-review` skill, adapted from the kit's `code-review` skill: two independent axes, run in parallel, reported separately, never re-ranked against each other. A change can pass Spec and fail Standards, or the reverse.
 
 Why this design, in one sentence each:
 
-- **Parallel where it is safe.** The analysts and checks only read, so they run side by side.
+- **Facts before judgment.** Tools measure; agents interpret and cite the evidence.
+- **Parallel where it is safe.** Analysts, checks and reviewers only read, so they run side by side.
 - **Sequential where code changes.** One writer at a time on one shared branch avoids merge conflicts.
-- **Agents only for judgment.** Tests, builds and version checks are deterministic Actions jobs.
 - **Agents never write directly.** gh-aw safe outputs push validated commits; the agent job itself is read-only.
-- **Concurrency.** One pipeline run per request, never cancelled mid-upgrade; each agent has its own engine concurrency group so agents can run in parallel.
+- **Traceable end to end.** One finding ID from the report to the plan, the commit and the review.
 
-Each agent is defined once as a role in `.github/agents/modernize-*.agent.md`, with shared rules in `.github/skills/java-upgrade-rules/`. The plan skill is `.github/skills/java-modernization/`.
-
-#### Model choices for the demo
-
-Each gh-aw workflow explicitly selects a different model under `engine.model`. All six use the `copilot` engine and the existing `COPILOT_GITHUB_TOKEN`; different models do not require separate provider API keys.
-
-| Workflow | Model ID | Why we chose it |
-|---|---|---|
-| `modernize-planner` | `claude-sonnet-4.6` | Balance reasoning and clear writing for the assessment and human-reviewable plan. |
-| `modernize-compat-analyst` | `gpt-5.4-mini` | Use a smaller model for bounded, read-only source compatibility analysis. |
-| `modernize-dependency-analyst` | `claude-haiku-4.5` | Favor a lightweight model for dependency inventory and upgrade recommendations, with no code writes. |
-| `modernize-build-upgrader` | `gpt-5-mini` | Keep a narrowly scoped Maven configuration edit on a smaller model, guided by the plan and analysis. |
-| `modernize-code-fixer` | `gpt-5.3-codex` | Use a coding-focused model for Java edits and the compile/test/fix loop. |
-| `modernize-conformance-reviewer` | `gpt-5.4` | Use a reasoning-oriented model to compare the plan, diff and validation evidence. |
-
-These are demo design choices, not benchmark results or guarantees of speed, cost or correctness. The model mix makes per-workflow selection visible; six different models are not a production requirement. Deterministic Actions jobs (`baseline-test`, `verify-build`, `verify-static`, and the orchestration/tracker jobs) use no AI model.
-
-**Show the customer:** open one workflow `.md`, point at `engine.id: copilot` and `engine.model`, then compare another workflow. The engine stays the same; the requested model changes by role.
-
-The selections compile with gh-aw v0.89.21 with no model warnings. Compilation does not prove the token owner can use every model: account access, organization policy and availability for the gh-aw integration still apply. Rehearse the full flow before presenting; do not treat a previous run as evidence for this new model mix. Changing models affects future runs only.
-
-References: [gh-aw engine configuration](https://github.github.com/gh-aw/reference/engines/) and [Copilot supported models](https://docs.github.com/en/copilot/reference/ai-models/supported-models).
-
-### 10.9 Stage 4 - review the Implementation Pull Request
-
-When the pipeline finishes, open the Implementation Pull Request: `[modernization] Upgrade Asset Manager to Java 21 and Spring Boot 3.5 (#<issue-number>)`.
+When the pipeline finishes, open `[modernization] Upgrade Asset Manager to Java 21 and Spring Boot 3.5.x (#<issue-number>)`:
 
 ```powershell
 gh pr list --search "[modernization] in:title"
 git fetch origin
 git diff --stat main...origin/modernize/issue-<N>
+git log --oneline main..origin/modernize/issue-<N>
 ```
 
 Show the customer:
 
-- The tracker comment: every stage, the **Assessment review** row, and baseline versus final test results.
-- The **Assessment report** comment: what the analysts found before any change, and who approved it.
-- The `modernize-compat-analyst` and `modernize-dependency-analyst` comments (raw agent output).
-- The diff: build files first, then `javax` to `jakarta`.
-- The `modernize-conformance-reviewer` comment: `Verdict: PASS`, and the PR description it wrote.
-- The label `ready-for-human-review`, and that the PR was a draft until all checks passed.
+- **Verification on JDK 21**: before and after for Java, Spring Boot, tests case by case, javax imports, known advisories, SpotBugs, packaged jars. In the pre-run: 4 tests with 0 errors on JDK 21 (the baseline Mockito error is gone), advisories 169 to 44, SpotBugs 9 to 5 with 0 new. Your run's numbers are the ones to show.
+- **JUnit on JDK 21** in the Checks tab: the native test report Java developers know from CI, published with the [Publish Test Results](https://github.com/marketplace/actions/publish-test-results) Marketplace action.
+- **Spec review** and the PR description: the traceability table, Met, Not met, Cannot verify.
+- **Standards review**: inline comments on changed lines, hard violations, judgement calls.
+- **AI cost of the execution stage**: actual credits per agent and model next to the estimate from the plan.
+- The status board on the issue: every stage green, gate 3 waiting for you.
 
-**Do not merge it.** `main` keeps the original Java 8 code. The modernized code stays on `modernize/issue-<N>`. A human merge is the only way it reaches `main`.
+**Do not merge it.** `main` keeps the original Java 8 code. A human merge is the only way it reaches `main`.
 
+#### Model choices and AI cost
+
+Each gh-aw workflow selects its model under `engine.model`. All seven use the `copilot` engine and the existing `COPILOT_GITHUB_TOKEN`; different models do not need separate provider keys.
+
+| Workflow | Stage | Model ID | Why we chose it |
+|---|---|---|---|
+| `modernize-compat-analyst` | Assess | `gpt-5.6-luna` | Bounded, read-only source analysis from tool evidence; the cheapest model in the run. |
+| `modernize-dependency-analyst` | Assess | `claude-haiku-4.5` | Dependency decisions from the measured tree. |
+| `modernize-planner` | Plan | `claude-sonnet-5.5` | Reasoning and clear writing for a human-reviewable plan. |
+| `modernize-build-upgrader` | Execute | `claude-haiku-5.5` | Narrow, plan-guided POM edits on a small model. |
+| `modernize-code-fixer` | Execute | `claude-sonnet-5.5` | Java edits and the compile, test, fix loop. |
+| `modernize-conformance-reviewer` | Review (Spec) | `claude-sonnet-5.5` | Traceability of the diff to the plan and findings. |
+| `modernize-standards-reviewer` | Review (Standards) | `claude-sonnet-5` | Rule and smell review of the diff, on a different model than the Spec review. |
+
+**What the pre-run taught about models (gh-aw v0.89.21).** Treat this as a teaching point, not a footnote:
+
+- The gh-aw integration offers a fixed list of models. `claude-sonnet-4.6`, `gpt-5.4` and `gpt-5-mini` failed with `The requested model is not available for integrator "agentic-workflows"`. The error message lists the models that are available.
+- The newest OpenAI models (`gpt-5.3-codex`, `gpt-5.6-*`, `gpt-6.x`) failed once they used tools through the Responses API custom-tool path: `Expected an ID that begins with 'fc'` and `Unsupported Responses custom tool ... Only 'apply_patch' is supported`. The read-only compat analyst on `gpt-5.6-luna` works because it never edits files. Agents that edit files or run long tool loops use Claude.
+- gh-aw may route a request to a different model. The compat analyst asked for `gpt-5.4-mini` and ran on `gpt-5.6-luna`, so the workflow now names the model that actually runs. The actual-cost tables always show the model used.
+- Recheck the model list after upgrading gh-aw: compile succeeds either way, only a run proves access.
+
+Measured AI credits of the full pre-run on 2026-10-19 (assessment and plan run 39338189682, execution run 39346443059). gh-aw records every model request in `token_usage.jsonl`; `.github/scripts/modernize_cost.py` prices them with the [GitHub Copilot models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing) table and reproduces gh-aw's numbers exactly. 1 AI credit = $0.01.
+
+| Agent | Model | Requests | Agent credits | Threat detection credits | Total credits |
+|---|---|---:|---:|---:|---:|
+| `modernize-compat-analyst` | `gpt-5.6-luna` | 16 | 3.0 | 0.6 | 3.6 |
+| `modernize-dependency-analyst` | `claude-haiku-4.5` | 11 | 28.6 | 5.3 | 33.9 |
+| `modernize-planner` | `claude-sonnet-5.5` | 12 | 31.1 | 14.8 | 45.9 |
+| `modernize-build-upgrader` | `claude-haiku-5.5` | 11 | 1.4 | 0.7 | 2.1 |
+| `modernize-code-fixer` | `claude-sonnet-5.5` | 13 | 21.2 | 14.4 | 35.6 |
+| `modernize-conformance-reviewer` | `claude-sonnet-5.5` | 10 | 24.5 | 10.8 | 35.2 |
+| `modernize-standards-reviewer` | `claude-sonnet-5` | 11 | 27.4 | 12.0 | 39.4 |
+| **Full run** | | **84** | **137.1** | **58.5** | **195.6, about $1.96** |
+
+How to read it:
+
+- Plan for about **200 AI credits, roughly $2, per full run**. The estimator gives a range of $1.55 to $3.31; the code fixer can loop longer on a harder codebase.
+- **Threat detection is about 30% of the cost.** After every agent, gh-aw runs a separate detection job on the same model that checks the agent's output before any safe output is applied. It is the price of the security model, and worth saying out loud.
+- Cache reads dominate the token count because an agent re-sends its growing context on every turn. They cost about a tenth of normal input, which is why half a million tokens cost cents. On Claude models, cache writes and output are the larger share.
+- The credits count against the Copilot plan of the token owner; use beyond the plan's included credits is billed. GitHub Actions minutes for the tools and checks are separate and use no AI credits.
+- Show the live numbers when you can: the report shows the analysts' actual cost, the plan shows the planner's, the Implementation PR shows the execution agents', and every gh-aw comment ends with its own credit count. `gh aw audit <run-id>` and `gh aw logs` give the same data on the command line.
+- Recompute any time from the fork: `python .github\scripts\modernize_cost.py estimate`. It reads `engine.model` from each workflow, so it follows a model change automatically.
+
+These are demo design choices, not benchmark results or guarantees of speed, cost or correctness. Rehearse the full flow before presenting.
+
+**Show the customer:** open two workflow `.md` files, point at `engine.id: copilot` and `engine.model`, then point at the cost comment on the Implementation PR. The engine stays the same; the model and its price change by role.
+
+References: [gh-aw engine configuration](https://github.github.com/gh-aw/reference/engines/), [Copilot supported models](https://docs.github.com/en/copilot/reference/ai-models/supported-models) and [models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing).
 ### 10.10 Live walkthrough with a pre-run (customer session)
 
-Because the full run takes a while, **pre-run Beat 4 before the meeting** (10.3 to 10.8) and keep the result open. In the meeting, replay it in this order. Roughly 15 minutes.
+Because the full run takes a while, **pre-run Beat 4 before the meeting** (10.3 to 10.9) and keep the result open. In the meeting, replay it in this order. Roughly 20 minutes.
 
-1. **Show the diagram** at the top of this Part (3 min). Name the three human gates: approve the plan, approve the assessment report, review the result.
-2. **Show the Modernization Request issue** (1 min). Point out the scope and the exclusions.
-3. **Show the plan pull request** (2 min). Open the plan file: baseline, target, steps tagged by agent. Say: "Merging this is the first approval."
-4. **Show the pipeline run graph** in Actions (3 min). Point at the parallel read-only lanes, the `assessment-approval` gate, then the sequential upgrade, then the review.
-5. **Show the Assessment report** on the draft PR (3 min). Say: "This is what and how it will change, reviewed before anything is touched. Approving it is the second gate."
-6. **Open one agent run** (2 min), for example `modernize-code-fixer`. Show its prompt role, its read-only job, and the validated push done by a separate job.
-7. **Show the Implementation PR** (3 min): tracker comment, baseline versus final tests, reviewer verdict.
-8. **Show where the code lives** (1 min): `main` is original, `modernize/issue-<N>` is modernized.
-9. Open [Beat_4_debrief.md](Beat_4_debrief.md) and close with the takeaways.
+1. **Show the diagram** at the top of this Part (2 min). Name the order and the three gates: approve the assessment, approve the plan, review the result.
+2. **Show the Modernization Request issue and its status board** (1 min). Point out the scope, the exclusions and the board rows.
+3. **Show the `assessment-facts` job** (2 min). One step per tool: `mvnw test`, `dependency:tree`, `versions-maven-plugin`, `jdeps`, `jdeprscan`, SpotBugs, OpenRewrite, OSV.dev. Say: "No AI produced any of these numbers."
+4. **Show the Assessment Report** (4 min). At a glance, decisions, findings with permalinks (click one), the OpenRewrite preview diff, the cost estimate. Say: "This is what will change and how, before anything is planned or touched. Approving it is gate 1."
+5. **Show the plan pull request** (3 min). `plan.md` with finding IDs per step, the Finding Coverage table, the Plan validation comment, the Cost Estimate. Say: "Merging this is gate 2. Nothing has changed in the code yet."
+6. **Show the execution run graph** (2 min): sequential writers, then parallel checks, then parallel reviewers.
+7. **Open one agent run** (2 min), for example `modernize-code-fixer`. Show its read-only job and the validated push done by a separate job.
+8. **Show the Implementation PR** (3 min): Verification on JDK 21, the JUnit check, commit list with finding IDs, Spec review, Standards review inline comments, AI cost.
+9. **Show where the code lives** (1 min): `main` is original, `modernize/issue-<N>` is modernized.
+10. Open [Beat_4_debrief.md](Beat_4_debrief.md) and close with the takeaways.
 
-If a customer asks for a live run, start a fresh Modernization Request while you walk the pre-run result, and come back to it at the end.
+If a customer asks for a live run, start a fresh Modernization Request while you walk the pre-run result, and come back to its assessment report at the end. The tool evidence and report take about 10 to 15 minutes.
 
 ### 10.11 Recovery and reset
 
-Each stage is its own job or workflow. A failure stops the pipeline at that stage; earlier commits stay on the branch.
+Each stage is its own job or workflow. A failure stops that run at that stage; earlier work stays.
 
 1. Open the failed run in **Actions** and read the failed job.
 2. Select **Re-run failed jobs**. Only the failed stage and the stages after it run again.
-3. To run one agent alone, dispatch it with the pull request details:
+3. To restart the assessment for a request, delete `modernize/plan-<N>` if it exists, then comment `/modernize` on the issue, or:
+
+   ```powershell
+   gh workflow run modernize-assessment.yml -f issue_number=<N>
+   ```
+
+4. To run one agent alone, dispatch it with the pull request details:
 
    ```powershell
    gh workflow run modernize-code-fixer.lock.yml `
      -f issue_number=<N> -f pr_number=<PR> `
      -f branch=modernize/issue-<N> `
-     -f plan_path=docs/modernization/requests/<N>-asset-manager-java-upgrade.md
+     -f plan_path=docs/modernization/requests/<N>/plan.md
    ```
 
-4. If the pipeline did not start after the plan merge, dispatch it:
+5. If the execution did not start after the plan merge, dispatch it:
 
    ```powershell
-   gh workflow run modernize-pipeline.yml `
-     -f plan_path=docs/modernization/requests/<N>-asset-manager-java-upgrade.md
+   gh workflow run modernize-pipeline.yml -f plan_path=docs/modernization/requests/<N>/plan.md
    ```
 
-To reset the fork for a fresh run. It closes all open issues and PRs, deletes every branch except `main`, and deletes all workflow runs. Merged plans on `main` stay; each uses a new issue number, so they never conflict.
+To reset the fork for a fresh run. It closes all open issues and PRs, deletes every branch except `main`, and deletes all workflow runs. Merged plans and assessments on `main` stay; each lives in its own `docs/modernization/requests/<N>/` folder, so they never conflict.
 
 ```powershell
 cd C:\Temp\GHDemo\JavaModernization\java-migration-copilot-samples
@@ -888,23 +941,30 @@ Keep your pre-run until after the customer meeting.
 | Symptom | Fix |
 |---|---|
 | `setup.ps1` shows `MANUAL` for Issues or Actions | Enable them in the fork's Settings, then re-run. Forks start with both off. |
-| `/modernize-plan` does not trigger | The issue body must start with `/modernize-plan`. Check `gh run list` and that Actions is enabled. |
-| No plan PR appears | Open the planner run and inspect the safe-output job. Verify "Allow GitHub Actions to create and approve pull requests". |
+| `/modernize` does not trigger | The issue body or comment must start with `/modernize`, and the author must be the owner, a member or a collaborator. Check `gh run list --workflow modernize-assessment.yml` and that Actions is enabled. |
+| `prepare` fails with `Branch modernize/plan-<N> already exists` | Close the old plan pull request and delete the branch, or run `reset.ps1 -Full`. |
 | Run reports a missing or rejected Copilot token | Use a fine-grained `github_pat_` token owned by your user account (not an organization) with **Account permissions: Copilot Requests: Read**. Do not use a classic PAT. |
-| Pipeline did not start after the merge | The plan PR title must start with `[modernization-plan]` and change a file under `docs/modernization/requests/`. Otherwise dispatch it (10.11). |
-| `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -Full`, then create a new request. |
-| `verify-build` fails on tests | Compare with the baseline in the tracker comment, then re-run `modernize-code-fixer` (10.11). |
-| The run shows **Waiting** at `assessment-approval` | Expected. It is human gate 2. Open the run, select **Review deployments** and approve (10.8). |
+| The OpenRewrite or OSV.dev step is yellow | Both are `continue-on-error`. The report says the preview or the advisories are unavailable; everything else continues. |
+| The run shows **Waiting** at `assessment-approval` | Expected. It is gate 1. Open the run, select **Review deployments** and approve (10.7). |
 | No **Review deployments** button | You are not a required reviewer of `assessment-review`, or the environment is missing. Run `setup.ps1`. Environments with reviewers need a public repository or a paid plan. |
 | `assessment-report` fails with `no required reviewer` or `does not exist` | The gate would not pause. Run `setup.ps1`, then re-run the failed jobs. |
-| `assessment-report` fails with `No comment from modernize-...-analyst` | An analyst did not post its comment. Re-run that analyst, then `assessment-report`. |
+| `assessment-report` fails with `No comment from modernize-...-analyst` | An analyst did not post its comment. Re-run the failed jobs. |
+| Report warns "posted no structured findings block" | The analyst's JSON block was missing or invalid. Its comment is shown as text; re-run the analyst for structured findings. |
+| No plan pull request appears after approval | Verify "Allow GitHub Actions to create and approve pull requests", then re-run `open-plan-pr`. |
+| Plan pull request stays a draft with `needs-attention` | Read the **Plan validation** comment. Re-run `modernize-planner`, then `plan-ready`. |
+| Execution did not start after the merge | The plan PR title must start with `[modernization-plan]` and contain `docs/modernization/requests/<N>/plan.md`. Otherwise dispatch it (10.11). |
+| `Branch modernize/issue-<N> already exists` | Run `reset.ps1 -Full`, then create a new request. |
+| `verify-build` fails on tests | Read **Verification on JDK 21**, case by case, then re-run `modernize-code-fixer` (10.11). |
 | An agent cannot download Maven dependencies | The agent workflows allow the `java` network ecosystem. Read the agent log for a blocked domain and add it under `network.allowed` in that agent's workflow `.md`, then `gh aw compile`. |
 | Workflow cannot find a skill or agent | Confirm the files under `.github\skills\` and `.github\agents\` exist and re-run `gh aw compile`. |
 | An agent's comment shows another agent's content, or `safe_outputs` fails with `No handler loaded for type` | Artifact name collision. Each worker needs a unique `stage` input (already set). If you add a worker, give it its own default. |
 | `gh extension upgrade aw` fails with SAML | Expected. Run `gh aw version`. Continue if it reports `v0.89.21` or newer. |
-| The baseline worker test fails on JDK 8 | Known baseline finding. Do not hand-edit it. The pipeline compares against it. |
-| The first full run behaves differently from this guide | Treat the pre-run as the rehearsal. This pipeline was compiled and statically checked, but its agent behavior is proven only by running it. Fix, then pre-run again until it is clean twice. |
-
+| Agent fails with `The requested model is not available for integrator "agentic-workflows"` | Pick a model from the list in the error message, set it under `engine.model`, run `gh aw compile`, push, and start again. |
+| Agent fails with `Expected an ID that begins with 'fc'` or `Unsupported Responses custom tool` | A newer OpenAI model used a tool path this gh-aw version cannot relay. Use a Claude model for agents that edit files or run long tool loops. |
+| An agent reports an incomplete result because a shell command was denied | The shell allowlist rejected a command, often a pipe or `cd`. The two writer agents allow all commands (`bash: [":*"]`) inside the sandbox; widen the list of the agent that failed. |
+| gh-aw opens an issue titled `[aw] ... failed` or `reported incomplete result` | gh-aw reports agent failures as issues. Read it for the cause, fix, re-run, and close it. `reset.ps1 -Full` closes them too. |
+| The baseline worker test fails on JDK 8 | Known baseline finding. Do not hand-edit it. The report lists it as a decision and the pipeline compares against it. |
+| The first full run behaves differently from this guide | Treat the pre-run as the rehearsal. This version completed a full end-to-end pre-run on 2026-10-19 (issue 16, Implementation PR 31: every stage green, both reviews PASS), but agent behavior can change with models and gh-aw versions. Pre-run again before each customer session. |
 ---
 
 ## Reference Links

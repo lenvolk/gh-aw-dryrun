@@ -29,6 +29,17 @@ Start with `gh aw audit <run-id>` and `gh aw logs`. Use `gh run view <run-id> --
 | No comment after 5 min, activation succeeded | Downstream `safe_outputs` job failed or was skipped | `gh run view <id> --log` and inspect each job; look at `detection` job (prompt-injection scanner may have blocked the output) |
 | `detection` job flags the agent's own output | Agent output triggered the safety scanner | Revise the agent prompt to produce cleaner output; or investigate whether an actual injection occurred |
 
+## Model and tool-path failures (observed with gh-aw v0.89.21, Beat 4 pre-run 2026-10-19)
+
+| Exact error in the agent log | Cause | Fix |
+|---|---|---|
+| `400 The requested model is not available for integrator "agentic-workflows". Available models: [...]` | `engine.model` names a model the gh-aw integration does not offer (seen: `claude-sonnet-4.6`, `gpt-5.4`, `gpt-5-mini`). Compile does not check this. | Pick a model from the list printed in the error, recompile, push, start a new run. A rerun of failed jobs reuses the old workflow file. |
+| `400 Invalid 'input[N].id': 'ctc_call_...'. Expected an ID that begins with 'fc'.` | A newer OpenAI model (`gpt-5.3-codex`, `gpt-5.6-luna`) used the Responses API custom-tool path, typically the `edit` tool. | Use a Claude model for agents that edit files. |
+| `400 Unsupported Responses custom tool '(unknown)'. Only 'apply_patch' is supported through the Copilot compatibility adapter.` | Same tool-path limitation (seen with `gpt-6.1-sol` on a reviewer). | Use a Claude model, or an older OpenAI model that worked (`gpt-5.4-mini` in read-only agents). |
+| `report_incomplete: ... was rejected with "Permission denied because no interactive user response was available"` | The `tools.bash` allowlist denied a command, often because the model added a pipe, `cd` or a redirect. | Widen the allowlist for that agent; for sandboxed writer agents `bash: [":*"]` is acceptable. |
+| Footer shows a different model than `engine.model` | gh-aw routed the request (seen: `gpt-5.4-mini` ran as `gpt-5.6-luna`). | Name the model that actually runs; read actual models from the `*-usage` artifacts. |
+
+Threat detection runs on the agent's own model after every agent run and was about 30% of the AI credits of a full Beat 4 run. Include it in cost estimates.
 ## Re-triggering a workflow without a new commit
 
 - Close and reopen the PR: `gh pr close <n>; gh pr reopen <n>` (fires `pull_request` again)

@@ -1,8 +1,8 @@
 # Beat 4 debrief - multi-agent Java modernization with human gates
 
-**In one sentence:** a GitHub issue became a reviewed plan, a team of small agents upgraded a Java 8 app to Java 21 and tested it, and a human decided what reached `main`.
+**In one sentence:** a GitHub issue became a measured assessment, then a reviewed plan, then a team of small agents upgraded a Java 8 app to Java 21 and proved it with tests, and a human approved every step.
 
-![Who does what in Beat 4](assets/beat-4-who-does-what.svg?v=gate2)
+![Who does what in Beat 4](assets/beat-4-who-does-what.svg?v=assess-first)
 
 > Editable source: [assets/beat-4-who-does-what.excalidraw](assets/beat-4-who-does-what.excalidraw)
 
@@ -11,27 +11,34 @@
 | # | What happened | Who decided |
 |---|---|---|
 | 1 | A GitHub issue stated the outcome and the boundaries: Java 21, Spring Boot 3.5, no Azure migration. | Human |
-| 2 | A planner agent inspected Asset Manager and opened a plan pull request. | Agent proposed, human reviewed |
-| 3 | The human merged the plan. The merge is the first approval. | **Human gate 1** |
-| 4 | Two read-only agents assessed the code while the baseline tests ran. The pipeline published one Assessment Report with what will change and how, then stopped. Nothing was changed yet. | Automated and auditable |
-| 5 | The human read the Assessment Report and approved it. | **Human gate 2** |
-| 6 | The code-writing agents upgraded the code, tests ran, and the result was checked against the plan. | Automated and auditable |
-| 7 | An Implementation Pull Request arrived with test evidence and a review verdict. | **Human gate 3** |
+| 2 | Standard Java tools measured the app: tests on JDK 8, dependency tree, newer versions, jdeps, jdeprscan, SpotBugs, an OpenRewrite preview, known advisories. Two read-only agents turned the facts into findings with IDs. One Assessment Report appeared on the issue. Nothing was changed. | Tools measured, agents judged |
+| 3 | The human read the report and approved it. | **Gate 1** |
+| 4 | A planner agent wrote the plan into a pull request next to the approved report and evidence. A check without AI confirmed every finding was owned by a step; the pipeline added a measured cost estimate. | Agent proposed, checks verified |
+| 5 | The human merged the plan. | **Gate 2** |
+| 6 | Agents upgraded the code on a branch, one at a time. Actions jobs built and tested on JDK 21, published a JUnit check, and re-ran SpotBugs and the advisory scan. Two reviewer agents checked the result in parallel: against the plan, and against the coding rules. | Automated and auditable |
+| 7 | An Implementation Pull Request arrived with before-and-after evidence, review verdicts and the actual AI cost. | **Gate 3** |
 
-Nothing is changed before the assessment is approved, and nothing reaches `main` unless a human merges it.
+Nothing is planned before the assessment is approved, nothing changes before the plan is merged, and nothing reaches `main` unless a human merges it.
 
 ## The pipeline
 
-![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=gate2)
+![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=assess-first)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw)
 
-Read it left to right in four steps:
+Read it top to bottom in three lanes:
 
-1. **Assess in parallel.** `baseline-test`, `modernize-compat-analyst` and `modernize-dependency-analyst` run side by side. They only read.
-2. **Review the assessment.** `assessment-report` combines their findings into one report. `assessment-approval` stops the run until a human approves it. No application file has changed.
-3. **Upgrade in sequence.** `modernize-build-upgrader` changes the Maven files. Then `modernize-code-fixer` changes the Java code until it builds and the tests pass. One writer at a time, on one branch.
-4. **Verify in parallel, then review.** `verify-build` and `verify-static` run side by side. `modernize-conformance-reviewer` then compares the result with the approved plan and assessment.
+1. **Assess.** `assessment-facts` runs the tools, with no AI. `modernize-compat-analyst` and `modernize-dependency-analyst` read the evidence in parallel and post findings with IDs. `assessment-report` builds one report. `assessment-approval` stops the run until a human approves it.
+2. **Plan.** `open-plan-pr` commits the approved report and evidence to a plan branch. `modernize-planner` writes `plan.md`. `plan-ready` validates it without AI and fills in the cost. A human merges it.
+3. **Execute and validate.** `modernize-build-upgrader` changes the Maven files, then `modernize-code-fixer` changes the Java code until it builds and the tests pass. `verify-build` and `verify-static` run side by side, then `modernize-conformance-reviewer` (Spec) and `modernize-standards-reviewer` (Standards) review side by side. `finalize` reports the cost and hands over.
+
+## What a Java developer sees at each gate
+
+| Gate | Evidence on screen | Produced by |
+|---|---|---|
+| 1. Approve the assessment | Baseline tests case by case, every javax import with a permalink, `dependency:tree`, newer versions, jdeps and jdeprscan results, OSV.dev advisories by artifact, the SpotBugs baseline, the OpenRewrite preview diff, findings with IDs and ranks, decisions to confirm, cost estimate | Tools, then analyst agents |
+| 2. Approve the plan | `plan.md` with each step's finding IDs and a small diff, a Finding Coverage table, Validation, Risks and Rollback, the measured cost, and a Plan validation comment | Planner agent, then checks without AI |
+| 3. Review the result | Verification on JDK 21 (tests, advisories and SpotBugs before and after), the JUnit check, commits that name finding IDs, Spec traceability per finding, Standards inline comments, actual AI cost | Actions jobs, then reviewer agents |
 
 ## Meet the agents
 
@@ -39,58 +46,62 @@ Each agent has one name everywhere: its workflow file, its entry in the Actions 
 
 | Agent | Reads or writes | What it produces |
 |---|---|---|
-| `modernize-planner` | Reads code, opens a plan PR | The Modernization Plan |
-| `modernize-compat-analyst` | Read-only | A comment: `javax` to `jakarta` and Spring Boot 3 changes |
-| `modernize-dependency-analyst` | Read-only | A comment: dependency and Maven wrapper decisions |
-| `modernize-build-upgrader` | Pushes a commit | Updated `pom.xml` files |
-| `modernize-code-fixer` | Pushes commits | Updated source and tests |
-| `modernize-conformance-reviewer` | Updates the PR description, one comment | A verdict and the PR summary |
+| `modernize-compat-analyst` | Read-only | Source findings `C-..` from the tool evidence |
+| `modernize-dependency-analyst` | Read-only | Dependency findings `D-..` and decisions per artifact |
+| `modernize-planner` | Pushes one Markdown file | `plan.md`, every finding ID owned by a step |
+| `modernize-build-upgrader` | Pushes a commit | Updated `pom.xml` files, commit `build(D-..)` |
+| `modernize-code-fixer` | Pushes commits | Updated sources and tests, commits `fix(C-..)` |
+| `modernize-conformance-reviewer` | Updates the PR description, one comment | Spec review: traceability per finding |
+| `modernize-standards-reviewer` | Inline review comments, one comment | Standards review: rules and smells |
 
-Plain Actions jobs, not agents, do the baseline tests, the JDK 21 build and test run, the version checks, and the final hand-off. Where a result can be computed, it is computed. Agents handle judgment.
+Plain Actions jobs, not agents, run the tools, the baseline and JDK 21 tests, the advisory scans, the version checks, the plan validation, the cost report and the hand-off. Where a result can be computed, it is computed. Agents handle judgment.
 
-## Why different models
+## Why different models, and what it costs
 
-Each workflow pins its requested model in `engine.model`. All use the same Copilot engine and existing token; the plain Actions jobs use no model.
+Each workflow pins its model in `engine.model`. All use the same Copilot engine and token; the plain Actions jobs use no model.
 
-| Workflow | Model ID | Decision |
+| Workflow | Model ID | Measured AI credits (agent + threat detection) |
 |---|---|---|
-| `modernize-planner` | `claude-sonnet-4.6` | Balance reasoning and readable plan writing. |
-| `modernize-compat-analyst` | `gpt-5.4-mini` | Smaller model for bounded, read-only source analysis. |
-| `modernize-dependency-analyst` | `claude-haiku-4.5` | Lightweight model for dependency inventory and recommendations. |
-| `modernize-build-upgrader` | `gpt-5-mini` | Smaller model for plan-guided edits limited to Maven configuration. |
-| `modernize-code-fixer` | `gpt-5.3-codex` | Coding-focused model for Java edits and the compile/test/fix loop. |
-| `modernize-conformance-reviewer` | `gpt-5.4` | Reasoning-oriented model for comparing the plan, diff and evidence. |
+| `modernize-compat-analyst` | `gpt-5.6-luna` | 3.6 |
+| `modernize-dependency-analyst` | `claude-haiku-4.5` | 33.9 |
+| `modernize-planner` | `claude-sonnet-5.5` | 45.9 |
+| `modernize-build-upgrader` | `claude-haiku-5.5` | 2.1 |
+| `modernize-code-fixer` | `claude-sonnet-5.5` | 35.6 |
+| `modernize-conformance-reviewer` | `claude-sonnet-5.5` | 35.2 |
+| `modernize-standards-reviewer` | `claude-sonnet-5` | 39.4 |
+| **Full run** | | **195.6 credits, about $1.96** |
 
-These are role-based demo choices, not measured claims that one model is best. Six different models demonstrate selection, not a production requirement. The compiler accepts the configuration, but token-owner access, policy and availability for the gh-aw integration must be verified by a fresh pre-run. Earlier successful runs used the previous configuration.
+Measured on the full pre-run of 2026-10-19. About 30% of it is threat detection: after every agent, gh-aw checks the agent's output on the same model before anything is written. The run itself shows the actual numbers at each gate, and every gh-aw comment ends with its own credit count. These are role-based demo choices, not benchmark claims.
 
-Show two workflow files side by side: the engine stays `copilot`, while `model` changes. See the [gh-aw engine reference](https://github.github.com/gh-aw/reference/engines/) for configuration.
-
+What the pre-run taught about models: the gh-aw integration offers a fixed list of models, and in gh-aw v0.89.21 the newest OpenAI models failed when they edited files through tools. Agents that edit files or run long tool loops use Claude; the read-only compat analyst uses a small OpenAI model. Show this to Java developers as an example of why you pre-run and read the logs.
 ## Why several agents instead of one
 
 Think of it like small services instead of one monolith.
 
-- **Faster.** Analysis and verification run in parallel.
-- **Safer.** Each agent has one job and the least access it needs. The analysts cannot change code.
-- **Easier to track.** Each stage is its own job with its own log and a row in the tracker comment.
-- **Easier to recover.** A failed stage can be re-run alone. Earlier commits stay on the branch.
+- **Faster.** Analysis, checks and reviews run in parallel.
+- **Safer.** Each agent has one job and the least access it needs. Analysts and reviewers cannot change code.
+- **Easier to trust.** Tools measure the facts; agents interpret them and cite the evidence.
+- **Easier to track.** One finding ID runs from the report to the plan, the commit and the review. Each stage has its own job, log and row on the status board.
+- **Easier to recover.** A failed stage can be re-run alone. Earlier work stays.
 
 ## Where the human stays in control
 
-1. **Merge the plan** to authorize the assessment.
-2. **Approve the Assessment Report** to authorize any code change. This is a GitHub Environment approval in the Actions run, and the report comment records who approved.
+1. **Approve the Assessment Report** to authorize a plan. It is a GitHub Environment approval in the Actions run, and the report records who approved.
+2. **Merge the plan** to authorize any code change.
 3. **Review the Implementation Pull Request** and merge or reject it.
 
 Along the way:
 
 - Agents never write to the repository directly. A separate, validated job pushes their commits.
-- The Implementation PR stays a **draft** until the checks pass.
-- `modernize-conformance-reviewer` states in writing whether the result matches the plan and the approved assessment.
+- The plan pull request stays a draft if the plan does not cover every finding.
+- The Implementation PR stays a **draft** until the checks pass and both the Spec and the Standards review say PASS.
 
 ## Where the code lives
 
 | Location | Contents |
 |---|---|
-| `main` | The original Java 8 / Spring Boot 2.7 code. Agents never touch it. |
+| `main` | The original Java 8 / Spring Boot 2.7 code, plus the approved assessment and plan as Markdown once the plan is merged. |
+| `modernize/plan-<N>` | The plan pull request branch: assessment, evidence, plan. No code. |
 | `modernize/issue-<N>` | The modernized Java 21 / Spring Boot 3.5 code. |
 | Implementation Pull Request | The review surface for the branch. Merging it is the only way the new code reaches `main`. |
 
@@ -98,43 +109,51 @@ Along the way:
 
 | Failure | What you see | Recovery |
 |---|---|---|
-| A test fails after the upgrade | `verify-build` is red; the tracker shows baseline versus final | Re-run `modernize-code-fixer` |
-| An agent cannot finish | That job is red; the branch still holds earlier work | Re-run the failed job from the Actions run |
-| The plan is wrong | The pipeline has not started yet | Reject the plan PR and file a new request |
-| The assessment is wrong or out of scope | The run waits at `assessment-approval`; no application file has changed | Select Reject in the run, fix the plan or request, and start again |
+| A tool step fails (OpenRewrite, OSV.dev) | The step is yellow; the report says the data is unavailable | Continue, or re-run the job |
+| The assessment is wrong or out of scope | The run waits at `assessment-approval`; nothing has changed | Select Reject, fix the request, start again |
+| The plan misses a finding | **Plan validation** fails; the plan pull request stays a draft | Re-run the planner, or close the pull request |
+| A test fails after the upgrade | `verify-build` is red; **Verification on JDK 21** shows each test before and after | Re-run `modernize-code-fixer` |
+| An agent cannot finish | That job is red; the branch keeps earlier work | Re-run the failed job from the Actions run |
 
 ## Be honest about the boundaries
 
-- This pipeline **copies the plan, execute, validate pattern** of GitHub Copilot app modernization. It uses our own agents and standard Maven commands. It does not run that product, and it is not a supported product feature.
-- The baseline has one failing worker test (Mockito cannot mock a final AWS class on Java 8). The pipeline records it first and compares against it. Whether the upgrade makes it pass is a result to report, not a promise.
+- This pipeline **copies the assess, plan, execute, validate order** of GitHub Copilot app modernization. It uses our own gh-aw agents and standard Java tools. It does not run that product, and it is not a supported product feature. The product assesses a whole repository for cloud readiness with its own rule engine; this demo assesses one application for one upgrade.
+- The baseline has one failing worker test (Mockito cannot mock a final AWS class on Java 8). The report lists it as a decision and the pipeline compares against it. Whether the upgrade makes it pass is a result to report, not a promise.
+- The cost table is an estimate. The actual credits recorded during the run are the numbers to quote.
 - Agent behavior is proven by running it. The pre-run you showed is that proof.
 
 ## What to have open on screen
 
-1. The Modernization Request issue.
-2. The plan pull request and its plan file.
-3. The pipeline run graph in Actions, stopped at `assessment-approval`.
-4. The Assessment Report comment on the draft Implementation Pull Request.
-5. One agent run, to show a read-only job and a separate validated write.
-6. The Implementation Pull Request: tracker comment, test comparison, reviewer verdict.
+1. The Modernization Request issue with its status board.
+2. The `assessment-facts` job, one step per tool.
+3. The Assessment Report comment.
+4. The plan pull request: `plan.md` and the Plan validation comment.
+5. The execution run graph, and one agent run to show a read-only job and a separate validated write.
+6. The Implementation Pull Request: Verification on JDK 21, commits with finding IDs, Spec and Standards reviews, AI cost.
 
 ## Questions you may get
 
 **Is this the Copilot app modernization product?**
-No. It follows the same plan, execute, validate pattern with gh-aw agents. The product remains the supported route for production work.
+No. It follows the same assess, plan, execute, validate order with gh-aw agents. The product remains the supported route for production work.
+
+**Where do the numbers in the report come from?**
+From the tools: Maven, Surefire, the versions plugin, `jdeps`, `jdeprscan`, SpotBugs, OpenRewrite and OSV.dev. Each is its own step in the `assessment-facts` job. The agents interpret the numbers; they do not produce them.
+
+**How much does a run cost?**
+About 200 AI credits, roughly $2, for all seven agents; the pre-run measured 195.6 credits. The report, the plan and the Implementation pull request show the actual credits per agent.
 
 **Can it run without a human?**
 It could. This demo deliberately keeps three gates. The approval model does not change if you add more stages.
 
 **What if an agent is wrong?**
-`modernize-conformance-reviewer` checks the diff against the plan, deterministic jobs run the tests, and a human reviews before anything reaches `main`.
+The tools measured the facts first, the plan validation catches a missing or invented finding, the tests run against the baseline, two reviewers check the plan and the rules separately, and a human reviews before anything reaches `main`.
 
 **Why not one big agent?**
 Parallel work, least privilege, and per-stage recovery. The same reasons teams split services.
 
 ## Customer takeaway
 
-> We did not ask an agent to modernize production code without oversight. We captured intent, reviewed the plan, reviewed a detailed assessment of what would change before anything was touched, let a team of small agents do the work in parallel where it was safe, and received reviewable code with test evidence. The next stages can be added later without changing this approval model.
+> We did not ask an agent to modernize production code without oversight. We captured intent, measured the application with the tools Java developers already trust, reviewed a detailed assessment before any plan, reviewed a plan that accounts for every finding before any code change, let a team of small agents do the work in parallel where it was safe, and received reviewable code with before-and-after evidence and a known cost. The next stages can be added later without changing this approval model.
 
 ## Deliberately deferred
 
@@ -145,3 +164,4 @@ Parallel work, least privilege, and per-stage recovery. The same reasons teams s
 - Azure deployment
 - CI/CD quality gates
 - Production observability and feedback
+- Remaining advisories after the upgrade (listed in the verification comment for follow-up)
