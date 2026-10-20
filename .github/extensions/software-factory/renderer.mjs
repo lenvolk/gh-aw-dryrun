@@ -233,7 +233,8 @@ function stageBody(s) {
     case "gate2": {
       const pr = S.planPr;
       if (s.status === "attention" && pr) {
-        h += '<div class="small">Merging puts only Markdown and evidence on <code>main</code>. The Java code does not change. The merge starts the execution.</div>';
+        h += '<div class="small">Merging puts only Markdown and evidence on <code>' + esc(pr.defaultBranch || "main") + "</code>, in <code>" + esc(pr.requestDir || "") + "/</code>" +
+          (pr.files ? " (" + pr.files.length + " files)" : "") + ". The Java code does not change. The merge starts the execution.</div>";
         links.push(link("Review plan pull request #" + pr.number, pr.html_url), '<button class="good" data-act="merge_plan" data-number="' + pr.number + '">Merge plan (gate 2)</button>');
       } else if (s.status === "done") h += '<div class="small muted">Plan merged.</div>';
       else h += '<div class="small muted">Opens when the plan passes validation.</div>';
@@ -281,6 +282,20 @@ function render() {
   showNotice(S.busy ? { kind: "agent", text: S.busy } : S.notice);
 }
 
+function mergePlanText() {
+  const pr = S.planPr || {};
+  const main = pr.defaultBranch || "main";
+  const dir = pr.requestDir || ("docs/modernization/requests/" + S.issue);
+  const files = (pr.files || []).filter(Boolean);
+  const outside = files.filter((f) => !f.startsWith(dir + "/"));
+  const list = files.length ? files.map((f) => "  • " + f.replace(dir + "/", "")).join("\n") : "  (file list unavailable; open Files changed on the plan pull request)";
+  return "Merge plan pull request #" + pr.number + " (gate 2)?\n\n" +
+    "These " + (files.length ? files.length + " " : "") + "files are squash-merged into the " + main + " branch of " + S.selected + ", in the folder:\n" +
+    "  " + dir + "/\n\n" + list + "\n\n" +
+    (outside.length ? "WARNING: " + outside.length + " file(s) are outside that folder: " + outside.join(", ") + "\n\n" : "") +
+    "No Java code changes: " + main + " stays on Java 8. The merge starts the execution run, which writes the modernized code to the branch modernize/issue-" + S.issue + ", not to " + main + ".";
+}
+
 function askConfirm(text) {
   const dlg = q("#confirmDlg");
   q("#confirmText").textContent = text;
@@ -303,7 +318,7 @@ document.addEventListener("click", async (ev) => {
   const confirmText = {
     approve_gate1: "Approve gate 1? The run continues: the plan pull request is opened from this report.",
     reject_gate1: "Reject gate 1? The run stops here. Nothing changes in the repository.",
-    merge_plan: "Merge the plan pull request (gate 2)? Only Markdown and evidence reach main, and the execution starts.",
+    merge_plan: S && S.planPr ? mergePlanText() : "Merge the plan pull request (gate 2)?",
     approve_impl: "Submit an approving review (gate 3)? The pull request is NOT merged.",
   }[kind];
   if (confirmText && !(await askConfirm(confirmText))) return;
@@ -401,7 +416,7 @@ export function renderHtml() {
   <div id="resetErr" class="small" style="color:var(--bad);margin-top:6px"></div>
   <div class="row" style="margin-top:10px;justify-content:flex-end"><button id="resetCancel">Cancel</button><button class="danger" id="resetGo">Reset</button></div>
 </form></dialog>
-<dialog id="confirmDlg"><form method="dialog"><p id="confirmText"></p>
+<dialog id="confirmDlg"><form method="dialog"><p id="confirmText" style="white-space:pre-line;font-size:13px"></p>
   <div class="row" style="justify-content:flex-end"><button id="confirmNo">Cancel</button><button class="good" id="confirmYes">Confirm</button></div></form></dialog>
 <script>${SCRIPT}</script>
 </body></html>`;

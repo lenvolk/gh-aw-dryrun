@@ -110,10 +110,11 @@ export async function collectState(rec) {
     if (!executionRun && planPr && planPr.merged) executionRun = await settle(G.findRun(repo, tpl.pipelineWorkflow, planPr.merged_at));
     const executionJobs = executionRun ? await settle(G.runJobs(repo, executionRun.id), []) : [];
 
-    const [planComments, implComments, implReviews] = await Promise.all([
+    const [planComments, implComments, implReviews, planFiles] = await Promise.all([
         planPr ? settle(G.issueComments(repo, planPr.number), []) : [],
         implPr ? settle(G.issueComments(repo, implPr.number), []) : [],
         implPr ? settle(G.prReviews(repo, implPr.number), []) : [],
+        planPr && planPr.state === "open" ? settle(G.prFiles(repo, planPr.number), null) : null,
     ]);
     const costComment = find(implComments, MARKERS.cost);
     const verificationComment = find(implComments, MARKERS.verification);
@@ -129,7 +130,7 @@ export async function collectState(rec) {
     state.stages = stages;
     state.active = isActive(stages) || !!(assessmentRun && assessmentJobs.some((j) => j.status !== "completed" && j.status !== "waiting"));
     state.gate1 = pendingGate ? { environment: pendingGate.environment, canApprove: pendingGate.current_user_can_approve, runId: assessmentRun.id } : null;
-    state.planPr = planPr;
+    state.planPr = planPr ? { ...planPr, files: planFiles, requestDir, defaultBranch: (repoData.info && repoData.info.default_branch) || "main" } : null;
     state.implPr = implPr ? { ...implPr, myApproval } : null;
     state.cards = {
         glance: reportComment ? parseAtAGlance(reportComment.body) : [],

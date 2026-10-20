@@ -763,7 +763,7 @@ On the plan pull request, **Files changed** shows, under `docs/modernization/req
 
 The card links **Plan pull request**, **plan.md**, **Cost estimate**, **Plan validation** and **Files changed**. The **Plan validation** comment proves, without AI, that every finding ID is owned by a step, no ID was invented, all sections exist, the Run Parameters are complete, and the Execution Plan has no deployment or Azure steps.
 
-**Human approval is the merge.** When the plan is ready for review, the **Gate 2** card shows **Merge plan (gate 2)**. Select it and confirm. The canvas squash-merges the plan pull request, the same as `gh pr merge --squash`. Only Markdown and evidence reach `main`; the Java code does not change.
+**Human approval is the merge.** When the plan is ready for review, the **Gate 2** card shows **Merge plan (gate 2)**. Select it. The confirmation names the exact folder on `main`, `docs/modernization/requests/<N>/`, and lists every file the plan pull request adds there (about 12: `plan.md`, `assessment.md`, `findings.json`, the two cost files and `evidence/`). It warns if any file is outside that folder. Confirm, and the canvas squash-merges the plan pull request, the same as `gh pr merge --squash`. Only Markdown and evidence reach `main`; the Java code does not change.
 
 Do not continue if the plan is wrong. Comment on the plan pull request and close it, then start a new request.
 

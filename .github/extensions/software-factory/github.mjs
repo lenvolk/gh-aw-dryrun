@@ -149,6 +149,10 @@ export async function prReviews(repo, number) {
     return apiLines(`repos/${repo}/pulls/${number}/reviews?per_page=100`, ".[] | {user: .user.login, state, submitted_at, html_url}");
 }
 
+export async function prFiles(repo, number) {
+    return apiLines(`repos/${repo}/pulls/${number}/files?per_page=100`, ".[] | .filename");
+}
+
 export async function createIssue(repo, title, body, label) {
     const payload = JSON.stringify({ title, body, labels: [label] });
     const r = await gh(["api", "-X", "POST", `repos/${repo}/issues`, "--input", "-", "--jq", "{number, html_url}"], { input: payload });
