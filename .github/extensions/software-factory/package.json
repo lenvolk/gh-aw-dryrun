@@ -1,0 +1,14 @@
+{
+  "name": "software-factory",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "extension.mjs",
+  "private": true,
+  "description": "Software Factory canvas: deploy the Java modernization template to nominated catalog repositories and drive the assess, plan, execute, validate lifecycle with three human gates, live progress and cost.",
+  "dependencies": {
+    "@github/copilot-sdk": "1.0.4"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

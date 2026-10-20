@@ -1,0 +1,48 @@
+{
+  "factory": "lenvolk/gh-aw-dryrun",
+  "description": "Repositories the Software Factory may work on. Only nominated repositories can use the factory's GitHub Actions minutes and Copilot AI credits.",
+  "billing": {
+    "actionsUsdPerMinute": 0.006,
+    "runner": "Standard GitHub-hosted runner, Linux 2-core x64",
+    "source": "https://docs.github.com/en/billing/reference/actions-runner-pricing",
+    "readOn": "2026-10-20",
+    "note": "Standard runners are free on public repositories. Each job is rounded up to a whole minute."
+  },
+  "templates": {
+    "java-modernization": {
+      "title": "Java modernization (Beat 4)",
+      "path": "templates/JavaModernization",
+      "deployScript": "templates/JavaModernization/deploy.ps1",
+      "requestLabel": "modernization-request",
+      "requestTitle": "Modernize Asset Manager",
+      "approvalEnvironment": "assessment-review",
+      "assessmentWorkflow": "modernize-assessment.yml",
+      "pipelineWorkflow": "modernize-pipeline.yml",
+      "planTitlePrefix": "[modernization-plan]",
+      "implementationTitlePrefix": "[modernization]"
+    }
+  },
+  "repositories": [
+    {
+      "repo": "lenvolk/java-migration-copilot-samples",
+      "title": "Asset Manager",
+      "description": "Spring Boot web and worker sample on Java 8. Target: Java 21 and Spring Boot 3.5.x.",
+      "language": "Java 8, Spring Boot 2.7",
+      "nominated": true,
+      "template": "java-modernization",
+      "localPath": "C:\\Temp\\GHDemo\\JavaModernization\\java-migration-copilot-samples",
+      "upstream": "Azure-Samples/java-migration-copilot-samples"
+    },
+    {
+      "repo": "lenvolk/JTicket",
+      "title": "JTicket",
+      "description": "Open source event ticketing system: venues, pricing, orders, payments and check-in.",
+      "language": "Java",
+      "nominated": false,
+      "reason": "Not nominated: no approved budget for Actions minutes and AI credits yet.",
+      "template": "java-modernization",
+      "localPath": "C:\\Temp\\GHDemo\\JTicket",
+      "upstream": "grantsunny/JTicket"
+    }
+  ]
+}

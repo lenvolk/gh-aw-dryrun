@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 660" width="1500" height="660">
+<defs><marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#495057"/></marker></defs>
+<rect x="0" y="0" width="1500" height="660" rx="10" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+<text x="750.0" y="40" font-size="26" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Beat 4 from the Software Factory</text>
+<text x="750.0" y="70" font-size="17" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">One factory holds the catalog, the template and the canvas. The workflows run in the nominated target repository.</text>
+<rect x="30" y="100" width="560" height="520" rx="10" fill="#f8f9fa" stroke="#868e96" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="50" y="128" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">SOFTWARE FACTORY  lenvolk/gh-aw-dryrun</text>
+<rect x="60" y="150" width="500" height="100" rx="10" fill="#e7f5ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="310.0" y="187.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Repository catalog</text>
+<text x="310.0" y="209.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">templates/catalog.json</text>
+<text x="310.0" y="227.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">only nominated repositories may spend minutes and AI credits</text>
+<rect x="60" y="275" width="500" height="100" rx="10" fill="#e7f5ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="310.0" y="312.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Java modernization template</text>
+<text x="310.0" y="334.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">templates/JavaModernization: workflows, agents, skills, scripts</text>
+<text x="310.0" y="352.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">deploy.ps1 copies, configures, compiles</text>
+<rect x="60" y="400" width="500" height="120" rx="10" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+<text x="310.0" y="438.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Software Factory canvas</text>
+<text x="310.0" y="460.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">buttons instead of scripts, live progress bars</text>
+<text x="310.0" y="478.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">predicted and actual cost, the three gate buttons</text>
+<text x="310.0" y="496.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">.github/extensions/software-factory</text>
+<rect x="60" y="545" width="500" height="60" rx="10" fill="#f1f3f5" stroke="#adb5bd" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="310.0" y="571.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">lenvolk/JTicket: not nominated</text>
+<text x="310.0" y="593.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">listed, but no minutes or credits are spent</text>
+<rect x="650" y="110" width="230" height="110" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
+<text x="765.0" y="143.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">You</text>
+<text x="765.0" y="165.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">type /modernize</text>
+<text x="765.0" y="183.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">click gate 1, 2, 3</text>
+<text x="765.0" y="201.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">never merge to main</text>
+<rect x="940" y="100" width="530" height="520" rx="10" fill="#f8f9fa" stroke="#868e96" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="960" y="128" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">TARGET  lenvolk/java-migration-copilot-samples</text>
+<rect x="970" y="150" width="470" height="120" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="1205.0" y="188.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-assessment.yml</text>
+<text x="1205.0" y="210.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">request -> tool facts -> 2 analyst agents</text>
+<text x="1205.0" y="228.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Assessment Report with predicted cost</text>
+<text x="1205.0" y="246.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gate 1 -> plan PR -> gate 2 (merge)</text>
+<rect x="970" y="295" width="470" height="120" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text x="1205.0" y="333.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-pipeline.yml</text>
+<text x="1205.0" y="355.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">build upgrader -> code fixer</text>
+<text x="1205.0" y="373.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">verify on JDK 21, Spec and Standards review</text>
+<text x="1205.0" y="391.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">finalize: actual vs predicted cost</text>
+<rect x="970" y="440" width="470" height="140" rx="10" fill="#b2f2bb" stroke="#2f9e44" stroke-width="2"/>
+<text x="1205.0" y="479.0" font-size="15" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Results in the repository</text>
+<text x="1205.0" y="501.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">issue with the status board</text>
+<text x="1205.0" y="519.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">plan PR: docs only reach main</text>
+<text x="1205.0" y="537.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Implementation PR on modernize/issue-N</text>
+<text x="1205.0" y="555.0" font-size="13" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">gate 3: approve, not merge; main stays Java 8</text>
+<line x1="560" y1="325" x2="968" y2="210" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<text x="760" y="300" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Deploy / Update template</text>
+<text x="760" y="317" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Copilot agent runs deploy.ps1,</text>
+<text x="760" y="334" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">asks before it pushes</text>
+<line x1="560" y1="450" x2="968" y2="360" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
+<text x="760" y="447" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Start request, approve gate 1,</text>
+<text x="760" y="464" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">merge plan, approve PR</text>
+<text x="760" y="481" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">(direct clicks, no AI)</text>
+<line x1="968" y1="510" x2="560" y2="485" stroke="#2f9e44" stroke-width="2" marker-end="url(#ah)"/>
+<text x="760" y="520" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">status board, jobs, cost JSON</text>
+<text x="760" y="537" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">polled through gh</text>
+<line x1="680" y1="220" x2="562" y2="420" stroke="#f08c00" stroke-width="2" marker-end="url(#ah)"/>
+</svg>
