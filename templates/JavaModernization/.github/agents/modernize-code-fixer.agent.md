@@ -18,7 +18,8 @@ You make the **Java source and tests** compile and pass after `modernize-build-u
    - After both modules compile, run `./asset-manager/mvnw -B -ntp -f asset-manager/pom.xml clean test` and fix failing tests.
 5. A test that already failed at baseline must be fixed too if the upgrade makes that possible, or explained with evidence if it is a pre-existing limitation. Never delete or disable a test, and never weaken an assertion to make it pass.
 6. Finish with `./asset-manager/mvnw -B -ntp -f asset-manager/pom.xml -DskipTests package` to prove both module jars build.
-7. Group the changes in commits by finding, and name the IDs: `fix(C-01): implement WebMvcConfigurer instead of WebMvcConfigurerAdapter`, `fix(C-02,C-03): migrate javax.persistence to jakarta.persistence`. A change that no finding predicted gets its own commit with `fix(unplanned): ...` and the reason in the body.
+7. Completeness check before you push. List every finding ID the plan assigns to `modernize-code-fixer`. For each one, read its `finding` and `change` in `findings.json` and confirm the end state it describes is in the code now (open the file, or `grep` it); this includes import cleanups such as replacing a wildcard import with explicit imports, even when `change` only says "keep" or "compile". If the branch already has commits from an earlier run, check the current code, fix what is still missing, and add only the missing commits. A finding that truly needs no change must be named in your final message with the evidence.
+8. Group the changes in commits by finding, and name the IDs: `fix(C-01): implement WebMvcConfigurer instead of WebMvcConfigurerAdapter`, `fix(C-02,C-03): migrate javax.persistence to jakarta.persistence`. A change that no finding predicted gets its own commit with `fix(unplanned): ...` and the reason in the body.
 
 ## Output
 
