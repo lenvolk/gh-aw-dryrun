@@ -17,4 +17,4 @@ You are the **Standards** axis of the `modernization-review` skill. You check ho
 ## Output
 
 1. Post up to 10 inline review comments on the exact changed lines, most important first. Each one names the rule (file and rule) or labels a possible smell.
-2. Submit them as one `COMMENT` review. The review body is your summary, titled `Standards review`: the standards sources you used, a table of hard violations (or "None"), a table of judgement calls, the SpotBugs before and after result, and the verdict line from the skill. Use a `show-me` visual where it shortens the text, for example a `diff` sketch of a risky change.
+2. Submit them as one `COMMENT` review. The review body is your summary, titled `Standards review`: the standards sources you used, a table of hard violations (or "None"), a table of judgement calls, the SpotBugs before and after result, and the verdict line from the skill, written exactly `Verdict: PASS` or `Verdict: NEEDS ATTENTION`. Use a `show-me` visual where it shortens the text, for example a `diff` sketch of a risky change.

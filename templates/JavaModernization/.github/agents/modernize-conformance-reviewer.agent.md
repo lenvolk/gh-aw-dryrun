@@ -20,4 +20,4 @@ You are the **Spec** axis of the `modernization-review` skill. You verify that t
    - Evidence: baseline versus final test totals and advisories before versus after, from the verification comment. Then the traceability table (finding ID, status, commit) inside a collapsed `<details>` block, with any Not met or Cannot verify row listed above it.
    - Merge Danger: judge the door and the blast radius from the diff.
    - End the body with the line `Closes #<issue-number>` so merging the pull request closes the Modernization Request.
-2. Post one comment that starts with `<!-- modernize:spec -->`, titled `Spec review`, with the counts (Met, Not met, Cannot verify) and the verdict line from the skill.
+2. Post one comment that starts with `<!-- modernize:spec -->`, titled `Spec review`, with the counts (Met, Not met, Cannot verify) and the verdict line from the skill, written exactly `Verdict: PASS` or `Verdict: NEEDS ATTENTION`.

@@ -61,9 +61,9 @@ Post up to 10 inline review comments on the exact changed lines for the most imp
 
 ## Verdict
 
-End your summary (the Spec comment, or the Standards review body) with one line:
+End your summary (the Spec comment, or the Standards review body) with one line that is exactly one of these two, with no bold and no other wording such as "Changes requested" or "Approved". The `finalize` job matches the exact text; any other wording counts as NEEDS ATTENTION.
 
 - `Verdict: PASS`: no Not met item (Spec) or no hard violation (Standards). Judgement calls alone never fail Standards.
-- `Verdict: NEEDS ATTENTION`: followed by the reasons.
+- `Verdict: NEEDS ATTENTION`: put the reasons on the following lines, not on the verdict line.
 
 Write in the style of the `pr-description` skill: short, plain words, tables in collapsed `<details>` blocks when longer than 8 rows.

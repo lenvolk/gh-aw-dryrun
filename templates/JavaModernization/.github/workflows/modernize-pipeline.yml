@@ -460,10 +460,16 @@ jobs:
         run: |
           # Read each reviewer's verdict line from its summary comment or review. gh-aw strips HTML markers from
           # agent output, so match the provenance footer that gh-aw adds itself. A missing verdict is empty, not an error.
+          # Any other verdict wording (for example "Verdict: Changes requested") counts as NEEDS ATTENTION and is quoted.
           verdict() {
             gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate --jq ".[] | select(.body | contains(\"gh-aw-agentic-workflow: $1,\")) | .body" > "verdict-$1.txt" || true
             gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/reviews" --paginate --jq ".[] | select(.body | contains(\"gh-aw-agentic-workflow: $1,\")) | .body" >> "verdict-$1.txt" || true
-            grep -oE 'Verdict: (PASS|NEEDS ATTENTION)' "verdict-$1.txt" | tail -n1 || true
+            v=$(grep -oE 'Verdict: (PASS|NEEDS ATTENTION)' "verdict-$1.txt" | tail -n1 || true)
+            if [ -z "$v" ]; then
+              other=$(grep -oE 'Verdict:[* ]*[A-Za-z][A-Za-z ]*' "verdict-$1.txt" | tail -n1 | tr -d '*' || true)
+              [ -n "$other" ] && v="Verdict: NEEDS ATTENTION (reviewer wrote '$other')"
+            fi
+            echo "$v"
           }
           # Stage status from both the job result and the verdict: a successful job with NEEDS ATTENTION is not done.
           review_status() { if [ "$1" != "success" ] || [ -z "$2" ]; then echo failed; elif [ "$2" = "Verdict: PASS" ]; then echo done; else echo attention; fi; }
