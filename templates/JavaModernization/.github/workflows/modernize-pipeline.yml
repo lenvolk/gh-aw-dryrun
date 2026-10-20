@@ -481,7 +481,7 @@ jobs:
           if [ "$BUILD" = "success" ] && [ "$STATIC" = "success" ] && [ "$SPEC" = "success" ] && [ "$STANDARDS" = "success" ] \
              && [ "$SPEC_VERDICT" = "Verdict: PASS" ] && [ "$STD_VERDICT" = "Verdict: PASS" ]; then
             gh pr ready "$PR"
-            gh pr edit "$PR" --add-label ready-for-human-review
+            gh pr edit "$PR" --add-label ready-for-human-review --remove-label needs-attention
             python3 .github/scripts/modernize_tracker.py --issue "$ISSUE" --stage "Human review" --status attention --detail "Ready: review and approve pull request #$PR (gate 3). Merging to main is a separate human decision"
           else
             gh pr edit "$PR" --add-label needs-attention
