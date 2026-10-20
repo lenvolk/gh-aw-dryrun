@@ -492,7 +492,7 @@ After these steps your repo is back to: `main` branch only, no open PR, no open 
 
 > **You can start here.** Beat 4 does not require the Python demo repository, labels, pull requests, or issues from Beats 1-3.
 
-![Beat 4: assess, plan, execute, validate, with a human gate at each step](assets/beat-4-pipeline.svg?v=assess-first)
+![Beat 4: assess, plan, execute, validate, with a human gate at each step](assets/beat-4-pipeline.svg?v=models)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw). Open it in the Excalidraw VS Code extension or at <https://excalidraw.com>.
 

@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1010" width="1500" height="1010">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1030" width="1500" height="1030">
 <defs><marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#495057"/></marker></defs>
-<rect x="0" y="0" width="1500" height="1010" rx="10" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<rect x="0" y="0" width="1500" height="1030" rx="10" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
 <text x="750" y="40" font-size="26" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Beat 4: assess, plan, execute, validate. A human approves each step.</text>
-<text x="750" y="70" font-size="17" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Tools measure the facts. gh-aw agents do the judgment work. Actions jobs do the checks. Nothing changes before gate 2.</text>
+<text x="750" y="70" font-size="17" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Tools measure the facts. gh-aw agents (Copilot engine, one model per role) do the judgment work. Actions jobs do the checks, no AI.</text>
 <rect x="30" y="93" width="26" height="20" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
 <text x="66" y="108" font-size="14" text-anchor="start" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Human step or gate</text>
 <rect x="220" y="93" width="26" height="20" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
@@ -28,11 +28,13 @@
 <text x="385.0" y="350" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">OSV.dev advisories</text>
 <text x="705" y="160" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">in parallel, read-only</text>
 <rect x="560" y="172" width="290" height="100" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="705.0" y="218" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-compat-analyst</text>
-<text x="705.0" y="236" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">source findings C-01 ...</text>
+<text x="705.0" y="209" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-compat-analyst</text>
+<text x="705.0" y="227" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">source findings C-01 ...</text>
+<text x="705.0" y="245" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: gpt-5.6-luna</text>
 <rect x="560" y="292" width="290" height="100" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="705.0" y="338" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-dependency-analyst</text>
-<text x="705.0" y="356" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">dependency findings D-01 ...</text>
+<text x="705.0" y="329" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-dependency-analyst</text>
+<text x="705.0" y="347" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">dependency findings D-01 ...</text>
+<text x="705.0" y="365" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-haiku-4.5</text>
 <rect x="880" y="162" width="270" height="240" rx="10" fill="#b2f2bb" stroke="#2f9e44" stroke-width="2"/>
 <text x="1015.0" y="233" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Assessment report</text>
 <text x="1015.0" y="251" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">on the request issue</text>
@@ -61,10 +63,11 @@
 <text x="385.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment.md, findings.json</text>
 <text x="385.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">evidence/ committed</text>
 <rect x="560" y="480" width="290" height="140" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="705.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-planner</text>
-<text x="705.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">writes plan.md</text>
-<text x="705.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">every finding ID owned</text>
-<text x="705.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">by one step</text>
+<text x="705.0" y="519" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-planner</text>
+<text x="705.0" y="537" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">writes plan.md</text>
+<text x="705.0" y="555" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">every finding ID owned</text>
+<text x="705.0" y="573" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">by one step</text>
+<text x="705.0" y="591" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-sonnet-5.5</text>
 <rect x="880" y="480" width="270" height="140" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
 <text x="1015.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">plan-ready</text>
 <text x="1015.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">plan validation, no AI</text>
@@ -81,14 +84,16 @@
 <rect x="15" y="662" width="1470" height="270" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="170" y="684" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">3  EXECUTE AND VALIDATE   workflow modernize-pipeline, branch modernize/issue-N</text>
 <rect x="30" y="735" width="215" height="160" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="137.5" y="802" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-build-upgrader</text>
-<text x="137.5" y="820" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">POM files only</text>
-<text x="137.5" y="838" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commit build(D-..)</text>
+<text x="137.5" y="793" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-build-upgrader</text>
+<text x="137.5" y="811" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">POM files only</text>
+<text x="137.5" y="829" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commit build(D-..)</text>
+<text x="137.5" y="847" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-haiku-5.5</text>
 <rect x="270" y="735" width="215" height="160" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="377.5" y="793" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-code-fixer</text>
-<text x="377.5" y="811" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">sources and tests</text>
-<text x="377.5" y="829" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">build and test loop</text>
-<text x="377.5" y="847" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commits fix(C-..)</text>
+<text x="377.5" y="784" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-code-fixer</text>
+<text x="377.5" y="802" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">sources and tests</text>
+<text x="377.5" y="820" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">build and test loop</text>
+<text x="377.5" y="838" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commits fix(C-..)</text>
+<text x="377.5" y="856" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-sonnet-5.5</text>
 <text x="625" y="710" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">in parallel, no AI</text>
 <rect x="510" y="720" width="230" height="90" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
 <text x="625.0" y="752" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">verify-build</text>
@@ -99,11 +104,13 @@
 <text x="625.0" y="884" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">versions, javax, scope</text>
 <text x="905" y="710" font-size="13" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">in parallel, read-only</text>
 <rect x="765" y="720" width="280" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="905.0" y="761" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-conformance-reviewer</text>
-<text x="905.0" y="779" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Spec: every finding ID traced</text>
+<text x="905.0" y="752" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-conformance-reviewer</text>
+<text x="905.0" y="770" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Spec: every finding ID traced</text>
+<text x="905.0" y="788" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-sonnet-5.5</text>
 <rect x="765" y="825" width="280" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
-<text x="905.0" y="866" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-standards-reviewer</text>
-<text x="905.0" y="884" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Standards: rules, inline comments</text>
+<text x="905.0" y="857" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-standards-reviewer</text>
+<text x="905.0" y="875" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">Standards: rules, inline comments</text>
+<text x="905.0" y="893" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-sonnet-5</text>
 <rect x="1070" y="735" width="160" height="160" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
 <text x="1150.0" y="802" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">finalize</text>
 <text x="1150.0" y="820" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">actual AI cost</text>
@@ -121,5 +128,6 @@
 <path d="M1045,765 L1070,790" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
 <path d="M1045,870 L1070,840" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
 <path d="M1230,815 L1255,815" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#ah)"/>
-<text x="750" y="975" font-size="16" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Only Markdown and evidence reach main when the plan is merged. Code stays on modernize/issue-N until a human merges the Implementation PR.</text>
+<text x="750" y="965" font-size="16" text-anchor="middle" fill="#495057" font-family="Segoe UI, Helvetica, Arial, sans-serif">Only Markdown and evidence reach main when the plan is merged. Code stays on modernize/issue-N until a human merges the Implementation PR.</text>
+<text x="750" y="995" font-size="14" text-anchor="middle" fill="#868e96" font-family="Segoe UI, Helvetica, Arial, sans-serif">Measured full run 2026-10-19: about 196 AI credits (about $2), threat detection included. Models as available in gh-aw v0.89.21.</text>
 </svg>
