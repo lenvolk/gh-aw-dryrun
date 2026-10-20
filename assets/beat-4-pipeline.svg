@@ -58,13 +58,15 @@
 <rect x="15" y="440" width="1470" height="200" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="30" y="462" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">2  PLAN   same run, after gate 1</text>
 <rect x="240" y="480" width="290" height="140" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
-<text x="385.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">open-plan-pr</text>
-<text x="385.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">branch modernize/plan-N</text>
-<text x="385.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment.md, findings.json</text>
-<text x="385.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">evidence/ committed</text>
+<text x="385.0" y="510" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">open-plan-pr</text>
+<text x="385.0" y="528" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">branch modernize/plan-N</text>
+<text x="385.0" y="546" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">commits to folder</text>
+<text x="385.0" y="564" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">docs/modernization/requests/N/</text>
+<text x="385.0" y="582" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment.md, findings.json,</text>
+<text x="385.0" y="600" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">evidence/, cost-estimate.md</text>
 <rect x="560" y="480" width="290" height="140" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
 <text x="705.0" y="519" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-planner</text>
-<text x="705.0" y="537" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">writes plan.md</text>
+<text x="705.0" y="537" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">adds plan.md to the same folder</text>
 <text x="705.0" y="555" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">every finding ID owned</text>
 <text x="705.0" y="573" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">by one step</text>
 <text x="705.0" y="591" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-sonnet-5.5</text>

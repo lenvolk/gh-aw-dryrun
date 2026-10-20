@@ -22,7 +22,7 @@ Nothing is planned before the assessment is approved, nothing changes before the
 
 ## The pipeline
 
-![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=models)
+![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=plan-folder)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw)
 
