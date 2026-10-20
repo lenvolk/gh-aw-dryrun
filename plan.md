@@ -755,7 +755,7 @@ About 10 to 15 minutes after the request, the comment **Assessment report for is
 
 In the pre-run of 2026-10-19 (issue 16) the report showed: 4 tests with 1 error on JDK 8 (`MockitoException: Cannot mock/spy class ResponseInputStream`), 9 javax imports in 5 files to migrate and `javax.imageio` to keep, `logback-classic 1.2.12` using `sun.reflect.Reflection` which JDK 21 removed, 169 known advisories, 9 SpotBugs patterns, an OpenRewrite preview of 7 files with Spring Boot 3.5.16, and 34 findings (11 Blocker). The dependency analyst also proposed a few questionable pins, which is exactly what gate 1 is for. Treat your own pre-run as the source of truth.
 
-**To approve gate 1:** at the end of the report, click **assessment run**, then **Review deployments** → tick `assessment-review` → **Approve and deploy**.
+**To approve gate 1:** at the end of the issue (the last comment, **Assessment report**), click **assessment run**, then **Review deployments** → tick `assessment-review` → **Approve and deploy**.
 
 **Reject** stops here; nothing changes.
 
