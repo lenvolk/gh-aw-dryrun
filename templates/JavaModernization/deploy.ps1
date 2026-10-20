@@ -258,8 +258,8 @@ if (-not $add.Ok) { Stop-Deploy "git add failed: $($add.Output)" }
 $message = if ($Update) { "chore(factory): update $TemplateId template from the Software Factory" } else { "chore(factory): deploy $TemplateId template from the Software Factory" }
 $commit = Invoke-Native { git commit -m $message }
 if (-not $commit.Ok) { Stop-Deploy "git commit failed: $($commit.Output)" }
-$push = Invoke-Native { git push origin $defaultBranch }
-if (-not $push.Ok) { Stop-Deploy "git push failed: $($push.Output)" }
+$pushResult = Invoke-Native { git push origin $defaultBranch }
+if (-not $pushResult.Ok) { Stop-Deploy "git push failed: $($pushResult.Output)" }
 Add-Result 'Commit and push' 'FIXED' "pushed to origin/$defaultBranch"
 
 Start-Sleep -Seconds 5
