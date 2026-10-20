@@ -783,7 +783,7 @@ gh pr list --search "[modernization-plan] in:title"
 
 The **Plan validation** comment proves, without AI, that every finding ID is owned by a step, no ID was invented, all sections exist, the Run Parameters are complete, and the Execution Plan has no deployment or Azure steps.
 
-**Human approval is the merge.** It adds only Markdown and evidence to `main`, no code. Select **Squash and merge**, then **Confirm**. Or run:
+**Human approval is the merge.** It adds only Markdown and evidence to `main`, no code. Select **Squash and merge**, then **Confirm**, and do not select **Delete branch** afterwards: the demo keeps `modernize/plan-<N>` so you can show it later. Or run:
 
 ```powershell
 $planPr = gh pr list `
@@ -793,7 +793,7 @@ $planPr = gh pr list `
   --json number `
   --jq '.[0].number'
 
-gh pr merge $planPr --repo lenvolk/java-migration-copilot-samples --squash --delete-branch
+gh pr merge $planPr --repo lenvolk/java-migration-copilot-samples --squash
 ```
 
 Do not continue if the plan is wrong. Comment on the plan pull request and close it, then file a new request.
