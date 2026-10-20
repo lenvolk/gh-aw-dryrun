@@ -492,7 +492,7 @@ After these steps your repo is back to: `main` branch only, no open PR, no open 
 
 > **You can start here.** Beat 4 does not require the Python demo repository, labels, pull requests, or issues from Beats 1-3.
 
-![Beat 4: assess, plan, execute, validate, with a human gate at each step](assets/beat-4-pipeline.svg?v=plan-folder)
+![Beat 4: assess, plan, execute, validate, with a human gate at each step](assets/beat-4-pipeline.svg?v=expand-request)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw). Open it in the Excalidraw VS Code extension or at <https://excalidraw.com>.
 
@@ -686,15 +686,29 @@ You should see `COPILOT_GITHUB_TOKEN`, nine `modernize-*` workflows (`modernize-
 .\demo\beat4\new-request.ps1
 ```
 
-It creates the issue in your fork from `demo\beat4\modernization-request.md`. The body starts with `/modernize`, which starts the plain Actions workflow [modernize-assessment.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-assessment.yml). Its `prepare` job only continues when the issue or comment starts with `/modernize` and its author is the owner, a member or a collaborator.
+It creates an issue in your fork that holds only what a developer who just inherited the app would write. They don't need to know the current versions or the target:
 
-Within a minute a comment **Modernization status** appears on the issue. It is the status board for the whole lifecycle: one row per stage across both workflows, with links to every run. Keep this issue open in a tab.
+```markdown
+/modernize
+
+I inherited Asset Manager. Bring it to our supported Java and Spring Boot baseline.
+Keep web and worker behavior the same. No Azure migration or deployment changes.
+```
+
+In a real project the developer types this in **Issues → New issue**; the script only makes rehearsals repeatable. `/modernize` starts the plain Actions workflow [modernize-assessment.yml](https://github.com/lenvolk/java-migration-copilot-samples/blob/main/.github/workflows/modernize-assessment.yml). Its `prepare` job only continues when the issue or comment starts with `/modernize` and its author is the owner, a member or a collaborator.
+
+Within a minute the pipeline posts two comments:
+
+1. **Modernization request, expanded**: the developer's words quoted, then the business outcome, the current Java and Spring Boot versions **read from `pom.xml`**, the approved target baseline (Java 21 LTS, latest Spring Boot 3.5.x from Maven Central), a `diff` sketch, how the request is handled (diagram and the three gates), out of scope, and what to do next.
+2. **Modernization status**: the status board for the whole lifecycle, one row per stage across both workflows, with links to every run. Keep this issue open in a tab.
+
+The target is the organization's approved baseline, enforced by the pipeline; the developer confirms it at gate 1.
 
 Show the customer:
 
-- The business outcome and explicit scope.
-- The lifecycle in the request: assessment, plan and code review each need a human.
-- The later modernization stages explicitly excluded.
+- Three lines from the developer, a full request from the pipeline: the developer did not look up versions or draw anything.
+- The current versions come from the build files, not from the developer or from AI.
+- The three human gates in the diagram, and what is explicitly out of scope.
 
 ### 10.7 Stage 2 - review and approve the Assessment Report (gate 1)
 
@@ -840,7 +854,7 @@ Each gh-aw workflow selects its model under `engine.model`. All seven use the `c
 
 | Workflow | Stage | Model ID | Why we chose it |
 |---|---|---|---|
-| `modernize-compat-analyst` | Assess | `gpt-5.6-luna` | Bounded, read-only source analysis from tool evidence; the cheapest model in the run. |
+| `modernize-compat-analyst` | Assess | `claude-haiku-5.5` | Bounded, read-only source analysis from tool evidence, on the cheapest model. |
 | `modernize-dependency-analyst` | Assess | `claude-haiku-4.5` | Dependency decisions from the measured tree. |
 | `modernize-planner` | Plan | `claude-sonnet-5.5` | Reasoning and clear writing for a human-reviewable plan. |
 | `modernize-build-upgrader` | Execute | `claude-haiku-5.5` | Narrow, plan-guided POM edits on a small model. |
@@ -851,7 +865,7 @@ Each gh-aw workflow selects its model under `engine.model`. All seven use the `c
 **What the pre-run taught about models (gh-aw v0.89.21).** Treat this as a teaching point, not a footnote:
 
 - The gh-aw integration offers a fixed list of models. `claude-sonnet-4.6`, `gpt-5.4` and `gpt-5-mini` failed with `The requested model is not available for integrator "agentic-workflows"`. The error message lists the models that are available.
-- The newest OpenAI models (`gpt-5.3-codex`, `gpt-5.6-*`, `gpt-6.x`) failed once they used tools through the Responses API custom-tool path: `Expected an ID that begins with 'fc'` and `Unsupported Responses custom tool ... Only 'apply_patch' is supported`. The read-only compat analyst on `gpt-5.6-luna` works because it never edits files. Agents that edit files or run long tool loops use Claude.
+- The newest OpenAI models (`gpt-5.3-codex`, `gpt-5.6-*`, `gpt-6.x`) failed once they used tools through the Responses API custom-tool path: `Expected an ID that begins with 'fc'` and `Unsupported Responses custom tool ... Only 'apply_patch' is supported`. Even a read-only agent is affected: gh-aw's threat-detection job runs on the agent's model and uses the Edit tool, so the compat analyst on `gpt-5.6-luna` failed detection in a later run. All seven agents now use Claude models.
 - gh-aw may route a request to a different model. The compat analyst asked for `gpt-5.4-mini` and ran on `gpt-5.6-luna`, so the workflow now names the model that actually runs. The actual-cost tables always show the model used.
 - Recheck the model list after upgrading gh-aw: compile succeeds either way, only a run proves access.
 
@@ -859,7 +873,7 @@ Measured AI credits of the full pre-run on 2026-10-19 (assessment and plan run 3
 
 | Agent | Model | Requests | Agent credits | Threat detection credits | Total credits |
 |---|---|---:|---:|---:|---:|
-| `modernize-compat-analyst` | `gpt-5.6-luna` | 16 | 3.0 | 0.6 | 3.6 |
+| `modernize-compat-analyst` | `gpt-5.6-luna` (now `claude-haiku-5.5`) | 16 | 3.0 | 0.6 | 3.6 |
 | `modernize-dependency-analyst` | `claude-haiku-4.5` | 11 | 28.6 | 5.3 | 33.9 |
 | `modernize-planner` | `claude-sonnet-5.5` | 12 | 31.1 | 14.8 | 45.9 |
 | `modernize-build-upgrader` | `claude-haiku-5.5` | 11 | 1.4 | 0.7 | 2.1 |

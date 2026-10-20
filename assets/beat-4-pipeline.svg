@@ -14,9 +14,10 @@
 <rect x="15" y="128" width="1470" height="290" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="30" y="150" font-size="15" text-anchor="start" fill="#495057" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">1  ASSESS   workflow modernize-assessment</text>
 <rect x="30" y="190" width="180" height="190" rx="10" fill="#ffec99" stroke="#f08c00" stroke-width="2"/>
-<text x="120.0" y="272" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Request issue</text>
-<text x="120.0" y="290" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">starts with</text>
-<text x="120.0" y="308" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">/modernize</text>
+<text x="120.0" y="263" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">Request issue</text>
+<text x="120.0" y="281" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">/modernize +</text>
+<text x="120.0" y="299" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">3 lines of intent</text>
+<text x="120.0" y="317" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">pipeline expands it</text>
 <rect x="240" y="162" width="290" height="240" rx="10" fill="#e9ecef" stroke="#868e96" stroke-width="2"/>
 <text x="385.0" y="224" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">assessment-facts</text>
 <text x="385.0" y="242" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">mvnw test on JDK 8</text>
@@ -30,7 +31,7 @@
 <rect x="560" y="172" width="290" height="100" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
 <text x="705.0" y="209" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-compat-analyst</text>
 <text x="705.0" y="227" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">source findings C-01 ...</text>
-<text x="705.0" y="245" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: gpt-5.6-luna</text>
+<text x="705.0" y="245" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">model: claude-haiku-5.5</text>
 <rect x="560" y="292" width="290" height="100" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
 <text x="705.0" y="329" font-size="14" text-anchor="middle" fill="#1e1e1e" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">modernize-dependency-analyst</text>
 <text x="705.0" y="347" font-size="14" text-anchor="middle" fill="#1e1e1e" font-family="Segoe UI, Helvetica, Arial, sans-serif">dependency findings D-01 ...</text>

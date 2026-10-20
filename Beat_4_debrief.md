@@ -10,7 +10,7 @@
 
 | # | What happened | Who decided |
 |---|---|---|
-| 1 | A GitHub issue stated the outcome and the boundaries: Java 21, Spring Boot 3.5, no Azure migration. | Human |
+| 1 | A developer who inherited the app wrote three lines in a GitHub issue. The pipeline expanded them into a full request: business outcome, current versions read from the build, the approved target, the gates, out of scope. | Human wrote intent, pipeline expanded |
 | 2 | Standard Java tools measured the app: tests on JDK 8, dependency tree, newer versions, jdeps, jdeprscan, SpotBugs, an OpenRewrite preview, known advisories. Two read-only agents turned the facts into findings with IDs. One Assessment Report appeared on the issue. Nothing was changed. | Tools measured, agents judged |
 | 3 | The human read the report and approved it. | **Gate 1** |
 | 4 | A planner agent wrote the plan into a pull request next to the approved report and evidence. A check without AI confirmed every finding was owned by a step; the pipeline added a measured cost estimate. | Agent proposed, checks verified |
@@ -22,7 +22,7 @@ Nothing is planned before the assessment is approved, nothing changes before the
 
 ## The pipeline
 
-![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=plan-folder)
+![Beat 4 pipeline](assets/beat-4-pipeline.svg?v=expand-request)
 
 > Editable source: [assets/beat-4-pipeline.excalidraw](assets/beat-4-pipeline.excalidraw)
 
@@ -62,7 +62,7 @@ Each workflow pins its model in `engine.model`. All use the same Copilot engine 
 
 | Workflow | Model ID | Measured AI credits (agent + threat detection) |
 |---|---|---|
-| `modernize-compat-analyst` | `gpt-5.6-luna` | 3.6 |
+| `modernize-compat-analyst` | `claude-haiku-5.5` (measured on `gpt-5.6-luna`) | 3.6 |
 | `modernize-dependency-analyst` | `claude-haiku-4.5` | 33.9 |
 | `modernize-planner` | `claude-sonnet-5.5` | 45.9 |
 | `modernize-build-upgrader` | `claude-haiku-5.5` | 2.1 |
@@ -73,7 +73,7 @@ Each workflow pins its model in `engine.model`. All use the same Copilot engine 
 
 Measured on the full pre-run of 2026-10-19. About 30% of it is threat detection: after every agent, gh-aw checks the agent's output on the same model before anything is written. The run itself shows the actual numbers at each gate, and every gh-aw comment ends with its own credit count. These are role-based demo choices, not benchmark claims.
 
-What the pre-run taught about models: the gh-aw integration offers a fixed list of models, and in gh-aw v0.89.21 the newest OpenAI models failed when they edited files through tools. Agents that edit files or run long tool loops use Claude; the read-only compat analyst uses a small OpenAI model. Show this to Java developers as an example of why you pre-run and read the logs.
+What the pre-run taught about models: the gh-aw integration offers a fixed list of models, and in gh-aw v0.89.21 the newest OpenAI models failed when they edited files through tools. All seven agents now use Claude models, because even the threat-detection job of a read-only agent edits a file. Show this to Java developers as an example of why you pre-run and read the logs.
 ## Why several agents instead of one
 
 Think of it like small services instead of one monolith.
