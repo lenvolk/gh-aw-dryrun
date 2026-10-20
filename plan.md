@@ -719,6 +719,8 @@ gh run list --workflow modernize-assessment.yml --limit 3
 gh run watch
 ```
 
+What you will see in the run graph (**Actions → modernize-assessment → your run**). This is a map of the jobs, not a command:
+
 ```text
 modernize-assessment
   prepare                                  status board on the issue
